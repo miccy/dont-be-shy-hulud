@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # harden-npm.sh - Hardening npm a bun konfigurace
-# https://github.com/miccy/hunting-worms-guide
+# https://github.com/miccy/dont-be-shy-hulud
 #
 # Použití: ./harden-npm.sh [--apply]
 #
@@ -91,7 +91,7 @@ apply_setting "npm config set prefer-offline true" "Preferuj offline instalaci"
 echo -e "\n${YELLOW}[2/5] Projektová .npmrc template${NC}"
 
 NPMRC_TEMPLATE='# Shai-Hulud hardened .npmrc
-# https://github.com/miccy/hunting-worms-guide
+# https://github.com/miccy/dont-be-shy-hulud
 
 # Disable lifecycle scripts
 ignore-scripts=true
@@ -133,7 +133,7 @@ if command -v bun &>/dev/null; then
     
     # bunfig.toml template
     BUNFIG_TEMPLATE='# Shai-Hulud hardened bunfig.toml
-# https://github.com/miccy/hunting-worms-guide
+# https://github.com/miccy/dont-be-shy-hulud
 
 [install]
 # Disable lifecycle scripts

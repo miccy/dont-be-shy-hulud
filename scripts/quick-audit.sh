@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # quick-audit.sh - Rychlý security audit pro Shai-Hulud 2.0
-# https://github.com/miccy/hunting-worms-guide
+# https://github.com/miccy/dont-be-shy-hulud
 #
 # Použití: ./quick-audit.sh [cesta_k_projektům]
 #

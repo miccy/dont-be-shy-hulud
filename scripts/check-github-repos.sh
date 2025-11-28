@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # check-github-repos.sh - Kontrola GitHub účtu na kompromitaci
-# https://github.com/miccy/hunting-worms-guide
+# https://github.com/miccy/dont-be-shy-hulud
 #
 # Vyžaduje: gh CLI (https://cli.github.com)
 #

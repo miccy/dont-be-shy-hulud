@@ -12,8 +12,8 @@ If you suspect you're compromised, run this immediately:
 
 ```bash
 # Clone this repo
-git clone https://github.com/miccy/hunting-worms-guide.git
-cd hunting-worms-guide
+git clone https://github.com/miccy/dont-be-shy-hulud.git
+cd dont-be-shy-hulud
 
 # Run the detector
 chmod +x scripts/detect.sh
@@ -197,7 +197,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run Shai-Hulud Detector
         run: |
-          curl -sSL https://raw.githubusercontent.com/miccy/hunting-worms-guide/main/scripts/detect.sh | bash -s -- .
+          curl -sSL https://raw.githubusercontent.com/miccy/dont-be-shy-hulud/main/scripts/detect.sh | bash -s -- .
 ```
 
 ## Remediation Guide

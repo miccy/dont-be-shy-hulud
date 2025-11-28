@@ -10,8 +10,8 @@
 
 ```bash
 # 1. Stáhni tento repo
-git clone https://github.com/miccy/hunting-worms-guide.git
-cd hunting-worms-guide
+git clone https://github.com/miccy/dont-be-shy-hulud.git
+cd dont-be-shy-hulud
 
 # 2. Spusť rychlý audit (macOS/Linux)
 chmod +x scripts/*.sh

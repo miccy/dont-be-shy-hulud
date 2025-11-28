@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Shai-Hulud 2.0 Detection Script
-# https://github.com/miccy/hunting-worms-guide
+# https://github.com/miccy/dont-be-shy-hulud
 #
 # Usage: ./detect.sh [path] [--output file] [--verbose] [--ci]
 #
@@ -60,7 +60,7 @@ log_ok() {
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
 echo "║           🪱 SHAI-HULUD 2.0 DETECTION SCRIPT                   ║"
-echo "║           https://github.com/miccy/hunting-worms-guide         ║"
+echo "║           https://github.com/miccy/dont-be-shy-hulud              ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
 echo ""
 echo "Scanning: $SCAN_PATH"
@@ -339,7 +339,7 @@ else
     echo "  5. Pin dependencies to pre-Nov 21, 2025 versions"
     echo ""
     echo "For detailed remediation, see:"
-    echo "  https://github.com/miccy/hunting-worms-guide/blob/main/docs/remediation.md"
+    echo "  https://github.com/miccy/dont-be-shy-hulud/blob/main/docs/en/REMEDIATION.md"
     
     if [[ "$CI_MODE" == true ]]; then
         exit 1
