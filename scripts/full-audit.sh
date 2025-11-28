@@ -18,7 +18,7 @@ NC='\033[0m'
 
 # Config
 SCAN_PATH="${1:-$HOME/Developer}"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" # Unused
 # IOC_DIR="$SCRIPT_DIR/../ioc" # Unused
 REPORT_DIR="$HOME/shai-hulud-audit-$(date +%Y%m%d-%H%M%S)"
 
@@ -139,7 +139,7 @@ fi
 # 2.3 Suspicious workflow files
 log_info "Searching for suspicious GitHub workflows..."
 find "$SCAN_PATH" -path "*/.github/workflows/*.yaml" -o -path "*/.github/workflows/*.yml" 2>/dev/null | \
-    xargs -I {} grep -l "self-hosted" {} 2>/dev/null > "$REPORT_DIR/suspicious-workflows.txt" || true
+    while read -r file; do grep -l "self-hosted" "$file" >> "$REPORT_DIR/suspicious-workflows.txt" || true; done
 
 if [ -s "$REPORT_DIR/suspicious-workflows.txt" ]; then
     while read -r file; do

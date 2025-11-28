@@ -60,10 +60,10 @@ fi
 # Test 2: .truffler-cache
 echo -e "\n${BLUE}[2/8] Checking .truffler-cache...${NC}"
 if [ -d "$HOME/.truffler-cache" ]; then
-    report_found "~/.truffler-cache exists!"
+    report_found "$HOME/.truffler-cache exists!"
     ls -la "$HOME/.truffler-cache" 2>/dev/null || true
 else
-    report_ok "~/.truffler-cache does not exist"
+    report_ok "$HOME/.truffler-cache does not exist"
 fi
 
 # Test 3: discussion.yaml workflows
@@ -113,7 +113,7 @@ if [ -f "$HOME/.npmrc" ]; then
         report_ok "No authToken in ~/.npmrc"
     fi
 else
-    report_ok "~/.npmrc does not exist"
+    report_ok "$HOME/.npmrc does not exist"
 fi
 
 # Test 6: GitHub CLI check

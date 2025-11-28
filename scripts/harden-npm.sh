@@ -133,7 +133,8 @@ if command -v bun &>/dev/null; then
     echo "bun version: $(bun --version)"
 
     # bunfig.toml template
-    BUNFIG_TEMPLATE="# Shai-Hulud hardened bunfig.toml
+    read -r -d '' BUNFIG_TEMPLATE << 'EOF'
+# Shai-Hulud hardened bunfig.toml
 # https://github.com/miccy/dont-be-shy-hulud
 
 [install]
@@ -149,7 +150,7 @@ frozen_lockfile = true
 [install.scopes]
 # Example: private registry for @company scope
 # "@company" = { url = "https://npm.company.com", token = "$COMPANY_NPM_TOKEN" }
-"
+EOF
 
     echo "Template for bunfig.toml:"
     echo "---"
