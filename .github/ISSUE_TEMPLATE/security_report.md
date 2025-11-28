@@ -16,6 +16,6 @@ Please report them via one of the following methods:
    - Click "New draft security advisory"
 
 2. **Email**:
-   - Send an email to: security@miccy.dev (if available)
+   - Send an email to: support@miccy.dev
 
 See [SECURITY.md](../../SECURITY.md) for more details.

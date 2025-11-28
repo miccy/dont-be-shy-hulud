@@ -1,107 +1,167 @@
 {
-  "_comment": "Shai-Hulud 2.0 - Known Malicious Packages",
-  "_updated": "2025-11-27",
-  "_sources": [
-    "https://github.com/tenable/shai-hulud-second-coming-affected-packages",
-    "https://github.com/DataDog/indicators-of-compromise/tree/main/shai-hulud-2.0",
-    "https://www.wiz.io/blog/shai-hulud-2-0-ongoing-supply-chain-attack"
-  ],
-  "_note": "Toto je sample seznam. Pro aktuální data stáhni z uvedených zdrojů.",
-  
-  "packages": [
-    {
-      "name": "@asyncapi/specs",
-      "malicious_versions": ["6.8.0", "6.8.1"],
-      "safe_version": "6.7.0",
-      "prevalence": "20%"
-    },
-    {
-      "name": "@postman/tunnel-agent",
-      "malicious_versions": ["0.6.1"],
-      "safe_version": "0.6.0",
-      "prevalence": "27%"
-    },
-    {
-      "name": "posthog-node",
-      "malicious_versions": ["4.18.0", "4.18.1"],
-      "safe_version": "4.17.0",
-      "prevalence": "25%"
-    },
-    {
-      "name": "posthog-js",
-      "malicious_versions": ["1.200.0"],
-      "safe_version": "1.199.0",
-      "prevalence": "15%"
-    },
-    {
-      "name": "@ensdomains/ensjs",
-      "malicious_versions": ["4.0.1"],
-      "safe_version": "4.0.0"
-    },
-    {
-      "name": "@ensdomains/content-hash",
-      "malicious_versions": ["3.0.1"],
-      "safe_version": "3.0.0"
-    },
-    {
-      "name": "zapier-platform-core",
-      "malicious_versions": ["18.0.0", "18.0.1"],
-      "safe_version": "17.0.0"
-    },
-    {
-      "name": "zapier-platform-cli",
-      "malicious_versions": ["18.0.0"],
-      "safe_version": "17.0.0"
-    },
-    {
-      "name": "zapier-sdk",
-      "malicious_versions": ["0.15.0", "0.15.1"],
-      "safe_version": "0.14.0"
-    },
-    {
-      "name": "@ctrl/tinycolor",
-      "malicious_versions": ["4.2.0"],
-      "safe_version": "4.1.0",
-      "note": "High download count - millions weekly"
-    },
-    {
-      "name": "get-them-args",
-      "malicious_versions": ["1.4.0"],
-      "safe_version": "1.3.0",
-      "prevalence": "14%"
-    },
-    {
-      "name": "shell-exec",
-      "malicious_versions": ["1.0.3"],
-      "safe_version": "1.0.2",
-      "prevalence": "13%"
-    },
-    {
-      "name": "kill-port",
-      "malicious_versions": ["2.0.2"],
-      "safe_version": "2.0.1",
-      "prevalence": "13%"
-    }
-  ],
-  
-  "file_indicators": [
-    "setup_bun.js",
-    "bun_environment.js",
-    ".truffler-cache",
-    ".github/workflows/discussion.yaml"
-  ],
-  
-  "exfiltrated_files": [
-    "cloud.json",
-    "contents.json", 
-    "environment.json",
-    "truffleSecrets.json",
-    "actionsSecrets.json"
-  ],
-  
-  "github_repo_markers": [
-    "Sha1-Hulud: The Second Coming.",
-    "Sha1-Hulud: The Continued Coming.",
-    "Shai-Hulud Migration"
-  ]
+  "meta": {
+    "description": "Indicators of Compromise (IOCs) for Shai-Hulud 2.0 npm worm",
+    "last_updated": "2025-11-28",
+    "update_frequency": "Daily during active incidents",
+    "sources": [
+      "https://github.com/DataDog/indicators-of-compromise/tree/main/shai-hulud-2.0",
+      "https://github.com/wiz-sec-public/wiz-research-iocs",
+      "https://github.com/tenable/shai-hulud-second-coming-affected-packages",
+      "https://github.com/safedep/shai-hulud-migration-response"
+    ],
+    "note": "This list is regularly updated from vendor sources. Always cross-reference with official vendor IOC lists for the most current data."
+  },
+  "high_risk_packages": {
+    "description": "Packages with highest deployment rates that were compromised",
+    "packages": [
+      {
+        "name": "@postman/tunnel-agent",
+        "risk_level": "critical",
+        "deployment_rate": "27%",
+        "affected_versions": ["Check vendor sources"],
+        "notes": "High prevalence in cloud environments"
+      },
+      {
+        "name": "posthog-node",
+        "risk_level": "critical",
+        "deployment_rate": "25%",
+        "affected_versions": ["Check vendor sources"],
+        "notes": "Analytics package, widely deployed"
+      },
+      {
+        "name": "posthog-js",
+        "risk_level": "critical",
+        "deployment_rate": "15%",
+        "affected_versions": ["Check vendor sources"],
+        "notes": "Client-side analytics"
+      },
+      {
+        "name": "@asyncapi/specs",
+        "risk_level": "critical",
+        "deployment_rate": "20%",
+        "affected_versions": ["Check vendor sources"],
+        "notes": "AsyncAPI tooling"
+      },
+      {
+        "name": "@asyncapi/openapi-schema-parser",
+        "risk_level": "critical",
+        "deployment_rate": "17%",
+        "affected_versions": ["Check vendor sources"],
+        "notes": "Schema parser"
+      },
+      {
+        "name": "angulartics2",
+        "risk_level": "high",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["Check vendor sources"],
+        "notes": "Angular analytics"
+      },
+      {
+        "name": "koa2-swagger-ui",
+        "risk_level": "high",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["Check vendor sources"],
+        "notes": "Swagger UI for Koa"
+      },
+      {
+        "name": "tinycolor",
+        "risk_level": "high",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["v4.1.2"],
+        "notes": "Color manipulation library - specific version affected"
+      }
+    ]
+  },
+  "ioc_files": {
+    "description": "File indicators of compromise",
+    "files": [
+      {
+        "filename": "setup_bun.js",
+        "type": "dropper",
+        "description": "Initial loader script, typically in preinstall hook",
+        "detection": "find . -name 'setup_bun.js' 2>/dev/null"
+      },
+      {
+        "filename": "bun_environment.js",
+        "type": "payload",
+        "description": "Main malicious payload (~10MB, heavily obfuscated)",
+        "detection": "find . -name 'bun_environment.js' 2>/dev/null"
+      },
+      {
+        "filename": "actionsSecrets.json",
+        "type": "exfiltration",
+        "description": "Stolen GitHub Actions secrets (double base64 encoded)",
+        "detection": "find . -name 'actionsSecrets.json' 2>/dev/null"
+      },
+      {
+        "filename": "cloud.json",
+        "type": "exfiltration",
+        "description": "Cloud credentials (AWS, GCP, Azure)",
+        "detection": "find . -name 'cloud.json' 2>/dev/null"
+      },
+      {
+        "filename": "contents.json",
+        "type": "exfiltration",
+        "description": "Repository contents",
+        "detection": "find . -name 'contents.json' 2>/dev/null"
+      },
+      {
+        "filename": "environment.json",
+        "type": "exfiltration",
+        "description": "Environment variables",
+        "detection": "find . -name 'environment.json' 2>/dev/null"
+      },
+      {
+        "filename": "truffleSecrets.json",
+        "type": "exfiltration",
+        "description": "Secrets found by TruffleHog scan",
+        "detection": "find . -name 'truffleSecrets.json' 2>/dev/null"
+      }
+    ]
+  },
+  "behavioral_iocs": {
+    "description": "Behavioral indicators of compromise",
+    "indicators": [
+      {
+        "type": "github_repo",
+        "pattern": "Repository description contains 'Sha1-Hulud: The Second Coming'",
+        "detection": "gh repo list --json description | jq -r '.[] | select(.description | contains(\"Hulud\"))'"
+      },
+      {
+        "type": "github_actions",
+        "pattern": "Self-hosted runner named 'SHA1HULUD'",
+        "detection": "Check Actions runners in GitHub settings"
+      },
+      {
+        "type": "workflow_file",
+        "pattern": "Workflow files matching 'formatter_*.yml' in .github/workflows/",
+        "detection": "find .github/workflows -name 'formatter_*.yml'"
+      },
+      {
+        "type": "directory",
+        "pattern": ".truffler-cache directory in home folder",
+        "detection": "ls -la ~/.truffler-cache"
+      },
+      {
+        "type": "process",
+        "pattern": "Unexpected Bun processes",
+        "detection": "ps aux | grep bun | grep -v grep"
+      },
+      {
+        "type": "package_json",
+        "pattern": "preinstall script with 'setup_bun' or 'bun_environment'",
+        "detection": "grep -r '\"preinstall\".*setup_bun\\|bun_environment' package.json"
+      }
+    ]
+  },
+  "network_iocs": {
+    "description": "Network indicators (if any identified)",
+    "note": "Shai-Hulud 2.0 primarily uses GitHub for exfiltration, not external C&C servers",
+    "indicators": []
+  },
+  "file_hashes": {
+    "description": "SHA-256 hashes of known malicious files",
+    "note": "Payloads are polymorphic - hashes change frequently. Use behavioral detection instead.",
+    "hashes": []
+  }
 }

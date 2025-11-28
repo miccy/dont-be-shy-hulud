@@ -6,7 +6,9 @@
 > Defense guide for detection & remediation against npm supply-chain worms | Shai-Hulud 2.0 (November 2025) and future threats
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub Stars](https://img.shields.io/github/stars/miccy/dont-be-shy-hulud?style=social)](https://github.com/miccy/dont-be-shy-hulud)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Security Advisories](https://img.shields.io/badge/security-advisories-red)](https://github.com/miccy/dont-be-shy-hulud/security/advisories)
 
 ## ⚡ Quick Start
 
@@ -133,7 +135,7 @@ If you use any of these packages, **immediately audit your lockfile**:
 | `koa2-swagger-ui` | 🟠 High | |
 | `tinycolor` | 🟠 High | v4.1.2 specifically |
 
-For full list, see [IOC Lists](#ioc-lists).
+For full IOC database with detailed indicators, see [IOC Lists](#ioc-lists) below and [ioc/malicious-packages.json](ioc/malicious-packages.json).
 
 ## Immediate Actions
 
@@ -328,7 +330,6 @@ Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 - [ ] Language translations
 - [ ] CI/CD integrations
 - [ ] Tool configurations
-- [ ] Language translations
 
 ## 🛠️ Repository Maintenance
 
