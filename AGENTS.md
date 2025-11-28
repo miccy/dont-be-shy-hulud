@@ -43,7 +43,7 @@ This repository is **bilingual (EN/CS)**:
 
 ### Documentation Files
 - All `.md` files in `docs/` have both EN and CS versions
-- Root READMEs: `README.md` (EN), `README-cs.md` (CS)
+- Root READMEs: `README.md` (EN), `cs/README.md` (CS)
 - CONTRIBUTING: `CONTRIBUTING.md` (EN), `CONTRIBUTING-cs.md` (CS)
 
 ### Code Files
@@ -82,7 +82,7 @@ Primary tools referenced:
 
 1. **Security First**: This is security-sensitive work. Be precise and thorough.
 
-2. **Check Language Preference**: 
+2. **Check Language Preference**:
    - If user writes in Czech, respond in Czech
    - If user writes in English, respond in English
    - Both languages should have feature parity

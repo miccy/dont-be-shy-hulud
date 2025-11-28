@@ -43,7 +43,7 @@ Tento repozitář je **dvojjazyčný (EN/CS)**:
 
 ### Dokumentační soubory
 - Všechny `.md` soubory v `docs/` mají EN i CS verze
-- Root README: `README.md` (EN), `README-cs.md` (CS)
+- Root README: `README.md` (EN), `cs/README.md` (CS)
 - CONTRIBUTING: `CONTRIBUTING.md` (EN), `CONTRIBUTING-cs.md` (CS)
 
 ### Kódové soubory
@@ -82,7 +82,7 @@ Primární nástroje odkazované:
 
 1. **Security First**: Toto je security-sensitive práce. Buď přesný a důkladný.
 
-2. **Zkontroluj jazykovou preferenci**: 
+2. **Zkontroluj jazykovou preferenci**:
    - Pokud uživatel píše česky, odpovídej česky
    - Pokud uživatel píše anglicky, odpovídej anglicky
    - Oba jazyky by měly mít feature parity
