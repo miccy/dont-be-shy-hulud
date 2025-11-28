@@ -1,0 +1,66 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "🔒 LOCKDOWN CONFIG - Pro použití během aktivní supply-chain hrozby",
+  
+  "extends": [
+    "config:recommended"
+  ],
+  
+  "enabled": true,
+  
+  "packageRules": [
+    {
+      "description": "🔴 KRITICKÉ: Zakázat všechny npm/bun updates",
+      "matchManagers": ["npm", "bun"],
+      "enabled": false
+    },
+    {
+      "description": "Povolit pouze GitHub Actions updates (pinned to SHA)",
+      "matchManagers": ["github-actions"],
+      "enabled": true,
+      "pinDigests": true,
+      "automerge": false,
+      "labels": ["dependencies", "github-actions", "security-review"]
+    },
+    {
+      "description": "Docker updates s manuální review",
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "enabled": true,
+      "automerge": false,
+      "labels": ["dependencies", "docker", "security-review"]
+    },
+    {
+      "description": "Terraform/Ansible - pouze security updates",
+      "matchManagers": ["terraform", "ansible"],
+      "enabled": true,
+      "matchUpdateTypes": ["patch"],
+      "automerge": false
+    },
+    {
+      "description": "Nix updates",
+      "matchManagers": ["nix"],
+      "enabled": true,
+      "automerge": false
+    }
+  ],
+  
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "critical", "vulnerability"],
+    "prPriority": 10
+  },
+  
+  "prConcurrentLimit": 1,
+  "prHourlyLimit": 1,
+  
+  "schedule": ["before 6am on monday"],
+  "timezone": "Europe/Prague",
+  
+  "commitMessagePrefix": "🔒 chore(deps): ",
+  "commitMessageAction": "lockdown update",
+  
+  "labels": ["dependencies", "lockdown-mode"],
+  
+  "reviewers": ["security-team"],
+  "reviewersFromCodeOwners": true
+}

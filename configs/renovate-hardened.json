@@ -1,0 +1,144 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "🛡️ HARDENED CONFIG - Bezpečný setup pro každodenní použití",
+  
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":rebaseStalePrs"
+  ],
+  
+  "timezone": "Europe/Prague",
+  "schedule": ["before 6am on monday"],
+  
+  "stabilityDays": 7,
+  "minimumReleaseAge": "7 days",
+  
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 2,
+  
+  "automerge": false,
+  "platformAutomerge": false,
+  
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on sunday"],
+    "automerge": false
+  },
+  
+  "packageRules": [
+    {
+      "description": "Seskupit všechny non-major npm updates",
+      "matchManagers": ["npm", "bun"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "npm non-major",
+      "automerge": false,
+      "labels": ["dependencies", "npm", "security-review"],
+      "prPriority": -5
+    },
+    {
+      "description": "Major npm updates jednotlivě",
+      "matchManagers": ["npm", "bun"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "npm", "major", "breaking-change"],
+      "prPriority": -10
+    },
+    {
+      "description": "Dev dependencies - povolený automerge pro minor/patch",
+      "matchManagers": ["npm", "bun"],
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackagePatterns": [
+        "^@types/",
+        "^eslint",
+        "^prettier",
+        "^typescript$",
+        "^vitest",
+        "^jest",
+        "^@biomejs/",
+        "^oxlint"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "labels": ["dependencies", "dev-tools", "automerge"]
+    },
+    {
+      "description": "GitHub Actions - pin to SHA, automerge minor",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+      "automerge": true,
+      "automergeType": "pr",
+      "matchUpdateTypes": ["minor", "patch"],
+      "labels": ["dependencies", "github-actions"]
+    },
+    {
+      "description": "Docker - automerge digest updates",
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "matchUpdateTypes": ["digest"],
+      "automerge": true
+    },
+    {
+      "description": "Docker - manuální review pro version updates",
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "automerge": false,
+      "labels": ["dependencies", "docker"]
+    },
+    {
+      "description": "Infrastructure (Terraform, Ansible) - vždy manuálně",
+      "matchManagers": ["terraform", "ansible"],
+      "automerge": false,
+      "labels": ["dependencies", "infrastructure"],
+      "prPriority": 5
+    },
+    {
+      "description": "Nix - seskupit a manuální review",
+      "matchManagers": ["nix"],
+      "groupName": "nix dependencies",
+      "automerge": false,
+      "labels": ["dependencies", "nix"],
+      "prPriority": 5
+    },
+    {
+      "description": "Blokovat známé problematické packages",
+      "matchPackageNames": [
+        "@asyncapi/specs",
+        "event-stream",
+        "flatmap-stream"
+      ],
+      "enabled": false
+    }
+  ],
+  
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "vulnerability"],
+    "prPriority": 10,
+    "automerge": false
+  },
+  
+  "prBodyNotes": [
+    "⚠️ **Security Review Required**",
+    "Before merging:",
+    "- [ ] Check package changelog",
+    "- [ ] Verify no suspicious lifecycle scripts",
+    "- [ ] Run `npm audit` / `socket scan`"
+  ],
+  
+  "commitMessagePrefix": "chore(deps): ",
+  
+  "labels": ["dependencies"],
+  "addLabels": ["renovate"],
+  
+  "reviewersFromCodeOwners": true,
+  
+  "postUpdateOptions": ["npmDedupe"],
+  
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/vendor/**",
+    "**/dist/**",
+    "**/build/**"
+  ]
+}

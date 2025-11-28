@@ -1,0 +1,30 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Audit reports (contain sensitive data)
+*-audit-*/
+*.audit.log
+
+# Temp files
+*.tmp
+*.temp
+.cache/
+
+# Secrets (nikdy necommituj!)
+.env
+.env.local
+*.pem
+*.key
+credentials.json

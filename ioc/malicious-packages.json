@@ -1,0 +1,107 @@
+{
+  "_comment": "Shai-Hulud 2.0 - Known Malicious Packages",
+  "_updated": "2025-11-27",
+  "_sources": [
+    "https://github.com/tenable/shai-hulud-second-coming-affected-packages",
+    "https://github.com/DataDog/indicators-of-compromise/tree/main/shai-hulud-2.0",
+    "https://www.wiz.io/blog/shai-hulud-2-0-ongoing-supply-chain-attack"
+  ],
+  "_note": "Toto je sample seznam. Pro aktuální data stáhni z uvedených zdrojů.",
+  
+  "packages": [
+    {
+      "name": "@asyncapi/specs",
+      "malicious_versions": ["6.8.0", "6.8.1"],
+      "safe_version": "6.7.0",
+      "prevalence": "20%"
+    },
+    {
+      "name": "@postman/tunnel-agent",
+      "malicious_versions": ["0.6.1"],
+      "safe_version": "0.6.0",
+      "prevalence": "27%"
+    },
+    {
+      "name": "posthog-node",
+      "malicious_versions": ["4.18.0", "4.18.1"],
+      "safe_version": "4.17.0",
+      "prevalence": "25%"
+    },
+    {
+      "name": "posthog-js",
+      "malicious_versions": ["1.200.0"],
+      "safe_version": "1.199.0",
+      "prevalence": "15%"
+    },
+    {
+      "name": "@ensdomains/ensjs",
+      "malicious_versions": ["4.0.1"],
+      "safe_version": "4.0.0"
+    },
+    {
+      "name": "@ensdomains/content-hash",
+      "malicious_versions": ["3.0.1"],
+      "safe_version": "3.0.0"
+    },
+    {
+      "name": "zapier-platform-core",
+      "malicious_versions": ["18.0.0", "18.0.1"],
+      "safe_version": "17.0.0"
+    },
+    {
+      "name": "zapier-platform-cli",
+      "malicious_versions": ["18.0.0"],
+      "safe_version": "17.0.0"
+    },
+    {
+      "name": "zapier-sdk",
+      "malicious_versions": ["0.15.0", "0.15.1"],
+      "safe_version": "0.14.0"
+    },
+    {
+      "name": "@ctrl/tinycolor",
+      "malicious_versions": ["4.2.0"],
+      "safe_version": "4.1.0",
+      "note": "High download count - millions weekly"
+    },
+    {
+      "name": "get-them-args",
+      "malicious_versions": ["1.4.0"],
+      "safe_version": "1.3.0",
+      "prevalence": "14%"
+    },
+    {
+      "name": "shell-exec",
+      "malicious_versions": ["1.0.3"],
+      "safe_version": "1.0.2",
+      "prevalence": "13%"
+    },
+    {
+      "name": "kill-port",
+      "malicious_versions": ["2.0.2"],
+      "safe_version": "2.0.1",
+      "prevalence": "13%"
+    }
+  ],
+  
+  "file_indicators": [
+    "setup_bun.js",
+    "bun_environment.js",
+    ".truffler-cache",
+    ".github/workflows/discussion.yaml"
+  ],
+  
+  "exfiltrated_files": [
+    "cloud.json",
+    "contents.json", 
+    "environment.json",
+    "truffleSecrets.json",
+    "actionsSecrets.json"
+  ],
+  
+  "github_repo_markers": [
+    "Sha1-Hulud: The Second Coming.",
+    "Sha1-Hulud: The Continued Coming.",
+    "Shai-Hulud Migration"
+  ]
+}

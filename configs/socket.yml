@@ -1,0 +1,158 @@
+# Socket.dev Configuration
+# https://github.com/miccy/hunting-worms-guide
+#
+# Dokumentace: https://docs.socket.dev/docs/socket-yml
+#
+# Umísti tento soubor jako .socket.yml do root repozitáře
+
+version: 2
+
+# ===========================================
+# ISSUE RULES
+# ===========================================
+# Definuje akce pro různé typy security issues
+
+issueRules:
+  # Kritické - vždy blokuj
+  criticalCVE:
+    action: error
+  
+  highCVE:
+    action: error
+  
+  mediumCVE:
+    action: warn
+  
+  lowCVE:
+    action: warn
+
+  # Supply chain alerts
+  installScripts:
+    action: error  # 🔴 Kritické pro Shai-Hulud!
+  
+  shellAccess:
+    action: error
+  
+  networkAccess:
+    action: warn
+  
+  envVars:
+    action: warn
+  
+  fsAccess:
+    action: warn
+  
+  # Maintainer changes
+  newAuthor:
+    action: warn
+  
+  unpopular:
+    action: warn
+  
+  deprecated:
+    action: warn
+
+# ===========================================
+# ALERTS
+# ===========================================
+alerts:
+  # Slack webhook (volitelné)
+  # slack:
+  #   webhook: $SOCKET_SLACK_WEBHOOK
+  #   channel: "#security-alerts"
+  
+  # GitHub Issues
+  github:
+    enabled: true
+    labels:
+      - security
+      - socket
+
+# ===========================================
+# IGNORE RULES
+# ===========================================
+# Ignoruj false positives (používej opatrně!)
+
+ignore:
+  # Příklad: ignoruj konkrétní package/issue
+  # - package: "some-package"
+  #   issue: "installScripts"
+  #   reason: "Reviewed and approved by security team"
+  #   expires: "2025-12-31"
+  []
+
+# ===========================================
+# GITHUB APP SETTINGS
+# ===========================================
+githubApp:
+  enabled: true
+  
+  # Blokuj merge pokud jsou issues
+  blockPR: true
+  
+  # Komentuj PR s findings
+  commentOnPR: true
+  
+  # Status checks
+  statusCheck:
+    enabled: true
+    context: "Socket Security"
+
+# ===========================================
+# SCANNING OPTIONS  
+# ===========================================
+scan:
+  # Skenuj tyto package managers
+  packageManagers:
+    - npm
+    - yarn
+    - pnpm
+    - bun
+  
+  # Maximální hloubka dependency tree
+  depth: 10
+  
+  # Skenuj dev dependencies
+  includeDevDependencies: true
+  
+  # Skenuj peer dependencies
+  includePeerDependencies: true
+
+# ===========================================
+# POLICIES
+# ===========================================
+policies:
+  # Vyžaduj license compliance
+  licenses:
+    allow:
+      - MIT
+      - Apache-2.0
+      - BSD-2-Clause
+      - BSD-3-Clause
+      - ISC
+      - 0BSD
+      - CC0-1.0
+      - Unlicense
+    
+    deny:
+      - GPL-3.0
+      - AGPL-3.0
+    
+    # Ostatní license = warn
+    unknown: warn
+
+  # Minimální verze Node.js
+  nodeVersion: ">=18.0.0"
+
+# ===========================================
+# NOTIFICATIONS (pro Team/Enterprise)
+# ===========================================
+# notifications:
+#   email:
+#     recipients:
+#       - security@company.com
+#     frequency: daily
+#   
+#   slack:
+#     webhook: $SLACK_WEBHOOK
+#     frequency: immediate

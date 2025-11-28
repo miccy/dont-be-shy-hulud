@@ -1,0 +1,104 @@
+# ===========================================
+# SECURE .npmrc TEMPLATE
+# ===========================================
+# https://github.com/miccy/hunting-worms-guide
+#
+# Použití:
+# 1. Zkopíruj do projektu jako .npmrc
+# 2. Commitni do git
+# 3. Nastav environment variables pro tokens
+#
+# Pro globální použití: cp .npmrc-secure ~/.npmrc
+
+# ===========================================
+# SECURITY SETTINGS
+# ===========================================
+
+# 🔴 KRITICKÉ: Zakázat lifecycle scripts
+# Chrání proti Shai-Hulud a podobným útokům
+ignore-scripts=true
+
+# Vyžaduj HTTPS
+strict-ssl=true
+
+# Audit settings
+audit=true
+audit-level=high
+
+# ===========================================
+# VERSION CONTROL
+# ===========================================
+
+# Ukládej přesné verze (ne ^semver)
+save-exact=true
+
+# Vždy generuj package-lock.json
+package-lock=true
+
+# ===========================================
+# PERFORMANCE & RELIABILITY
+# ===========================================
+
+# Preferuj offline instalaci
+prefer-offline=true
+
+# Timeout pro registry
+fetch-timeout=60000
+fetch-retries=3
+
+# ===========================================
+# REGISTRY CONFIGURATION
+# ===========================================
+
+# Výchozí registry (npm public)
+registry=https://registry.npmjs.org/
+
+# Příklad: Private registry pro @company scope
+# @company:registry=https://npm.company.com/
+# //npm.company.com/:_authToken=${COMPANY_NPM_TOKEN}
+
+# ===========================================
+# AUTHENTICATION (NECOMMITUJ TOKENY!)
+# ===========================================
+
+# NIKDY neukládej tokeny přímo do souboru!
+# Použij environment variables:
+#
+# //registry.npmjs.org/:_authToken=${NPM_TOKEN}
+#
+# V CI/CD nastav NPM_TOKEN jako secret
+
+# ===========================================
+# ENGINE STRICTNESS
+# ===========================================
+
+# Vyžaduj správnou verzi Node.js
+engine-strict=true
+
+# ===========================================
+# LOGGING
+# ===========================================
+
+# Méně verbose output
+loglevel=warn
+
+# ===========================================
+# FUND/MESSAGES
+# ===========================================
+
+# Vypni fund messages
+fund=false
+
+# ===========================================
+# CI/CD SPECIFIC
+# ===========================================
+
+# Tyto nastavení jsou vhodné pro CI/CD:
+# 
+# # Použij npm ci místo npm install
+# # npm ci --ignore-scripts
+#
+# Environment variables:
+# NPM_CONFIG_IGNORE_SCRIPTS=true
+# NPM_CONFIG_AUDIT_LEVEL=high
+# NPM_CONFIG_FUND=false
