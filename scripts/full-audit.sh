@@ -1,14 +1,14 @@
 #!/bin/bash
 #
-# full-audit.sh - Kompletní security audit pro Shai-Hulud 2.0
+# full-audit.sh - Complete security audit for Shai-Hulud 2.0
 # https://github.com/miccy/dont-be-shy-hulud
 #
-# Použití: ./full-audit.sh [cesta_k_projektům]
+# Usage: ./full-audit.sh [path_to_projects]
 #
 
 set -euo pipefail
 
-# Barvy
+# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -16,7 +16,7 @@ BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
-# Konfigurace
+# Config
 SCAN_PATH="${1:-$HOME/Developer}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 IOC_DIR="$SCRIPT_DIR/../ioc"
@@ -33,12 +33,12 @@ echo "╔═══════════════════════�
 echo "║           SHAI-HULUD 2.0 FULL SECURITY AUDIT                 ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
-echo "Skenuju: $SCAN_PATH"
+echo "Scanning: $SCAN_PATH"
 echo "Report: $REPORT_DIR"
-echo "Datum: $(date)"
+echo "Date: $(date)"
 echo ""
 
-# Vytvoř report directory
+# Create report directory
 mkdir -p "$REPORT_DIR"
 
 # Logging
@@ -75,9 +75,9 @@ log_info() {
 }
 
 # ============================================
-# FÁZE 1: Stažení aktuálních IOC
+# PHASE 1: Download current IOCs
 # ============================================
-echo -e "\n${CYAN}═══ FÁZE 1: Aktualizace IOC databáze ═══${NC}"
+echo -e "\n${CYAN}═══ PHASE 1: Update IOC database ═══${NC}"
 
 IOC_SOURCES=(
     "https://raw.githubusercontent.com/tenable/shai-hulud-second-coming-affected-packages/main/list.json"
@@ -88,100 +88,100 @@ mkdir -p "$REPORT_DIR/ioc"
 
 for url in "${IOC_SOURCES[@]}"; do
     filename=$(basename "$url")
-    log_info "Stahuji IOC: $filename"
+    log_info "Downloading IOC: $filename"
     if curl -sL "$url" -o "$REPORT_DIR/ioc/$filename" 2>/dev/null; then
-        log_ok "Staženo: $filename"
+        log_ok "Downloaded: $filename"
     else
-        log_medium "Nepodařilo se stáhnout: $url"
+        log_medium "Failed to download: $url"
     fi
 done
 
-# Extrahuj package names
+# Extract package names
 if [ -f "$REPORT_DIR/ioc/list.json" ]; then
     jq -r '.[].name // empty' "$REPORT_DIR/ioc/list.json" 2>/dev/null | sort -u > "$REPORT_DIR/ioc/malicious-packages.txt" || true
-    log_info "Extrahováno $(wc -l < "$REPORT_DIR/ioc/malicious-packages.txt" | tr -d ' ') známých malicious packages"
+    log_info "Extracted $(wc -l < "$REPORT_DIR/ioc/malicious-packages.txt" | tr -d ' ') known malicious packages"
 fi
 
 # ============================================
-# FÁZE 2: Kontrola souborového systému
+# PHASE 2: Filesystem Check
 # ============================================
-echo -e "\n${CYAN}═══ FÁZE 2: Kontrola souborového systému ═══${NC}"
+echo -e "\n${CYAN}═══ PHASE 2: Filesystem Check ═══${NC}"
 
-# 2.1 Payload soubory
-log_info "Hledám payload soubory..."
+# 2.1 Payload files
+log_info "Searching for payload files..."
 find "$SCAN_PATH" -maxdepth 15 \
     \( -name "setup_bun.js" -o -name "bun_environment.js" \) \
     -type f 2>/dev/null > "$REPORT_DIR/payload-files.txt" || true
 
 if [ -s "$REPORT_DIR/payload-files.txt" ]; then
     while read -r file; do
-        log_critical "Payload nalezen: $file"
+        log_critical "Payload found: $file"
         
-        # Spočítej hash
+        # Calculate hash
         if command -v shasum &>/dev/null; then
             hash=$(shasum -a 256 "$file" | cut -d' ' -f1)
             echo "  SHA256: $hash" >> "$REPORT_DIR/findings.log"
         fi
     done < "$REPORT_DIR/payload-files.txt"
 else
-    log_ok "Žádné payload soubory nenalezeny"
+    log_ok "No payload files found"
 fi
 
 # 2.2 TruffleHog cache
-log_info "Kontrola .truffler-cache..."
+log_info "Checking .truffler-cache..."
 if [ -d "$HOME/.truffler-cache" ]; then
-    log_critical "~/.truffler-cache existuje!"
+    log_critical "~/.truffler-cache exists!"
     ls -la "$HOME/.truffler-cache" >> "$REPORT_DIR/findings.log" 2>/dev/null
 else
-    log_ok "~/.truffler-cache neexistuje"
+    log_ok "~/.truffler-cache does not exist"
 fi
 
-# 2.3 Podezřelé workflow soubory
-log_info "Hledám podezřelé GitHub workflows..."
+# 2.3 Suspicious workflow files
+log_info "Searching for suspicious GitHub workflows..."
 find "$SCAN_PATH" -path "*/.github/workflows/*.yaml" -o -path "*/.github/workflows/*.yml" 2>/dev/null | \
     xargs grep -l "self-hosted" 2>/dev/null > "$REPORT_DIR/suspicious-workflows.txt" || true
 
 if [ -s "$REPORT_DIR/suspicious-workflows.txt" ]; then
     while read -r file; do
         if grep -q "discussion" "$file" 2>/dev/null; then
-            log_high "Podezřelý workflow (discussion + self-hosted): $file"
+            log_high "Suspicious workflow (discussion + self-hosted): $file"
         else
-            log_low "Self-hosted workflow (review manuálně): $file"
+            log_low "Self-hosted workflow (review manually): $file"
         fi
     done < "$REPORT_DIR/suspicious-workflows.txt"
 else
-    log_ok "Žádné podezřelé workflow soubory"
+    log_ok "No suspicious workflow files"
 fi
 
 # ============================================
-# FÁZE 3: Kontrola závislostí
+# PHASE 3: Dependency Check
 # ============================================
-echo -e "\n${CYAN}═══ FÁZE 3: Kontrola závislostí ═══${NC}"
+echo -e "\n${CYAN}═══ PHASE 3: Dependency Check ═══${NC}"
 
-# 3.1 Hledej package-lock.json a porovnej s IOC
-log_info "Skenuju package-lock.json soubory..."
+# 3.1 Search package-lock.json and compare with IOC
+log_info "Scanning package-lock.json files..."
 
 if [ -f "$REPORT_DIR/ioc/malicious-packages.txt" ]; then
     find "$SCAN_PATH" -name "package-lock.json" -not -path "*/node_modules/*" 2>/dev/null | \
     while read -r lockfile; do
-        log_info "Kontroluji: $lockfile"
+        log_info "Checking: $lockfile"
         
-        # Extrahuj packages z lockfile
+        # Extract packages from lockfile
         jq -r '.packages | keys[]' "$lockfile" 2>/dev/null | \
         sed 's|node_modules/||g' | \
         while read -r pkg; do
             pkg_name=$(echo "$pkg" | sed 's|@[^/]*/||' | cut -d'/' -f1)
             if grep -qF "$pkg_name" "$REPORT_DIR/ioc/malicious-packages.txt" 2>/dev/null; then
-                log_high "Známý malicious package: $pkg_name v $lockfile"
+                log_high "Known malicious package: $pkg_name in $lockfile"
             fi
         done
     done
 else
-    log_medium "IOC seznam není dostupný - přeskakuji kontrolu dependencies"
+    log_medium "IOC list not available - skipping dependency check"
 fi
 
-# 3.2 Kontrola preinstall scripts
-log_info "Hledám podezřelé preinstall scripts..."
+# 3.2 Check preinstall scripts
+log_info "Searching for suspicious preinstall scripts..."
 find "$SCAN_PATH" -name "package.json" -path "*/node_modules/*" -exec \
     grep -l '"preinstall"' {} \; 2>/dev/null > "$REPORT_DIR/preinstall-scripts.txt" || true
 
@@ -194,31 +194,31 @@ if [ -s "$REPORT_DIR/preinstall-scripts.txt" ]; then
 fi
 
 # ============================================
-# FÁZE 4: Kontrola procesů a sítě
+# PHASE 4: Process and Network Check
 # ============================================
-echo -e "\n${CYAN}═══ FÁZE 4: Kontrola procesů a sítě ═══${NC}"
+echo -e "\n${CYAN}═══ PHASE 4: Process and Network Check ═══${NC}"
 
-# 4.1 Běžící procesy
-log_info "Kontrola běžících procesů..."
+# 4.1 Running processes
+log_info "Checking running processes..."
 ps aux > "$REPORT_DIR/processes.txt" 2>/dev/null
 
 if grep -qE "(bun_environment|trufflehog|setup_bun)" "$REPORT_DIR/processes.txt" 2>/dev/null; then
-    log_critical "Podezřelé procesy běží!"
+    log_critical "Suspicious processes running!"
     grep -E "(bun_environment|trufflehog|setup_bun)" "$REPORT_DIR/processes.txt" >> "$REPORT_DIR/findings.log"
 else
-    log_ok "Žádné podezřelé procesy"
+    log_ok "No suspicious processes"
 fi
 
 # 4.2 Network connections
-log_info "Kontrola síťových spojení..."
+log_info "Checking network connections..."
 if command -v lsof &>/dev/null; then
     lsof -i -n > "$REPORT_DIR/network.txt" 2>/dev/null || true
 fi
 
 # ============================================
-# FÁZE 5: Kontrola credentials
+# PHASE 5: Credentials Check
 # ============================================
-echo -e "\n${CYAN}═══ FÁZE 5: Kontrola credentials ═══${NC}"
+echo -e "\n${CYAN}═══ PHASE 5: Credentials Check ═══${NC}"
 
 check_credential_file() {
     local path="$1"
@@ -226,10 +226,10 @@ check_credential_file() {
     local severity="${3:-MEDIUM}"
     
     if [ -f "$path" ]; then
-        log_medium "$name existuje: $path"
-        echo "  Potenciálně kompromitovaný - doporučena rotace" >> "$REPORT_DIR/findings.log"
+        log_medium "$name exists: $path"
+        echo "  Potentially compromised - rotation recommended" >> "$REPORT_DIR/findings.log"
     elif [ -d "$path" ]; then
-        log_medium "$name adresář existuje: $path"
+        log_medium "$name directory exists: $path"
     fi
 }
 
@@ -243,28 +243,28 @@ check_credential_file "$HOME/.ssh/id_rsa" "SSH private key"
 check_credential_file "$HOME/.ssh/id_ed25519" "SSH private key (ed25519)"
 
 # ============================================
-# FÁZE 6: GitHub kontrola
+# PHASE 6: GitHub Check
 # ============================================
-echo -e "\n${CYAN}═══ FÁZE 6: GitHub kontrola ═══${NC}"
+echo -e "\n${CYAN}═══ PHASE 6: GitHub Check ═══${NC}"
 
 if command -v gh &>/dev/null && gh auth status &>/dev/null 2>&1; then
-    log_info "Kontrola GitHub repos..."
+    log_info "Checking GitHub repos..."
     
-    # Hledej Shai-Hulud repos
+    # Search Shai-Hulud repos
     gh repo list --limit 500 --json name,description,createdAt 2>/dev/null | \
         jq -r '.[] | select(.description != null) | select(.description | test("hulud|Hulud"; "i")) | 
         "REPO: \(.name) | CREATED: \(.createdAt) | DESC: \(.description)"' > "$REPORT_DIR/hulud-repos.txt" || true
     
     if [ -s "$REPORT_DIR/hulud-repos.txt" ]; then
         while read -r line; do
-            log_critical "Shai-Hulud repo nalezen: $line"
+            log_critical "Shai-Hulud repo found: $line"
         done < "$REPORT_DIR/hulud-repos.txt"
     else
-        log_ok "Žádné Shai-Hulud repos"
+        log_ok "No Shai-Hulud repos"
     fi
     
-    # Kontrola nedávných repos
-    log_info "Kontrola nedávno vytvořených repos..."
+    # Check recent repos
+    log_info "Checking recently created repos..."
     WEEK_AGO=$(date -v-7d +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -d "7 days ago" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null)
     
     gh repo list --limit 100 --json name,createdAt,description 2>/dev/null | \
@@ -272,17 +272,17 @@ if command -v gh &>/dev/null && gh auth status &>/dev/null 2>&1; then
         "\(.name) | \(.createdAt)"' > "$REPORT_DIR/recent-repos.txt" || true
     
     if [ -s "$REPORT_DIR/recent-repos.txt" ]; then
-        log_info "Nedávno vytvořené repos (review manuálně):"
+        log_info "Recently created repos (review manually):"
         cat "$REPORT_DIR/recent-repos.txt"
     fi
 else
-    log_info "gh CLI není dostupné - přeskakuji GitHub kontrolu"
+    log_info "gh CLI not available - skipping GitHub check"
 fi
 
 # ============================================
-# FÁZE 7: npm kontrola
+# PHASE 7: npm Check
 # ============================================
-echo -e "\n${CYAN}═══ FÁZE 7: npm kontrola ═══${NC}"
+echo -e "\n${CYAN}═══ PHASE 7: npm Check ═══${NC}"
 
 if command -v npm &>/dev/null; then
     # npm whoami
@@ -290,21 +290,21 @@ if command -v npm &>/dev/null; then
         NPM_USER=$(npm whoami 2>/dev/null)
         log_info "npm user: $NPM_USER"
         
-        # Kontrola publikovaných packages
-        log_info "Kontrola publikovaných packages..."
+        # Check published packages
+        log_info "Checking published packages..."
         npm access ls-packages 2>/dev/null > "$REPORT_DIR/npm-packages.txt" || true
         
         if [ -s "$REPORT_DIR/npm-packages.txt" ]; then
-            log_info "Tvoje packages:"
+            log_info "Your packages:"
             cat "$REPORT_DIR/npm-packages.txt"
-            log_medium "Doporučení: Zkontroluj nedávné publikace těchto packages"
+            log_medium "Recommendation: Check recent publications of these packages"
         fi
     else
-        log_info "npm není autentizováno"
+        log_info "npm is not authenticated"
     fi
     
     # npm audit
-    log_info "Spouštím npm audit v dostupných projektech..."
+    log_info "Running npm audit in available projects..."
     find "$SCAN_PATH" -name "package.json" -not -path "*/node_modules/*" -maxdepth 5 2>/dev/null | \
     head -10 | while read -r pkg; do
         dir=$(dirname "$pkg")
@@ -314,21 +314,21 @@ if command -v npm &>/dev/null; then
             read -r high_vulns || high_vulns=0
             
             if [ "$high_vulns" != "0" ] && [ -n "$high_vulns" ]; then
-                log_high "npm audit: $high_vulns high vulnerabilities v $dir"
+                log_high "npm audit: $high_vulns high vulnerabilities in $dir"
             fi
         fi
     done
 else
-    log_info "npm není nainstalováno"
+    log_info "npm is not installed"
 fi
 
 # ============================================
-# SHRNUTÍ
+# SUMMARY
 # ============================================
 echo ""
 echo -e "${CYAN}"
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║                      SHRNUTÍ AUDITU                          ║"
+echo "║                      AUDIT SUMMARY                           ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
@@ -337,25 +337,25 @@ echo -e "High:     ${RED}$HIGH${NC}"
 echo -e "Medium:   ${YELLOW}$MEDIUM${NC}"
 echo -e "Low:      ${YELLOW}$LOW${NC}"
 echo ""
-echo "Report uložen: $REPORT_DIR"
+echo "Report saved: $REPORT_DIR"
 echo ""
 
 if [ $CRITICAL -gt 0 ] || [ $HIGH -gt 0 ]; then
-    echo -e "${RED}⚠️  POZOR: Nalezeny kritické nebo vysoké nálezy!${NC}"
+    echo -e "${RED}⚠️  WARNING: Critical or high findings detected!${NC}"
     echo ""
-    echo "Okamžité kroky:"
-    echo "1. Izoluj systém od sítě"
-    echo "2. Prostuduj $REPORT_DIR/findings.log"
-    echo "3. Následuj docs/REMEDIATION.md"
-    echo "4. Rotuj VŠECHNY credentials"
+    echo "Immediate actions:"
+    echo "1. Isolate system from network"
+    echo "2. Review $REPORT_DIR/findings.log"
+    echo "3. Follow docs/REMEDIATION.md"
+    echo "4. Rotate ALL credentials"
 elif [ $MEDIUM -gt 0 ]; then
-    echo -e "${YELLOW}⚠️  Nalezeny střední nálezy - doporučena review${NC}"
+    echo -e "${YELLOW}⚠️  Medium findings detected - review recommended${NC}"
 else
-    echo -e "${GREEN}✅ Žádné významné nálezy${NC}"
-    echo "Doporučení: Zkontroluj docs/PREVENTION.md pro hardening"
+    echo -e "${GREEN}✅ No significant findings${NC}"
+    echo "Recommendation: Check docs/PREVENTION.md for hardening"
 fi
 
-# Generuj HTML report
+# Generate HTML report
 echo "
 <!DOCTYPE html>
 <html>

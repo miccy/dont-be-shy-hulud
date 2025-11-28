@@ -1,14 +1,14 @@
 #!/bin/bash
 #
-# harden-npm.sh - Hardening npm a bun konfigurace
+# harden-npm.sh - Hardening npm and bun configuration
 # https://github.com/miccy/dont-be-shy-hulud
 #
-# Použití: ./harden-npm.sh [--apply]
+# Usage: ./harden-npm.sh [--apply]
 #
 
 set -euo pipefail
 
-# Barvy
+# Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -26,14 +26,14 @@ echo "============================="
 echo ""
 
 if [ "$APPLY_MODE" = true ]; then
-    echo -e "${GREEN}Režim: APPLY (provádím změny)${NC}"
+    echo -e "${GREEN}Mode: APPLY (making changes)${NC}"
 else
-    echo -e "${YELLOW}Režim: DRY-RUN (pouze zobrazuji co by se změnilo)${NC}"
-    echo "Pro aplikaci změn spusť: $0 --apply"
+    echo -e "${YELLOW}Mode: DRY-RUN (only showing what would change)${NC}"
+    echo "To apply changes run: $0 --apply"
 fi
 echo ""
 
-# Funkce
+# Functions
 apply_setting() {
     local cmd="$1"
     local desc="$2"
@@ -41,9 +41,9 @@ apply_setting() {
     echo -e "${BLUE}→ $desc${NC}"
     if [ "$APPLY_MODE" = true ]; then
         eval "$cmd"
-        echo -e "${GREEN}  ✓ Aplikováno${NC}"
+        echo -e "${GREEN}  ✓ Applied${NC}"
     else
-        echo "  Příkaz: $cmd"
+        echo "  Command: $cmd"
     fi
 }
 
@@ -53,21 +53,21 @@ backup_file() {
         local backup="${file}.backup.$(date +%Y%m%d%H%M%S)"
         if [ "$APPLY_MODE" = true ]; then
             cp "$file" "$backup"
-            echo -e "${GREEN}  Záloha: $backup${NC}"
+            echo -e "${GREEN}  Backup: $backup${NC}"
         else
-            echo "  Záloha by byla: $backup"
+            echo "  Backup would be: $backup"
         fi
     fi
 }
 
 # ============================================
-# 1. npm konfigurace
+# 1. npm configuration
 # ============================================
-echo -e "\n${YELLOW}[1/5] npm konfigurace${NC}"
+echo -e "\n${YELLOW}[1/5] npm configuration${NC}"
 
-# Backup existující .npmrc
+# Backup existing .npmrc
 if [ -f "$HOME/.npmrc" ]; then
-    echo "Existující ~/.npmrc:"
+    echo "Existing ~/.npmrc:"
     cat "$HOME/.npmrc"
     backup_file "$HOME/.npmrc"
 fi
@@ -77,18 +77,18 @@ echo ""
 apply_setting "npm config set ignore-scripts true" "Disable lifecycle scripts (ignore-scripts=true)"
 
 # audit-level
-apply_setting "npm config set audit-level high" "Nastav audit-level na high"
+apply_setting "npm config set audit-level high" "Set audit-level to high"
 
 # save-exact
-apply_setting "npm config set save-exact true" "Ukládej přesné verze (save-exact=true)"
+apply_setting "npm config set save-exact true" "Save exact versions (save-exact=true)"
 
 # prefer-offline
-apply_setting "npm config set prefer-offline true" "Preferuj offline instalaci"
+apply_setting "npm config set prefer-offline true" "Prefer offline installation"
 
 # ============================================
-# 2. Projektová .npmrc template
+# 2. Project .npmrc template
 # ============================================
-echo -e "\n${YELLOW}[2/5] Projektová .npmrc template${NC}"
+echo -e "\n${YELLOW}[2/5] Project .npmrc template${NC}"
 
 NPMRC_TEMPLATE='# Shai-Hulud hardened .npmrc
 # https://github.com/miccy/dont-be-shy-hulud
@@ -113,23 +113,23 @@ prefer-offline=true
 package-lock=true
 '
 
-echo "Template pro .npmrc v projektech:"
+echo "Template for .npmrc in projects:"
 echo "---"
 echo "$NPMRC_TEMPLATE"
 echo "---"
 
 if [ "$APPLY_MODE" = true ]; then
     echo "$NPMRC_TEMPLATE" > "$HOME/.npmrc-hardened-template"
-    echo -e "${GREEN}Template uložen: ~/.npmrc-hardened-template${NC}"
+    echo -e "${GREEN}Template saved: ~/.npmrc-hardened-template${NC}"
 fi
 
 # ============================================
-# 3. bun konfigurace
+# 3. bun configuration
 # ============================================
-echo -e "\n${YELLOW}[3/5] bun konfigurace${NC}"
+echo -e "\n${YELLOW}[3/5] bun configuration${NC}"
 
 if command -v bun &>/dev/null; then
-    echo "bun verze: $(bun --version)"
+    echo "bun version: $(bun --version)"
     
     # bunfig.toml template
     BUNFIG_TEMPLATE='# Shai-Hulud hardened bunfig.toml
@@ -146,35 +146,35 @@ exact = true
 frozen_lockfile = true
 
 [install.scopes]
-# Příklad: private registry pro @company scope
+# Example: private registry for @company scope
 # "@company" = { url = "https://npm.company.com", token = "$COMPANY_NPM_TOKEN" }
 '
 
-    echo "Template pro bunfig.toml:"
+    echo "Template for bunfig.toml:"
     echo "---"
     echo "$BUNFIG_TEMPLATE"
     echo "---"
     
     if [ "$APPLY_MODE" = true ]; then
         echo "$BUNFIG_TEMPLATE" > "$HOME/.bunfig-hardened-template.toml"
-        echo -e "${GREEN}Template uložen: ~/.bunfig-hardened-template.toml${NC}"
+        echo -e "${GREEN}Template saved: ~/.bunfig-hardened-template.toml${NC}"
     fi
 else
-    echo "bun není nainstalován - přeskakuji"
+    echo "bun is not installed - skipping"
 fi
 
 # ============================================
-# 4. Git hooks pro audit
+# 4. Git hooks for audit
 # ============================================
 echo -e "\n${YELLOW}[4/5] Git pre-commit hook template${NC}"
 
 PRECOMMIT_HOOK='#!/bin/bash
-# Pre-commit hook pro security audit
-# Instalace: cp tento soubor do .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+# Pre-commit hook for security audit
+# Install: cp this file to .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
 
-# Kontrola package.json změn
+# Check package.json changes
 if git diff --cached --name-only | grep -q "package.json\|package-lock.json\|bun.lockb"; then
-    echo "📦 Detekována změna v dependencies..."
+    echo "📦 Detected changes in dependencies..."
     
     # npm audit
     if [ -f "package-lock.json" ]; then
@@ -185,7 +185,7 @@ if git diff --cached --name-only | grep -q "package.json\|package-lock.json\|bun
         fi
     fi
     
-    # Socket.dev scan (pokud je nainstalován)
+    # Socket.dev scan (if installed)
     if command -v socket &>/dev/null; then
         echo "Running Socket.dev scan..."
         if ! socket scan .; then
@@ -197,7 +197,7 @@ fi
 exit 0
 '
 
-echo "Template pro .git/hooks/pre-commit:"
+echo "Template for .git/hooks/pre-commit:"
 echo "---"
 echo "$PRECOMMIT_HOOK"
 echo "---"
@@ -205,7 +205,7 @@ echo "---"
 if [ "$APPLY_MODE" = true ]; then
     echo "$PRECOMMIT_HOOK" > "$HOME/.git-precommit-audit-template"
     chmod +x "$HOME/.git-precommit-audit-template"
-    echo -e "${GREEN}Template uložen: ~/.git-precommit-audit-template${NC}"
+    echo -e "${GREEN}Template saved: ~/.git-precommit-audit-template${NC}"
 fi
 
 # ============================================
@@ -213,7 +213,7 @@ fi
 # ============================================
 echo -e "\n${YELLOW}[5/5] CI/CD environment variables${NC}"
 
-echo "Doporučené env vars pro CI/CD:"
+echo "Recommended env vars for CI/CD:"
 echo ""
 echo "# npm"
 echo "export NPM_CONFIG_IGNORE_SCRIPTS=true"
@@ -227,26 +227,26 @@ echo "export NODE_OPTIONS=\"--disallow-code-generation-from-strings\""
 echo ""
 
 # ============================================
-# Shrnutí
+# Summary
 # ============================================
 echo ""
 echo "============================="
 if [ "$APPLY_MODE" = true ]; then
-    echo -e "${GREEN}✅ Hardening dokončen!${NC}"
+    echo -e "${GREEN}✅ Hardening completed!${NC}"
     echo ""
-    echo "Změny provedeny:"
-    echo "- npm config aktualizován"
-    echo "- Templates uloženy v ~/"
+    echo "Changes made:"
+    echo "- npm config updated"
+    echo "- Templates saved in ~/"
     echo ""
-    echo "Další kroky:"
-    echo "1. Zkopíruj ~/.npmrc-hardened-template do svých projektů jako .npmrc"
-    echo "2. Zkopíruj ~/.bunfig-hardened-template.toml do projektů jako bunfig.toml"
-    echo "3. Nastav git hooks pomocí ~/.git-precommit-audit-template"
+    echo "Next steps:"
+    echo "1. Copy ~/.npmrc-hardened-template to your projects as .npmrc"
+    echo "2. Copy ~/.bunfig-hardened-template.toml to projects as bunfig.toml"
+    echo "3. Set up git hooks using ~/.git-precommit-audit-template"
 else
-    echo -e "${YELLOW}Dry-run dokončen.${NC}"
-    echo "Pro aplikaci změn spusť: $0 --apply"
+    echo -e "${YELLOW}Dry-run completed.${NC}"
+    echo "To apply changes run: $0 --apply"
 fi
 
 echo ""
-echo "Aktuální npm config:"
+echo "Current npm config:"
 npm config list 2>/dev/null || true

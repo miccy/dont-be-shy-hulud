@@ -148,7 +148,7 @@ For full list, see [IOC Lists](#ioc-lists).
 npm token revoke $(npm token ls --json | jq -r '.[].key')
 
 # 5. Rotate credentials
-# See: docs/credential-rotation.md
+# See: docs/en/REMEDIATION.md
 ```
 
 ### 🟠 Preventive (Not Yet Confirmed Compromised)
@@ -202,7 +202,7 @@ jobs:
 
 ## Remediation Guide
 
-See [docs/remediation.md](docs/remediation.md) for detailed steps.
+See [docs/en/REMEDIATION.md](docs/en/REMEDIATION.md) for detailed steps.
 
 ### Quick Remediation
 
@@ -243,7 +243,7 @@ See [configs/renovate-secure.json](configs/renovate-secure.json) for a hardened 
 
 ### GitHub Settings
 
-See [docs/github-hardening.md](docs/github-hardening.md) for:
+See [docs/en/GITHUB-HARDENING.md](docs/en/GITHUB-HARDENING.md) for:
 - Branch protection rules
 - Actions security settings
 - Secret scanning configuration
@@ -261,7 +261,7 @@ See [configs/dependabot.yml](configs/dependabot.yml) for secure settings.
 
 ### GitHub Actions
 
-See [configs/actions-permissions.md](configs/actions-permissions.md) for lockdown guide.
+See [docs/en/GITHUB-HARDENING.md](docs/en/GITHUB-HARDENING.md) for lockdown guide.
 
 ## IOC Lists
 

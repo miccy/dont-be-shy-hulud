@@ -1,0 +1,44 @@
+{
+  "name": "shai-hulud-remediation",
+  "description": "Guided remediation workflow for Shai-Hulud 2.0. Helps with credential rotation, cleaning infected packages, and system recovery.",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "rotate_credentials",
+      "description": "Guides the user through rotating compromised credentials",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "service": {
+            "type": "string",
+            "description": "Service to rotate credentials for (e.g., github, npm)"
+          }
+        }
+      }
+    },
+    {
+      "name": "clean_packages",
+      "description": "Removes infected packages and reinstalls clean versions",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "package_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "verify_cleanup",
+      "description": "Verifies that the system is clean after remediation steps",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  ],
+  "instruction": "If detection was positive, proceed with remediation. Ask the user which credentials need rotation. Clean any identified infected packages. Finally, run the verification tool to ensure the system is clean."
+}

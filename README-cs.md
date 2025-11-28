@@ -59,7 +59,7 @@ chmod +x scripts/*.sh
 **Exfiltrované soubory:**
 - `cloud.json`, `contents.json`, `environment.json`, `truffleSecrets.json`
 
-➡️ [Podrobná analýza](docs/THREAT-OVERVIEW.md)
+➡️ [Podrobná analýza](docs/cs/THREAT-OVERVIEW.md)
 
 ## 🔍 Detekce
 
@@ -85,7 +85,7 @@ gh repo list --json name,description | jq '.[] | select(.description | contains(
 ./scripts/full-audit.sh
 ```
 
-➡️ [Kompletní detekční guide](docs/DETECTION.md)
+➡️ [Kompletní detekční guide](docs/cs/DETECTION.md)
 
 ## 🔧 Remediation
 
@@ -108,7 +108,7 @@ bun pm cache rm
 npm install --ignore-scripts
 ```
 
-➡️ [Kompletní remediation guide](docs/REMEDIATION.md)
+➡️ [Kompletní remediation guide](docs/cs/REMEDIATION.md)
 
 ## 🛡️ Prevence
 
@@ -132,7 +132,7 @@ npm config set ignore-scripts true
 echo "ignore-scripts=true" >> .npmrc
 ```
 
-➡️ [Kompletní prevention guide](docs/PREVENTION.md)
+➡️ [Kompletní prevention guide](docs/cs/PREVENTION.md)
 
 ## 🔧 Common Issues
 
@@ -145,7 +145,7 @@ echo "ignore-scripts=true" >> .npmrc
 | `unstableOwnership` | Změna maintainera | Často false positive (Google, Biome) |
 | `obfuscatedFile` | Minifikovaný kód | Ověř na npm/GitHub |
 
-➡️ [Kompletní common issues guide](docs/COMMON-ISSUES.md)
+➡️ [Kompletní common issues guide](docs/cs/COMMON-ISSUES.md)
 
 ## 📈 Case Study
 
@@ -156,7 +156,7 @@ Praktický příklad analýzy 78 alertů ze Socket.dev:
 - Čas na analýzu: 30 minut
 - Čas na opravu: 10 minut
 
-➡️ [Kompletní case study](docs/CASE-STUDY-SOCKET-ANALYSIS.md)
+➡️ [Kompletní case study](docs/cs/CASE-STUDY-SOCKET-ANALYSIS.md)
 
 ## 📜 Scripty
 

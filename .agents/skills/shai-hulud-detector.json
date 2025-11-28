@@ -1,0 +1,43 @@
+{
+  "name": "shai-hulud-detector",
+  "description": "Automated detection skill for Shai-Hulud 2.0 compromise. Scans for IOC files, checks running processes, verifies credentials exposure, scans GitHub repos, and checks workflows.",
+  "version": "1.0.0",
+  "tools": [
+    {
+      "name": "scan_iocs",
+      "description": "Scans the filesystem for known Shai-Hulud IOC files like setup_bun.js and bun_environment.js",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Root path to scan"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "check_processes",
+      "description": "Checks for suspicious running processes related to Shai-Hulud",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    },
+    {
+      "name": "scan_github_workflows",
+      "description": "Checks GitHub workflow files for malicious modifications",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "repo_path": {
+            "type": "string",
+            "description": "Path to the repository"
+          }
+        }
+      }
+    }
+  ],
+  "instruction": "Use the provided tools to scan the system. Start by scanning for IOC files in the current workspace. Then check running processes. Check GitHub workflows for anomalies. Finally, report any findings."
+}
