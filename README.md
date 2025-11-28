@@ -2,7 +2,7 @@
 
 ![Don't Be Shy, Hulud Banner](assets/banner.png)
 
-> **Incident Response & Protection Guide for npm Supply Chain Attacks**  
+> **Incident Response & Protection Guide for npm Supply Chain Attacks**
 > Defense guide for detection & remediation against npm supply-chain worms | Shai-Hulud 2.0 (November 2025) and future threats
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

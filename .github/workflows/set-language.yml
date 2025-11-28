@@ -1,0 +1,32 @@
+name: Set Repository Language
+
+on:
+  workflow_dispatch:
+    inputs:
+      language:
+        description: 'Language to keep (en = English only, cs = Czech only)'
+        required: true
+        default: 'en'
+        type: choice
+        options:
+        - en
+        - cs
+
+jobs:
+  set-language:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run language setup script
+        run: |
+          chmod +x scripts/set-language.sh
+          ./scripts/set-language.sh ${{ inputs.language }}
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: set repository language to ${{ inputs.language }}"
+          file_pattern: '.'

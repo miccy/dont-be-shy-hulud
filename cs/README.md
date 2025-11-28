@@ -1,8 +1,8 @@
 # 🪱 Don't Be Shy, Hulud
 
-![Don't Be Shy, Hulud Banner](assets/banner.png)
+![Don't Be Shy, Hulud Banner](../assets/banner.png)
 
-> **Praktický průvodce detekcí a ochranou proti npm supply-chain útokům**  
+> **Praktický průvodce detekcí a ochranou proti npm supply-chain útokům**
 > Zaměřeno na Shai-Hulud 2.0 (listopad 2025) a podobné hrozby
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -61,7 +61,7 @@ chmod +x scripts/*.sh
 **Exfiltrované soubory:**
 - `cloud.json`, `contents.json`, `environment.json`, `truffleSecrets.json`
 
-➡️ [Podrobná analýza](docs/cs/THREAT-OVERVIEW.md)
+➡️ [Podrobná analýza](docs/THREAT-OVERVIEW.md)
 
 ## 🔍 Detekce
 
@@ -87,7 +87,7 @@ gh repo list --json name,description | jq '.[] | select(.description | contains(
 ./scripts/full-audit.sh
 ```
 
-➡️ [Kompletní detekční guide](docs/cs/DETECTION.md)
+➡️ [Kompletní detekční guide](docs/DETECTION.md)
 
 ## 🔧 Remediation
 
@@ -110,7 +110,7 @@ bun pm cache rm
 npm install --ignore-scripts
 ```
 
-➡️ [Kompletní remediation guide](docs/cs/REMEDIATION.md)
+➡️ [Kompletní remediation guide](docs/REMEDIATION.md)
 
 ## 🛡️ Prevence
 
@@ -134,7 +134,7 @@ npm config set ignore-scripts true
 echo "ignore-scripts=true" >> .npmrc
 ```
 
-➡️ [Kompletní prevention guide](docs/cs/PREVENTION.md)
+➡️ [Kompletní prevention guide](docs/PREVENTION.md)
 
 ## 🔧 Common Issues
 
@@ -147,7 +147,7 @@ echo "ignore-scripts=true" >> .npmrc
 | `unstableOwnership` | Změna maintainera | Často false positive (Google, Biome) |
 | `obfuscatedFile` | Minifikovaný kód | Ověř na npm/GitHub |
 
-➡️ [Kompletní common issues guide](docs/cs/COMMON-ISSUES.md)
+➡️ [Kompletní common issues guide](docs/COMMON-ISSUES.md)
 
 ## 📈 Case Study
 
@@ -158,35 +158,35 @@ Praktický příklad analýzy 78 alertů ze Socket.dev:
 - Čas na analýzu: 30 minut
 - Čas na opravu: 10 minut
 
-➡️ [Kompletní case study](docs/cs/CASE-STUDY-SOCKET-ANALYSIS.md)
+➡️ [Kompletní case study](docs/CASE-STUDY-SOCKET-ANALYSIS.md)
 
 ## 📜 Scripty
 
 | Script | Účel |
 |--------|------|
-| [`quick-audit.sh`](scripts/quick-audit.sh) | Rychlý security audit (5 min) |
-| [`full-audit.sh`](scripts/full-audit.sh) | Kompletní audit s IOC skenováním |
-| [`scan-node-modules.sh`](scripts/scan-node-modules.sh) | Skenování node_modules ve všech projektech |
-| [`check-github-repos.sh`](scripts/check-github-repos.sh) | Kontrola GitHub repos na kompromitaci |
-| [`rotate-credentials.sh`](scripts/rotate-credentials.sh) | Asistovaná rotace credentials |
-| [`harden-npm.sh`](scripts/harden-npm.sh) | Hardening npm/bun konfigurace |
+| [`quick-audit.sh`](../scripts/quick-audit.sh) | Rychlý security audit (5 min) |
+| [`full-audit.sh`](../scripts/full-audit.sh) | Kompletní audit s IOC skenováním |
+| [`scan-node-modules.sh`](../scripts/scan-node-modules.sh) | Skenování node_modules ve všech projektech |
+| [`check-github-repos.sh`](../scripts/check-github-repos.sh) | Kontrola GitHub repos na kompromitaci |
+| [`rotate-credentials.sh`](../scripts/rotate-credentials.sh) | Asistovaná rotace credentials |
+| [`harden-npm.sh`](../scripts/harden-npm.sh) | Hardening npm/bun konfigurace |
 
 ## ⚙️ Konfigurace
 
 | Soubor | Účel |
 |--------|------|
-| [`renovate-lockdown.json`](configs/renovate-lockdown.json) | Renovate config pro krizový lockdown |
-| [`renovate-hardened.json`](configs/renovate-hardened.json) | Renovate config pro běžný provoz |
-| [`socket.yml`](configs/socket.yml) | Socket.dev konfigurace |
-| [`.npmrc-secure`](configs/.npmrc-secure) | Bezpečná .npmrc template |
+| [`renovate-lockdown.json`](../configs/renovate-lockdown.json) | Renovate config pro krizový lockdown |
+| [`renovate-hardened.json`](../configs/renovate-hardened.json) | Renovate config pro běžný provoz |
+| [`socket.yml`](../configs/socket.yml) | Socket.dev konfigurace |
+| [`.npmrc-secure`](../configs/.npmrc-secure) | Bezpečná .npmrc template |
 
 ## 📊 IOC databáze
 
 Aktualizované seznamy IOC (Indicators of Compromise):
 
-- [`malicious-packages.json`](ioc/malicious-packages.json) – Seznam kompromitovaných packages
-- [`malicious-hashes.json`](ioc/malicious-hashes.json) – SHA hashes malicious payloads
-- [`github-repos.json`](ioc/github-repos.json) – Známé exfiltration repos
+- [`malicious-packages.json`](../ioc/malicious-packages.json) – Seznam kompromitovaných packages
+- [`malicious-hashes.json`](../ioc/malicious-hashes.json) – SHA hashes malicious payloads
+- [`github-repos.json`](../ioc/github-repos.json) – Známé exfiltration repos
 
 **Zdroje IOC:**
 - [Tenable IOC List](https://github.com/tenable/shai-hulud-second-coming-affected-packages)
@@ -213,7 +213,7 @@ PRs jsou vítány! Zejména:
 
 ## 📄 License
 
-MIT – viz [LICENSE](LICENSE)
+MIT – viz [LICENSE](../LICENSE)
 
 ---
 

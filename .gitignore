@@ -4,7 +4,7 @@ Thumbs.db
 
 # Editor
 .idea/
-.vscode/
+# .vscode/
 *.swp
 *.swo
 *~
@@ -28,3 +28,7 @@ npm-debug.log*
 *.pem
 *.key
 credentials.json
+
+# Agents
+.agents/task.md
+.agents/implementation_plan.md
