@@ -1,0 +1,121 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Hardened Renovate config for npm supply chain attack protection",
+  
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":pinAllExceptPeerDependencies"
+  ],
+
+  "timezone": "Europe/Prague",
+  "schedule": ["before 6am on monday"],
+
+  "stabilityDays": 7,
+  "prCreation": "not-pending",
+  "rebaseWhen": "behind-base-branch",
+  "prConcurrentLimit": 2,
+
+  "lockFileMaintenance": {
+    "enabled": false,
+    "description": "Disabled during supply chain crisis"
+  },
+
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "critical", "supply-chain"],
+    "prPriority": 10
+  },
+
+  "packageRules": [
+    {
+      "description": "🔴 CRITICAL: Disable automerge for ALL npm packages during supply chain crisis",
+      "matchManagers": ["npm", "bun"],
+      "automerge": false,
+      "prPriority": -10,
+      "labels": ["npm", "security-review-required"],
+      "reviewers": ["team:security"],
+      "assignees": ["miccy"]
+    },
+    {
+      "description": "Block known compromised package namespaces",
+      "matchPackagePatterns": [
+        "^@asyncapi/",
+        "^@postman/",
+        "^@posthog/",
+        "^@zapier/",
+        "^@ensdomains/",
+        "^posthog-",
+        "^zapier-"
+      ],
+      "enabled": false,
+      "description": "Temporarily disabled - manually verify before re-enabling"
+    },
+    {
+      "description": "GitHub Actions - keep automerge but pin to SHA",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+      "automerge": true,
+      "automergeType": "pr",
+      "schedule": ["at any time"]
+    },
+    {
+      "description": "Docker - manual review for base images",
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "automerge": false,
+      "labels": ["docker", "security-review"],
+      "prPriority": 5
+    },
+    {
+      "description": "Rust/Cargo - safer ecosystem, allow automerge for patch",
+      "matchManagers": ["cargo"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    },
+    {
+      "description": "Nix - safer ecosystem",
+      "matchManagers": ["nix"],
+      "automerge": true,
+      "groupName": "nix dependencies"
+    },
+    {
+      "description": "Dev tooling - manual review during crisis",
+      "matchDepTypes": ["devDependencies"],
+      "matchManagers": ["npm", "bun"],
+      "automerge": false,
+      "labels": ["dev-deps"]
+    },
+    {
+      "description": "Major updates - always manual",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["major-update"],
+      "prPriority": -5
+    }
+  ],
+
+  "ignoreDeps": [
+    "@asyncapi/specs",
+    "@postman/tunnel-agent",
+    "comment": "Add any packages you want to permanently ignore"
+  ],
+
+  "postUpdateOptions": [
+    "npmDedupe",
+    "yarnDedupeFewer"
+  ],
+
+  "npmrc": "ignore-scripts=true",
+
+  "commitMessagePrefix": "🔒 ",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}}",
+
+  "prBodyNotes": [
+    "⚠️ **Security Notice**: This PR was created during an active npm supply chain attack (Shai-Hulud 2.0).",
+    "Please verify the package has not been compromised before merging.",
+    "Check: https://socket.dev/npm/package/{{depName}}"
+  ],
+
+  "labels": ["dependencies", "security-review"]
+}

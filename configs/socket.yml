@@ -1,158 +1,176 @@
 # Socket.dev Configuration
-# https://github.com/miccy/hunting-worms-guide
+# https://socket.dev/docs/configuration
 #
-# Dokumentace: https://docs.socket.dev/docs/socket-yml
-#
-# Umísti tento soubor jako .socket.yml do root repozitáře
+# Recommended settings for protection against Shai-Hulud 2.0 and similar attacks
+# Place this file in the root of your repository as .socket.yml
 
 version: 2
 
-# ===========================================
-# ISSUE RULES
-# ===========================================
-# Definuje akce pro různé typy security issues
+# =============================================================================
+# Issue Rules - Block or warn on risky behaviors
+# =============================================================================
 
 issueRules:
-  # Kritické - vždy blokuj
-  criticalCVE:
-    action: error
-  
-  highCVE:
-    action: error
-  
-  mediumCVE:
-    action: warn
-  
-  lowCVE:
-    action: warn
-
-  # Supply chain alerts
+  # 🔴 CRITICAL: Block these behaviors (Shai-Hulud attack vectors)
   installScripts:
-    action: error  # 🔴 Kritické pro Shai-Hulud!
+    action: error
+    comment: "Install scripts are the primary vector for Shai-Hulud 2.0"
   
   shellAccess:
     action: error
+    comment: "Shell access can be used for credential theft"
   
   networkAccess:
-    action: warn
+    action: error
+    comment: "Network access enables exfiltration"
   
   envVars:
-    action: warn
+    action: error
+    comment: "Environment variable access can steal credentials"
   
-  fsAccess:
-    action: warn
+  filesystemAccess:
+    action: error
+    comment: "Filesystem access can read ~/.npmrc, ~/.aws/credentials"
   
-  # Maintainer changes
+  binaryExecution:
+    action: error
+    comment: "Binary execution can run malicious payloads"
+
+  # 🟠 HIGH: Warn and require review
   newAuthor:
     action: warn
+    comment: "New package author - verify legitimacy"
   
-  unpopular:
+  criticalSeverity:
+    action: error
+  
+  highSeverity:
     action: warn
   
+  malware:
+    action: error
+  
+  protestware:
+    action: error
+  
+  potentialVulnerability:
+    action: warn
+
+  # 🟡 MEDIUM: Monitor these
+  typeModuleNotExportsResolution:
+    action: warn
+  
+  obfuscatedCode:
+    action: warn
+    comment: "Shai-Hulud uses heavily obfuscated code"
+  
+  suspiciousString:
+    action: warn
+  
+  unmaintained:
+    action: warn
+
+  # 🟢 LOW: Informational
   deprecated:
     action: warn
-
-# ===========================================
-# ALERTS
-# ===========================================
-alerts:
-  # Slack webhook (volitelné)
-  # slack:
-  #   webhook: $SOCKET_SLACK_WEBHOOK
-  #   channel: "#security-alerts"
   
-  # GitHub Issues
-  github:
-    enabled: true
-    labels:
-      - security
-      - socket
+  noLicense:
+    action: warn
 
-# ===========================================
-# IGNORE RULES
-# ===========================================
-# Ignoruj false positives (používej opatrně!)
+# =============================================================================
+# Package Rules - Specific package overrides
+# =============================================================================
 
-ignore:
-  # Příklad: ignoruj konkrétní package/issue
-  # - package: "some-package"
-  #   issue: "installScripts"
-  #   reason: "Reviewed and approved by security team"
-  #   expires: "2025-12-31"
-  []
+packageRules:
+  # Block known compromised namespaces
+  - pattern: "@asyncapi/*"
+    action: error
+    comment: "Temporarily blocked due to Shai-Hulud 2.0"
+  
+  - pattern: "@postman/*"
+    action: error
+    comment: "Temporarily blocked due to Shai-Hulud 2.0"
+  
+  - pattern: "@posthog/*"
+    action: error
+    comment: "Temporarily blocked due to Shai-Hulud 2.0"
+  
+  - pattern: "@zapier/*"
+    action: error
+    comment: "Temporarily blocked due to Shai-Hulud 2.0"
+  
+  - pattern: "@ensdomains/*"
+    action: error
+    comment: "Temporarily blocked due to Shai-Hulud 2.0"
+  
+  - pattern: "posthog-*"
+    action: error
+    comment: "Temporarily blocked due to Shai-Hulud 2.0"
+  
+  - pattern: "zapier-*"
+    action: error
+    comment: "Temporarily blocked due to Shai-Hulud 2.0"
 
-# ===========================================
-# GITHUB APP SETTINGS
-# ===========================================
+  # Trust your own packages (adjust namespace)
+  - pattern: "@miccy/*"
+    action: ignore
+    comment: "Trust own packages"
+
+# =============================================================================
+# GitHub Integration
+# =============================================================================
+
 githubApp:
   enabled: true
   
-  # Blokuj merge pokud jsou issues
+  # Block PRs that introduce risky packages
   blockPR: true
   
-  # Komentuj PR s findings
-  commentOnPR: true
+  # Comment on issues
+  commentOnIssues: true
   
-  # Status checks
-  statusCheck:
-    enabled: true
-    context: "Socket Security"
-
-# ===========================================
-# SCANNING OPTIONS  
-# ===========================================
-scan:
-  # Skenuj tyto package managers
-  packageManagers:
-    - npm
-    - yarn
-    - pnpm
-    - bun
+  # Add labels to PRs
+  labels:
+    - "socket-security"
   
-  # Maximální hloubka dependency tree
-  depth: 10
+  # Fail check on errors
+  failCheckOnError: true
   
-  # Skenuj dev dependencies
-  includeDevDependencies: true
-  
-  # Skenuj peer dependencies
-  includePeerDependencies: true
+  # Minimum severity to fail
+  minSeverityToFail: "high"
 
-# ===========================================
-# POLICIES
-# ===========================================
-policies:
-  # Vyžaduj license compliance
-  licenses:
-    allow:
-      - MIT
-      - Apache-2.0
-      - BSD-2-Clause
-      - BSD-3-Clause
-      - ISC
-      - 0BSD
-      - CC0-1.0
-      - Unlicense
-    
-    deny:
-      - GPL-3.0
-      - AGPL-3.0
-    
-    # Ostatní license = warn
-    unknown: warn
+# =============================================================================
+# Slack/Discord Integration (optional)
+# =============================================================================
 
-  # Minimální verze Node.js
-  nodeVersion: ">=18.0.0"
-
-# ===========================================
-# NOTIFICATIONS (pro Team/Enterprise)
-# ===========================================
 # notifications:
-#   email:
-#     recipients:
-#       - security@company.com
-#     frequency: daily
-#   
 #   slack:
-#     webhook: $SLACK_WEBHOOK
-#     frequency: immediate
+#     webhook: "${SOCKET_SLACK_WEBHOOK}"
+#     channels:
+#       - "#security-alerts"
+#     minSeverity: "high"
+
+# =============================================================================
+# CI/CD Integration
+# =============================================================================
+
+cicd:
+  # Exit with non-zero code on errors
+  exitOnError: true
+  
+  # Generate SARIF output for GitHub Security tab
+  sarifOutput: true
+  
+  # Output format
+  outputFormat: "json"
+
+# =============================================================================
+# Ignore Paths
+# =============================================================================
+
+ignorePaths:
+  - "**/node_modules/**"
+  - "**/vendor/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/.git/**"

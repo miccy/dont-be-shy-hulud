@@ -1,220 +1,350 @@
-# 🪱 Hunting Worms Guide
+# 🪱 Don't Be Shy, Hulud
 
-> **Praktický průvodce detekcí a ochranou proti npm supply-chain útokům**  
-> Zaměřeno na Shai-Hulud 2.0 (listopad 2025) a podobné hrozby
+> **Incident Response & Protection Guide for npm Supply Chain Attacks**  
+> Defense guide for detection & remediation against npm supply-chain worms | Shai-Hulud 2.0 (November 2025) and future threats
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-## ⚡ TL;DR – Co dělat HNED
+## ⚡ Quick Start
+
+If you suspect you're compromised, run this immediately:
 
 ```bash
-# 1. Stáhni tento repo
+# Clone this repo
 git clone https://github.com/miccy/hunting-worms-guide.git
 cd hunting-worms-guide
 
-# 2. Spusť rychlý audit (macOS/Linux)
-chmod +x scripts/*.sh
-./scripts/quick-audit.sh
-
-# 3. Pokud jsi kompromitovaný, rotuj VŠECHNY credentials
-./scripts/rotate-credentials.sh --help
+# Run the detector
+chmod +x scripts/detect.sh
+./scripts/detect.sh /path/to/your/project
 ```
 
-## 📋 Obsah
+## 📖 Table of Contents
 
-- [Přehled hrozby](#-přehled-hrozby)
-- [Detekce](#-detekce)
-- [Remediation](#-remediation)
-- [Prevence](#-prevence)
-- [Common Issues](#-common-issues)
-- [Case Study](#-case-study)
-- [Scripty](#-scripty)
-- [Konfigurace](#-konfigurace)
-- [IOC databáze](#-ioc-databáze)
+- [What is Shai-Hulud 2.0?](#what-is-shai-hulud-20)
+- [Am I Affected?](#am-i-affected)
+- [Immediate Actions](#immediate-actions)
+- [Detection Scripts](#detection-scripts)
+- [Remediation Guide](#remediation-guide)
+- [Hardening Your Environment](#hardening-your-environment)
+- [Tool Configuration](#tool-configuration)
+- [Resources](#resources)
 
-## 🎯 Přehled hrozby
+## What is Shai-Hulud 2.0?
 
-### Shai-Hulud 2.0 (Listopad 2025)
+Shai-Hulud 2.0 (aka "The Second Coming") is a **self-propagating npm worm** discovered on November 24, 2025. It represents a significant evolution in supply chain attacks.
 
-| Vlastnost | Hodnota |
-|-----------|---------|
-| **Typ** | Self-propagating npm worm |
-| **Kompromitované packages** | 796+ unique, 1092+ versions |
-| **Zasažené GitHub repos** | 25,000+ |
-| **Weekly downloads zasažených** | 20+ milionů |
-| **Exfiltrované credentials** | 775+ GitHub, 373 AWS, 300 GCP, 115 Azure |
+### Attack Timeline
 
-**Klíčové vlastnosti:**
-- ⚡ Exekuce v **preinstall** fázi (ne postinstall)
-- 🔄 Samoreplikace až 100 packages/infection
-- 💀 Dead-man switch – destrukce dat při selhání exfiltrace
-- 🚪 Persistent backdoor přes GitHub Discussions
-- 🐳 Docker privilege escalation
+| Date | Event |
+|------|-------|
+| Sep 15, 2025 | Shai-Hulud v1 discovered (postinstall-based) |
+| Nov 21-23, 2025 | Shai-Hulud 2.0 packages uploaded to npm |
+| Nov 24, 2025 | Mass propagation detected |
+| Nov 25, 2025 | 700+ packages, 25,000+ repos affected |
+| Nov 26, 2025 | GitHub begins mass removal |
 
-**Payload soubory:**
-- `setup_bun.js` – loader
-- `bun_environment.js` – hlavní obfuskovaný payload
+### Key Differences from v1
 
-**Exfiltrované soubory:**
-- `cloud.json`, `contents.json`, `environment.json`, `truffleSecrets.json`
+| Feature | v1 (September) | v2 (November) |
+|---------|----------------|---------------|
+| Execution Phase | `postinstall` | `preinstall` |
+| Exfiltration | Webhook endpoint | GitHub repos |
+| Runtime | Node.js | Bun |
+| Fallback | None | Dead-man switch (wipe data) |
+| Persistence | None | GitHub Actions backdoor |
+| Propagation | ~500 packages | 700+ packages |
 
-➡️ [Podrobná analýza](docs/THREAT-OVERVIEW.md)
+### How It Works
 
-## 🔍 Detekce
-
-### Rychlá kontrola
-
-```bash
-# Kontrola známých IOC souborů
-find ~/Developer -name "setup_bun.js" -o -name "bun_environment.js" 2>/dev/null
-
-# Kontrola podezřelých GitHub workflows
-find ~/Developer -path "*/.github/workflows/*" -name "discussion.yaml" 2>/dev/null
-
-# Kontrola .truffler-cache
-ls -la ~/.truffler-cache 2>/dev/null
-
-# Kontrola GitHub repos s Shai-Hulud description
-gh repo list --json name,description | jq '.[] | select(.description | contains("Hulud"))'
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    SHAI-HULUD 2.0 ATTACK FLOW                   │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. INITIAL INFECTION                                           │
+│     └── Compromised npm package with preinstall script          │
+│         └── Drops: setup_bun.js + bun_environment.js            │
+│                                                                 │
+│  2. PAYLOAD EXECUTION                                           │
+│     └── Installs Bun runtime (evades Node.js monitoring)        │
+│         └── Runs 10MB+ obfuscated payload                       │
+│                                                                 │
+│  3. CREDENTIAL HARVESTING                                       │
+│     ├── ~/.npmrc (npm tokens)                                   │
+│     ├── ~/.aws/, ~/.azure/, ~/.config/gcloud/                   │
+│     ├── Environment variables                                   │
+│     ├── GitHub Actions secrets                                  │
+│     └── TruffleHog scan for secrets in codebase                 │
+│                                                                 │
+│  4. EXFILTRATION                                                │
+│     └── Creates public GitHub repo with stolen data             │
+│         └── Description: "Sha1-Hulud: The Second Coming"        │
+│                                                                 │
+│  5. PROPAGATION                                                 │
+│     ├── Uses stolen npm token to publish infected versions      │
+│     ├── Up to 100 packages per victim                           │
+│     └── Cross-victim: uses other victims' tokens                │
+│                                                                 │
+│  6. PERSISTENCE                                                 │
+│     └── GitHub Actions workflow backdoor                        │
+│         └── Triggered via repository discussions                │
+│                                                                 │
+│  7. FALLBACK (if blocked)                                       │
+│     └── Dead-man switch: wipes user data                        │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Automatizovaný audit
+## Am I Affected?
+
+### Quick Check
 
 ```bash
-./scripts/full-audit.sh
+# Check for IOC files
+find . -name "setup_bun.js" -o -name "bun_environment.js" 2>/dev/null
+
+# Check for malicious workflows
+find . -path "*/.github/workflows/*" -name "*.yml" -exec grep -l "SHA1HULUD\|self-hosted" {} \;
+
+# Check npm cache
+npm cache ls 2>/dev/null | grep -E "(setup_bun|bun_environment)"
 ```
 
-➡️ [Kompletní detekční guide](docs/DETECTION.md)
+### High-Risk Packages
 
-## 🔧 Remediation
+If you use any of these packages, **immediately audit your lockfile**:
 
-### Okamžité kroky
+| Package | Risk | Notes |
+|---------|------|-------|
+| `@postman/tunnel-agent` | 🔴 Critical | 27% of environments |
+| `posthog-node` | 🔴 Critical | 25% of environments |
+| `posthog-js` | 🔴 Critical | 15% of environments |
+| `@asyncapi/specs` | 🔴 Critical | 20% of environments |
+| `@asyncapi/openapi-schema-parser` | 🔴 Critical | 17% of environments |
+| `@zapier/*` | 🔴 Critical | Multiple packages |
+| `@ensdomains/*` | 🔴 Critical | Multiple packages |
+| `@postman/postman-mcp-cli` | 🟠 High | MCP tooling |
+| `zapier-sdk` | 🟠 High | |
+| `angulartics2` | 🟠 High | |
+| `koa2-swagger-ui` | 🟠 High | |
+| `tinycolor` | 🟠 High | v4.1.2 specifically |
 
-1. **Freeze npm/bun updates**
-2. **Rotace credentials** (npm, GitHub, AWS, GCP, Azure)
-3. **Smazání node_modules a cache**
-4. **Reinstalace z čistých verzí**
+For full list, see [IOC Lists](#ioc-lists).
+
+## Immediate Actions
+
+### 🔴 If Compromised
 
 ```bash
-# Kompletní čištění projektu
+# 1. STOP - Don't run npm install on any project
+# 2. Disconnect from network if possible
+
+# 3. Check for exfiltration repos on your GitHub
+# Search: https://github.com/search?q=Sha1-Hulud+user%3AYOUR_USERNAME
+
+# 4. Revoke ALL tokens immediately
+npm token revoke $(npm token ls --json | jq -r '.[].key')
+
+# 5. Rotate credentials
+# See: docs/credential-rotation.md
+```
+
+### 🟠 Preventive (Not Yet Confirmed Compromised)
+
+```bash
+# 1. Freeze npm updates
+# Add to .npmrc:
+echo "ignore-scripts=true" >> ~/.npmrc
+
+# 2. Clear caches
 rm -rf node_modules
 npm cache clean --force
-# nebo
+# or for bun:
 rm -rf node_modules bun.lockb
 bun pm cache rm
 
-# Reinstalace s disabled scripts
-npm install --ignore-scripts
+# 3. Pin dependencies to known clean versions
+# Use dates before Nov 21, 2025
 ```
 
-➡️ [Kompletní remediation guide](docs/REMEDIATION.md)
+## Detection Scripts
 
-## 🛡️ Prevence
-
-### Doporučené nástroje
-
-| Nástroj | Účel | Cena |
-|---------|------|------|
-| [Socket.dev](https://socket.dev) | Supply-chain security | Free / Paid |
-| [Snyk](https://snyk.io) | Vulnerability scanning | Free / Paid |
-| [npm audit](https://docs.npmjs.com/cli/v10/commands/npm-audit) | Built-in audit | Free |
-| [Renovate](https://renovatebot.com) | Dependency updates | Free |
-| [Datadog SCFW](https://github.com/DataDog/supply-chain-firewall) | Firewall | Free (OSS) |
-
-### Klíčová opatření
+### Full System Scan
 
 ```bash
-# Disable lifecycle scripts globálně
-npm config set ignore-scripts true
-
-# Nebo per-project v .npmrc
-echo "ignore-scripts=true" >> .npmrc
+./scripts/detect.sh ~
 ```
 
-➡️ [Kompletní prevention guide](docs/PREVENTION.md)
+### Project-Only Scan
 
-## 🔧 Common Issues
+```bash
+./scripts/detect.sh /path/to/project
+```
 
-Časté nálezy ze security scanů:
+### CI/CD Integration
 
-| Issue | Příčina | Řešení |
-|-------|---------|--------|
-| Transitivní CVE | Stará závislost v dependency tree | `npm ls package` → update parent |
-| Špatný package name | `biome` místo `@biomejs/biome` | Přeinstaluj správný package |
-| `unstableOwnership` | Změna maintainera | Často false positive (Google, Biome) |
-| `obfuscatedFile` | Minifikovaný kód | Ověř na npm/GitHub |
+```yaml
+# .github/workflows/security-scan.yml
+name: Shai-Hulud Detection
+on: [push, pull_request]
 
-➡️ [Kompletní common issues guide](docs/COMMON-ISSUES.md)
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Shai-Hulud Detector
+        run: |
+          curl -sSL https://raw.githubusercontent.com/miccy/hunting-worms-guide/main/scripts/detect.sh | bash -s -- .
+```
 
-## 📈 Case Study
+## Remediation Guide
 
-Praktický příklad analýzy 78 alertů ze Socket.dev:
+See [docs/remediation.md](docs/remediation.md) for detailed steps.
 
-- 2 Critical → opraveno (špatný `biome` package)
-- 39 High → 30 false positives (workbox, biomejs)
-- Čas na analýzu: 30 minut
-- Čas na opravu: 10 minut
+### Quick Remediation
 
-➡️ [Kompletní case study](docs/CASE-STUDY-SOCKET-ANALYSIS.md)
+```bash
+# 1. Identify affected packages
+./scripts/detect.sh . --output affected.txt
 
-## 📜 Scripty
+# 2. Roll back to clean versions
+npm install package-name@version-before-nov-21
 
-| Script | Účel |
-|--------|------|
-| [`quick-audit.sh`](scripts/quick-audit.sh) | Rychlý security audit (5 min) |
-| [`full-audit.sh`](scripts/full-audit.sh) | Kompletní audit s IOC skenováním |
-| [`scan-node-modules.sh`](scripts/scan-node-modules.sh) | Skenování node_modules ve všech projektech |
-| [`check-github-repos.sh`](scripts/check-github-repos.sh) | Kontrola GitHub repos na kompromitaci |
-| [`rotate-credentials.sh`](scripts/rotate-credentials.sh) | Asistovaná rotace credentials |
-| [`harden-npm.sh`](scripts/harden-npm.sh) | Hardening npm/bun konfigurace |
+# 3. Regenerate lockfile
+rm package-lock.json
+npm install --ignore-scripts
 
-## ⚙️ Konfigurace
+# 4. Verify
+npm audit
+./scripts/detect.sh .
+```
 
-| Soubor | Účel |
-|--------|------|
-| [`renovate-lockdown.json`](configs/renovate-lockdown.json) | Renovate config pro krizový lockdown |
-| [`renovate-hardened.json`](configs/renovate-hardened.json) | Renovate config pro běžný provoz |
-| [`socket.yml`](configs/socket.yml) | Socket.dev konfigurace |
-| [`.npmrc-secure`](configs/.npmrc-secure) | Bezpečná .npmrc template |
+## Hardening Your Environment
 
-## 📊 IOC databáze
+### npm/bun Configuration
 
-Aktualizované seznamy IOC (Indicators of Compromise):
+```bash
+# ~/.npmrc - Recommended settings
+ignore-scripts=true
+audit=true
+fund=false
+```
 
-- [`malicious-packages.json`](ioc/malicious-packages.json) – Seznam kompromitovaných packages
-- [`malicious-hashes.json`](ioc/malicious-hashes.json) – SHA hashes malicious payloads
-- [`github-repos.json`](ioc/github-repos.json) – Známé exfiltration repos
+### Renovate Configuration
 
-**Zdroje IOC:**
-- [Tenable IOC List](https://github.com/tenable/shai-hulud-second-coming-affected-packages)
-- [Datadog IOC List](https://github.com/DataDog/indicators-of-compromise/tree/main/shai-hulud-2.0)
-- [SafeDep Response](https://github.com/safedep/shai-hulud-migration-response)
-- [Wiz IOC CSV](https://github.com/wiz-sec-public/wiz-research-iocs)
+See [configs/renovate-secure.json](configs/renovate-secure.json) for a hardened Renovate config that:
+- Disables automerge for npm packages
+- Increases stabilityDays to 7
+- Requires security review labels
+- Blocks preinstall/postinstall changes
 
-## 🤝 Contributing
+### GitHub Settings
 
-PRs jsou vítány! Zejména:
-- Nové detekční scripty
-- Aktualizace IOC
-- Dokumentace pro specifické platformy
-- Překlady
+See [docs/github-hardening.md](docs/github-hardening.md) for:
+- Branch protection rules
+- Actions security settings
+- Secret scanning configuration
+- Code scanning setup
 
-## 📚 Reference
+## Tool Configuration
+
+### Socket.dev
+
+See [configs/socket.yml](configs/socket.yml) for recommended configuration.
+
+### Dependabot
+
+See [configs/dependabot.yml](configs/dependabot.yml) for secure settings.
+
+### GitHub Actions
+
+See [configs/actions-permissions.md](configs/actions-permissions.md) for lockdown guide.
+
+## IOC Lists
+
+### Official Sources
+
+| Source | URL |
+|--------|-----|
+| Datadog | [github.com/DataDog/indicators-of-compromise](https://github.com/DataDog/indicators-of-compromise/tree/main/shai-hulud-2.0) |
+| Wiz Research | [wiz-sec-public/wiz-research-iocs](https://github.com/wiz-sec-public/wiz-research-iocs) |
+| Tenable | [tenable/shai-hulud-second-coming-affected-packages](https://github.com/tenable/shai-hulud-second-coming-affected-packages) |
+| SafeDep | [safedep/shai-hulud-migration-response](https://github.com/safedep/shai-hulud-migration-response) |
+| Cobenian | [Cobenian/shai-hulud-detect](https://github.com/Cobenian/shai-hulud-detect) |
+
+### File IOCs
+
+| File | Purpose | Hash (SHA-256) |
+|------|---------|----------------|
+| `setup_bun.js` | Loader/dropper | Various |
+| `bun_environment.js` | Main payload (~10MB) | Various |
+| `actionsSecrets.json` | Exfil data (double base64) | N/A |
+| `.github/workflows/formatter_*.yml` | Backdoor workflow | N/A |
+
+### Behavioral IOCs
+
+- GitHub repos with description: `Sha1-Hulud: The Second Coming`
+- GitHub Actions runners named `SHA1HULUD`
+- Files: `cloud.json`, `contents.json`, `environment.json`, `truffleSecrets.json`
+- `.truffler-cache` directory
+- Bun installation in unexpected locations
+
+## Resources
+
+### Official Advisories
+
+- [CISA Alert](https://www.cisa.gov/news-events/alerts/2025/09/23/widespread-supply-chain-compromise-impacting-npm-ecosystem)
+- [npm Security Advisory](https://github.com/npm/cli/security/advisories)
+
+### Vendor Reports
 
 - [HackerOne Blog](https://www.hackerone.com/blog/shai-hulud-2-npm-worm-supply-chain-attack)
 - [Socket.dev Analysis](https://socket.dev/blog/shai-hulud-strikes-again-v2)
-- [Palo Alto Unit 42](https://unit42.paloaltonetworks.com/npm-supply-chain-attack/)
 - [Datadog Security Labs](https://securitylabs.datadoghq.com/articles/shai-hulud-2.0-npm-worm/)
 - [Wiz Research](https://www.wiz.io/blog/shai-hulud-2-0-ongoing-supply-chain-attack)
-- [CISA Alert](https://www.cisa.gov/news-events/alerts/2025/09/23/widespread-supply-chain-compromise-impacting-npm-ecosystem)
+- [GitLab Security](https://about.gitlab.com/blog/gitlab-discovers-widespread-npm-supply-chain-attack/)
+- [Palo Alto Unit 42](https://unit42.paloaltonetworks.com/npm-supply-chain-attack/)
+- [GitGuardian](https://blog.gitguardian.com/shai-hulud-2/)
 
-## 📄 License
+### Detection Tools
 
-MIT – viz [LICENSE](LICENSE)
+- [gensecaihq/Shai-Hulud-2.0-Detector](https://github.com/gensecaihq/Shai-Hulud-2.0-Detector)
+- [Cobenian/shai-hulud-detect](https://github.com/Cobenian/shai-hulud-detect)
+- [SafeDep GitHub App](https://github.com/apps/safedep)
+
+## Contributing
+
+Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
+
+### Priority Areas
+
+- [ ] Additional IOCs
+- [ ] Detection improvements
+- [ ] Language translations
+- [ ] CI/CD integrations
+- [ ] Tool configurations
+
+## License
+
+MIT License - See [LICENSE](LICENSE) for details.
 
 ---
 
-> 💡 **Tip:** Přidej ⭐ pokud ti tento guide pomohl!
+## 🙏 Credits
 
-> ⚠️ **Disclaimer:** Tento guide je poskytován "as is". Autoři nenesou odpovědnost za škody způsobené použitím nebo nepoužitím těchto informací.
+This guide compiles research from multiple security teams:
+- Aikido Security (initial detection)
+- Socket.dev, Datadog, Wiz, GitLab, Palo Alto Networks Unit 42
+- GitGuardian, SafeDep, Tenable
+- The broader security community
+
+**Stay safe. Rotate your secrets. Pin your dependencies.** 🛡️
+
+---
+
+<div align="center">
+  <p>🛠 Built by <a href="https://github.com/miccy">@miccy</a> out of hatred for Worms 🤬</p>
+</div>
