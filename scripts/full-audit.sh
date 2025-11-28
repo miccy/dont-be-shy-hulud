@@ -19,7 +19,7 @@ NC='\033[0m'
 # Config
 SCAN_PATH="${1:-$HOME/Developer}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-IOC_DIR="$SCRIPT_DIR/../ioc"
+# IOC_DIR="$SCRIPT_DIR/../ioc" # Unused
 REPORT_DIR="$HOME/shai-hulud-audit-$(date +%Y%m%d-%H%M%S)"
 
 # Counters
@@ -139,7 +139,7 @@ fi
 # 2.3 Suspicious workflow files
 log_info "Searching for suspicious GitHub workflows..."
 find "$SCAN_PATH" -path "*/.github/workflows/*.yaml" -o -path "*/.github/workflows/*.yml" 2>/dev/null | \
-    xargs grep -l "self-hosted" 2>/dev/null > "$REPORT_DIR/suspicious-workflows.txt" || true
+    xargs -I {} grep -l "self-hosted" {} 2>/dev/null > "$REPORT_DIR/suspicious-workflows.txt" || true
 
 if [ -s "$REPORT_DIR/suspicious-workflows.txt" ]; then
     while read -r file; do
@@ -223,7 +223,7 @@ echo -e "\n${CYAN}═══ PHASE 5: Credentials Check ═══${NC}"
 check_credential_file() {
     local path="$1"
     local name="$2"
-    local severity="${3:-MEDIUM}"
+    # local severity="${3:-MEDIUM}" # Unused
 
     if [ -f "$path" ]; then
         log_medium "$name exists: $path"
@@ -310,7 +310,7 @@ if command -v npm &>/dev/null; then
         dir=$(dirname "$pkg")
         if [ -f "$dir/package-lock.json" ]; then
             log_info "Audit: $dir"
-            (cd "$dir" && npm audit --json 2>/dev/null | jq -r '.metadata.vulnerabilities.high // 0' || echo "0") | \
+            (cd "$dir" && npm audit --json 2>/dev/null || echo '{"metadata":{"vulnerabilities":{"high":0}}}' | jq -r '.metadata.vulnerabilities.high // 0' || echo "0") | \
             read -r high_vulns || high_vulns=0
 
             if [ "$high_vulns" != "0" ] && [ -n "$high_vulns" ]; then

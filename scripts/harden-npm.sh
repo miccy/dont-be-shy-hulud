@@ -9,7 +9,7 @@
 set -euo pipefail
 
 # Colors
-RED='\033[0;31m'
+# RED='\033[0;31m' # Unused
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
@@ -37,7 +37,7 @@ echo ""
 apply_setting() {
     local cmd="$1"
     local desc="$2"
-    
+
     echo -e "${BLUE}→ $desc${NC}"
     if [ "$APPLY_MODE" = true ]; then
         eval "$cmd"
@@ -50,7 +50,8 @@ apply_setting() {
 backup_file() {
     local file="$1"
     if [ -f "$file" ]; then
-        local backup="${file}.backup.$(date +%Y%m%d%H%M%S)"
+        local backup
+        backup="${file}.backup.$(date +%Y%m%d%H%M%S)"
         if [ "$APPLY_MODE" = true ]; then
             cp "$file" "$backup"
             echo -e "${GREEN}  Backup: $backup${NC}"
@@ -130,9 +131,9 @@ echo -e "\n${YELLOW}[3/5] bun configuration${NC}"
 
 if command -v bun &>/dev/null; then
     echo "bun version: $(bun --version)"
-    
+
     # bunfig.toml template
-    BUNFIG_TEMPLATE='# Shai-Hulud hardened bunfig.toml
+    BUNFIG_TEMPLATE="# Shai-Hulud hardened bunfig.toml
 # https://github.com/miccy/dont-be-shy-hulud
 
 [install]
@@ -148,13 +149,13 @@ frozen_lockfile = true
 [install.scopes]
 # Example: private registry for @company scope
 # "@company" = { url = "https://npm.company.com", token = "$COMPANY_NPM_TOKEN" }
-'
+"
 
     echo "Template for bunfig.toml:"
     echo "---"
     echo "$BUNFIG_TEMPLATE"
     echo "---"
-    
+
     if [ "$APPLY_MODE" = true ]; then
         echo "$BUNFIG_TEMPLATE" > "$HOME/.bunfig-hardened-template.toml"
         echo -e "${GREEN}Template saved: ~/.bunfig-hardened-template.toml${NC}"
@@ -175,7 +176,7 @@ PRECOMMIT_HOOK='#!/bin/bash
 # Check package.json changes
 if git diff --cached --name-only | grep -q "package.json\|package-lock.json\|bun.lockb"; then
     echo "📦 Detected changes in dependencies..."
-    
+
     # npm audit
     if [ -f "package-lock.json" ]; then
         echo "Running npm audit..."
@@ -184,7 +185,7 @@ if git diff --cached --name-only | grep -q "package.json\|package-lock.json\|bun
             exit 1
         fi
     fi
-    
+
     # Socket.dev scan (if installed)
     if command -v socket &>/dev/null; then
         echo "Running Socket.dev scan..."
@@ -219,7 +220,7 @@ echo "# npm"
 echo "export NPM_CONFIG_IGNORE_SCRIPTS=true"
 echo "export NPM_CONFIG_AUDIT_LEVEL=high"
 echo ""
-echo "# bun"  
+echo "# bun"
 echo "export BUN_CONFIG_NO_SCRIPTS=1"
 echo ""
 echo "# Node.js"

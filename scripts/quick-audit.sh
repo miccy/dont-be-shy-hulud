@@ -85,7 +85,7 @@ fi
 
 # Test 4: Running processes
 echo -e "\n${BLUE}[4/8] Checking running processes...${NC}"
-SUSPICIOUS_PROCS=$(ps aux | grep -E "(bun_environment|trufflehog|setup_bun)" | grep -v grep || true)
+SUSPICIOUS_PROCS=$(pgrep -f "bun_environment|trufflehog|setup_bun" || true)
 
 if [ -n "$SUSPICIOUS_PROCS" ]; then
     report_found "Suspicious processes running!"
@@ -100,7 +100,7 @@ if [ -f "$HOME/.npmrc" ]; then
     if grep -q "_authToken" "$HOME/.npmrc" 2>/dev/null; then
         report_warn "npm token found in ~/.npmrc"
         report_info "Recommendation: Verify validity and consider rotation"
-        
+
         # Try to verify token
         if command -v npm &>/dev/null; then
             if npm whoami &>/dev/null 2>&1; then
@@ -122,7 +122,7 @@ if command -v gh &>/dev/null; then
     if gh auth status &>/dev/null 2>&1; then
         HULUD_REPOS=$(gh repo list --limit 500 --json name,description 2>/dev/null | \
             jq -r '.[] | select(.description != null) | select(.description | test("hulud|Hulud"; "i")) | .name' || true)
-        
+
         if [ -n "$HULUD_REPOS" ]; then
             echo "$HULUD_REPOS" | while read -r repo; do
                 report_found "Shai-Hulud repo: $repo"
