@@ -1,6 +1,6 @@
 # CodeRabbit Configuration File
 # Documentation: https://coderabbit.ai/docs/using-coderabbit/configuration
-version: "2"
+
 
 # Language for reviews and chat
 language: "en-US"
@@ -26,15 +26,35 @@ reviews:
   # Feedback filter
   profile: "chill"
 
-  # Request changes if critical issues are found
-  request_changes_workflow: false
+  # Approve the review once CodeRabbit’s comments are resolved
+  request_changes_workflow: true
+
+  # Tools to run during review
+  tools:
+    shellcheck:
+      enabled: true
+    markdownlint:
+      enabled: true
+    actionlint:
+      enabled: true
+    gitleaks:
+      enabled: true
+    yamllint:
+      enabled: true
+
+  # Auto-generate PR title following Conventional Commits
+  auto_title_instructions: "Generate the PR title following the Conventional Commits specification (e.g., 'feat:', 'fix:', 'chore:', 'docs:'). Keep it concise and descriptive."
 
 chat:
   # Enable conversational bot on PRs
   auto_reply: true
 
-integrations:
-  jira:
-    enabled: false
-  linear:
-    enabled: false
+  integrations:
+    jira:
+      usage: disabled
+    linear:
+      usage: disabled
+
+
+
+

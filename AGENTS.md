@@ -100,7 +100,15 @@ Primary tools referenced:
 5. **Documentation Updates**:
    - Follow existing markdown style
    - Include code examples where applicable
-   - Link to official vendor documentation
+6. **Changelog Updates**:
+   - **ALWAYS** update `CHANGELOG.md` when making any changes (code, config, docs).
+   - Use the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format.
+   - Add entries under the current `Unreleased` or active version section.
+
+7. **Bilingual Documentation Rule**:
+   - When modifying `README.md` or files in `docs/`, **YOU MUST** update the corresponding file in `cs/` or `cs/docs/`.
+   - Keep the content synchronized (translation doesn't have to be word-for-word, but meaning must match).
+   - If you change structure in one, change it in the other.
 
 ### Task Priorities
 

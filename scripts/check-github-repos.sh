@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION="1.3.1"
+VERSION="1.3.3"
 
 if [[ "${1:-}" == "--version" ]]; then
     echo "$VERSION"

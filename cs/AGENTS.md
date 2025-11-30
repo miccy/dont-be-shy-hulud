@@ -102,6 +102,16 @@ Primární nástroje odkazované:
    - Zahrň kódové příklady kde vhodné
    - Linkuj na oficiální vendor dokumentaci
 
+6. **Aktualizace Changelogu**:
+   - **VŽDY** aktualizuj `CHANGELOG.md` při provádění jakýchkoli změn (kód, config, docs).
+   - Používej formát [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+   - Přidávej záznamy pod aktuální sekci `Unreleased` nebo aktivní verzi.
+
+7. **Pravidlo dvojjazyčné dokumentace**:
+   - Při úpravě `README.md` nebo souborů v `docs/`, **MUSÍŠ** aktualizovat odpovídající soubor v `cs/` nebo `cs/docs/`.
+   - Udržuj obsah synchronizovaný (překlad nemusí být doslovný, ale význam musí sedět).
+   - Pokud změníš strukturu v jednom, změň ji i v druhém.
+
 ### Priorit úkolů
 
 Při provádění změn, priorizuj v tomto pořadí:
