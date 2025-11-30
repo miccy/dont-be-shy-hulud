@@ -23,7 +23,7 @@ CI_MODE=false
 SKIP_HASH=false
 GITHUB_CHECK=false
 FOUND_ISSUES=0
-VERSION="1.3.4"
+VERSION="1.4.0"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do

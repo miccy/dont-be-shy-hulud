@@ -5,13 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.4.0] - 2025-11-30
 
 ### Changed
 - Updated `packageManager` to `pnpm@10.24.0`
 
 ### Fixed
 - Added `pnpm-lock.yaml` to ensure consistent dependency installation in CI
+- Improved `scripts/release.sh` to insert comparison links at the top of the list
+- Fixed `scripts/release.sh` to include `package.json` in the release commit
+- Fixed `scripts/release.sh` to correctly rename `[Unreleased]` section and append comparison links
 
 ## [1.3.4] - 2025-11-30
 
@@ -35,7 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added missing `[1.3.2]` and `[1.3.3]` links in CHANGELOG.md
 - Removed duplicate comments (`# Config`, `# Parse arguments`, trap comment) in `scripts/detect.sh`
 - Corrected `.coderabbit.yaml` nesting for `tools` and `auto_title_instructions`
-- Fixed `scripts/release.sh` to correctly rename `[Unreleased]` section and append comparison links
 
 ## [1.3.3] - 2025-11-30
 
@@ -172,6 +174,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IOC database
 - Configuration templates (Renovate, Socket.dev, npm)
 
+[1.4.0]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.3.4...v1.4.0
 [1.3.4]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.3.1...v1.3.2

@@ -84,9 +84,18 @@ LINK="[$NEW_VERSION]: $REPO_URL/compare/v$CURRENT_VERSION...v$NEW_VERSION"
 
 # Check if link already exists to avoid duplicates
 if ! grep -Fq "$LINK" CHANGELOG.md; then
-    # Ensure newline before link
-    echo "" >> CHANGELOG.md
-    echo "$LINK" >> CHANGELOG.md
+    # Find the first link line to insert before
+    FIRST_LINK_LINE=$(grep -n "^\[.*\]: http" CHANGELOG.md | head -n 1 | cut -d: -f1)
+
+    if [ -n "$FIRST_LINK_LINE" ]; then
+        # Insert before the first link
+        sed -i.bak "${FIRST_LINK_LINE}i\\
+$LINK" CHANGELOG.md && rm CHANGELOG.md.bak
+    else
+        # No links found, append to end
+        echo "" >> CHANGELOG.md
+        echo "$LINK" >> CHANGELOG.md
+    fi
 fi
 
 # 7. Open Editor
@@ -116,7 +125,7 @@ echo -e "Continue? [y/N]"
 read -r CONFIRM
 
 if [[ "$CONFIRM" =~ ^[yY]$ ]]; then
-    git add CHANGELOG.md scripts/
+    git add CHANGELOG.md scripts/ package.json
     git commit -m "chore: release v$NEW_VERSION"
 
     echo -e "\n${BLUE}Pushing branch to GitHub...${NC}"
