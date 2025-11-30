@@ -59,11 +59,29 @@ jobs:
           git tag -a "v${{ steps.get_version.outputs.version }}" -m "Release v${{ steps.get_version.outputs.version }}"
           git push origin "v${{ steps.get_version.outputs.version }}"
 
+      - name: Extract Release Notes
+        id: extract_notes
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          # Extract content between the version header and the next header
+          # Matches "## [VERSION]..." start and stops at next "## [..."
+          awk -v ver="$VERSION" '$0 ~ "^## \\[" ver "\\]" {flag=1; next} /^## \[/ {flag=0} flag' CHANGELOG.md > RELEASE_NOTES.md
+
+          if [ -s RELEASE_NOTES.md ]; then
+            echo "Notes extracted successfully."
+            echo "use_generated=false" >> $GITHUB_OUTPUT
+          else
+            echo "Warning: No notes found for v$VERSION. Using auto-generated notes."
+            echo "use_generated=true" >> $GITHUB_OUTPUT
+            rm -f RELEASE_NOTES.md # Ensure file doesn't exist so body_path is ignored if logic depends on it
+          fi
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2.4.2
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
           name: v${{ steps.get_version.outputs.version }}
-          generate_release_notes: true
+          body_path: RELEASE_NOTES.md
+          generate_release_notes: ${{ steps.extract_notes.outputs.use_generated }}
           draft: false
           prerelease: false

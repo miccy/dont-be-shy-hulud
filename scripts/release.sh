@@ -114,8 +114,8 @@ if [[ "$CONFIRM" =~ ^[yY]$ ]]; then
     echo ""
     echo "Next steps:"
     echo "1. Open a Pull Request: https://github.com/miccy/dont-be-shy-hulud/compare/main...$RELEASE_BRANCH"
-    echo "2. Review and merge the PR into 'main'"
-    echo "3. Create a Release/Tag on GitHub (or pull main and tag locally)"
+    echo "2. Review and merge the PR into 'main' (Ensure 'Merge commit' or 'Rebase' is used to keep the commit message)"
+    echo "3. Wait for the GitHub Action to automatically create the Release and Tag"
 else
     echo -e "${RED}Release cancelled.${NC}"
     # Cleanup branch if desired? No, keep it safe.
