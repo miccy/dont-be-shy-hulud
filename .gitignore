@@ -33,3 +33,7 @@ credentials.json
 .agents/task.md
 .agents/implementation_plan.md
 .agents/research/
+
+# Scan results
+results.txt
+results_*.txt

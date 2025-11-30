@@ -18,17 +18,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+
+      - name: Setup pnpm
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Lockfile Lint (pnpm)
+        run: npx lockfile-lint --path pnpm-lock.yaml --allowed-hosts npm --validate-https
+
+      - name: pnpm Audit
+        run: pnpm audit --prod
+        continue-on-error: true
+
       - name: Extract Version
         id: get_version
-       - name: Extract Version
-         id: get_version
-         env:
-           COMMIT_MSG: ${{ github.event.head_commit.message }}
-         run: |
-           # Extract version from commit message (e.g., "chore: release v1.4.0" -> "1.4.0")
-           VERSION=$(echo "$COMMIT_MSG" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
-           echo "Detected version: $VERSION"
-           echo "version=$VERSION" >> $GITHUB_OUTPUT
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          # Extract version from commit message (e.g., "chore: release v1.4.0" -> "1.4.0")
+          VERSION=$(echo "$COMMIT_MSG" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "0.0.0")
+          if [[ -z "$VERSION" ]] || [[ "$VERSION" == "0.0.0" ]]; then
+            echo "Error: Could not extract version from commit message"
+            exit 1
+          fi
+          echo "Detected version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create Git Tag
         run: |

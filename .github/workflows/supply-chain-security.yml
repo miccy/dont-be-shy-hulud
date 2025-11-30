@@ -42,21 +42,42 @@ jobs:
 
       - name: Run Shai-Hulud Detector
         id: detect
-        run: ./detect.sh . --ci --output results.txt
-        continue-on-error: true
+        run: |
+          set -eo pipefail
+          # initialize rc so we always have a value
+          rc=0
+          # run detector and capture exit code (allow failure)
+          ./detect.sh . --ci --output=results.txt || rc=$?
+
+          # Ensure results.txt exists and use an unambiguous marker
+          if [ ! -f results.txt ]; then
+            echo "NO_FINDINGS" > results.txt
+          fi
+
+          # Determine if issues were found: results is non-empty, not the NO_FINDINGS marker, and detector returned non-zero
+          if [ -s results.txt ] && ! grep -q '^NO_FINDINGS$' results.txt && [ "${rc}" -ne 0 ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+          fi
+
+          echo "exit_code=${rc}" >> $GITHUB_OUTPUT
 
       - name: Upload Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: shai-hulud-scan-results
-          path: results.txt
+          path: |
+            results.txt
+            shai-hulud-*.log
           retention-days: 30
 
       - name: Fail on Detection
-        if: steps.detect.outcome == 'failure'
+        if: steps.detect.outputs.found == 'true'
         run: |
           echo "::error::Shai-Hulud IOCs detected! Check artifacts for details."
+          echo "Review artifact: shai-hulud-scan-results (results.txt)"
           exit 1
 
   dependency-audit:

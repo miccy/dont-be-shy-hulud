@@ -58,6 +58,23 @@ echo -e "\n=============================="
 echo "Quick check dokončen."
 ```
 
+## Automatizovaný detekční skript
+
+Poskytujeme robustní detekční skript `scripts/detect.sh`, který automatizuje mnoho z těchto kontrol.
+
+```bash
+# Základní sken
+./scripts/detect.sh .
+
+# Sken s kontrolou GitHub API (vyžaduje gh CLI autentizaci)
+./scripts/detect.sh . --github-check
+
+# Výstup výsledků do souboru (užitečné pro CI)
+./scripts/detect.sh . --output results.txt
+```
+
+**Poznámka:** Skript obsahuje ochranu proti falešným poplachům (např. vyloučení dokumentačních souborů) a podporuje lokální i CI prostředí.
+
 ## Detailní audit
 
 ### 1. Kontrola node_modules

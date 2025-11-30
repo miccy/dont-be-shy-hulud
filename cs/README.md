@@ -41,7 +41,7 @@ npm token list
 
 ### Možnosti migrace:
 
-**Možnost 1: Trusted Publishing (Doporučeno)**
+#### Možnost 1: Trusted Publishing (Doporučeno)
 ```yaml
 # .github/workflows/publish.yml
 - uses: actions/setup-node@v4
@@ -52,7 +52,7 @@ npm token list
     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
-**Možnost 2: Granulární tokeny**
+#### Možnost 2: Granulární tokeny
 - Max životnost: 90 dní (default 7 dní)
 - Omezit na konkrétní packages
 - Povolit IP allowlist pokud možno

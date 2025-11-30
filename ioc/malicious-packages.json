@@ -66,7 +66,8 @@
         "name": "@asyncapi/openapi-schema-parser",
         "risk_level": "critical",
         "deployment_rate": "17%",
-        "affected_versions": ["Check vendor sources"],
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
         "status": "reclaimed",
         "notes": "Schema parser"
       },
@@ -74,14 +75,16 @@
         "name": "@asyncapi/avro-schema-parser",
         "risk_level": "critical",
         "deployment_rate": "17%",
-        "affected_versions": ["Check vendor sources"],
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
         "status": "reclaimed"
       },
       {
         "name": "@asyncapi/raml-dt-schema-parser",
         "risk_level": "critical",
         "deployment_rate": "15%",
-        "affected_versions": ["Check vendor sources"],
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
         "status": "reclaimed"
       },
       {
@@ -96,7 +99,8 @@
         "name": "zapier-platform-cli",
         "risk_level": "critical",
         "deployment_rate": "Unknown",
-        "affected_versions": ["Check vendor sources"],
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
         "status": "reclaimed"
       },
       {
@@ -125,7 +129,8 @@
         "name": "ngx-bootstrap",
         "risk_level": "high",
         "deployment_rate": "Unknown",
-        "affected_versions": ["Check vendor sources"],
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
         "status": "reclaimed",
         "notes": "Widely used Angular bootstrap components"
       },
@@ -141,7 +146,8 @@
         "name": "angulartics2",
         "risk_level": "high",
         "deployment_rate": "Unknown",
-        "affected_versions": ["Check vendor sources"],
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
         "status": "reclaimed",
         "notes": "Angular analytics"
       },
@@ -149,7 +155,8 @@
         "name": "koa2-swagger-ui",
         "risk_level": "high",
         "deployment_rate": "Unknown",
-        "affected_versions": ["Check vendor sources"],
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
         "status": "reclaimed",
         "notes": "Swagger UI for Koa"
       },
@@ -157,7 +164,8 @@
         "name": "@postman/postman-mcp-cli",
         "risk_level": "high",
         "deployment_rate": "Unknown",
-        "affected_versions": ["Check vendor sources"],
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
         "status": "reclaimed",
         "notes": "Postman MCP tooling"
       },
@@ -165,14 +173,16 @@
         "name": "ethereum-ens",
         "risk_level": "high",
         "deployment_rate": "Unknown",
-        "affected_versions": ["Check vendor sources"],
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
         "status": "reclaimed"
       },
       {
         "name": "@ensdomains/content-hash",
         "risk_level": "high",
         "deployment_rate": "Unknown",
-        "affected_versions": ["Check vendor sources"],
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
         "status": "reclaimed"
       }
     ]
@@ -419,48 +429,59 @@
     "key_dates": [
       {
         "date": "2025-08-27",
-        "event": "S1ngularity/Nx GitHub token theft (precursor attack)"
+        "event": "S1ngularity/Nx GitHub token theft (precursor attack)",
+        "recommended_action": "Monitor for unusual token usage"
       },
       {
         "date": "2025-09-15",
-        "event": "Shai-Hulud v1 discovered (postinstall-based)"
+        "event": "Shai-Hulud v1 discovered (postinstall-based)",
+        "recommended_action": "Block postinstall scripts"
       },
       {
         "date": "2025-09-23",
-        "event": "CISA Advisory issued"
+        "event": "CISA Advisory issued",
+        "recommended_action": "Review CISA guidance"
       },
       {
         "date": "2025-11-05",
-        "event": "npm disables new classic token creation"
+        "event": "npm disables new classic token creation",
+        "recommended_action": "Switch to granular tokens"
       },
       {
         "date": "2025-11-21",
-        "event": "Shai-Hulud 2.0 package uploads begin"
+        "event": "Shai-Hulud 2.0 package uploads begin",
+        "recommended_action": "Pin dependencies to pre-Nov 21"
       },
       {
         "date": "2025-11-24T03:16:00Z",
-        "event": "First detection (go-template, AsyncAPI)"
+        "event": "First detection (go-template, AsyncAPI)",
+        "recommended_action": "Scan for IOCs"
       },
       {
         "date": "2025-11-24T04:11:00Z",
-        "event": "PostHog packages compromised"
+        "event": "PostHog packages compromised",
+        "recommended_action": "Audit PostHog dependencies"
       },
       {
         "date": "2025-11-24T05:09:00Z",
-        "event": "Postman packages compromised"
+        "event": "Postman packages compromised",
+        "recommended_action": "Audit Postman dependencies"
       },
       {
         "date": "2025-11-25",
-        "event": "Secondary phase detected ('Continued Coming')"
+        "event": "Secondary phase detected ('Continued Coming')",
+        "recommended_action": "Check for new IOC patterns"
       },
       {
         "date": "2025-11-26",
-        "event": "GitHub reduces public malicious repos to ~300"
+        "event": "GitHub reduces public malicious repos to ~300",
+        "recommended_action": "Continue monitoring"
       },
       {
         "date": "2025-12-09",
         "event": "npm legacy token revocation deadline",
-        "critical": true
+        "critical": true,
+        "recommended_action": "Migrate to granular tokens immediately"
       }
     ]
   }

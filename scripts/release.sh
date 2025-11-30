@@ -80,6 +80,12 @@ if command -v code &> /dev/null; then
     code -w CHANGELOG.md
 elif [ -n "$EDITOR" ]; then
     $EDITOR CHANGELOG.md
+elif command -v nano &> /dev/null; then
+    nano CHANGELOG.md
+elif command -v vim &> /dev/null; then
+    vim CHANGELOG.md
+elif command -v vi &> /dev/null; then
+    vi CHANGELOG.md
 else
     echo "Press [Enter] when you have finished editing CHANGELOG.md"
     read -r

@@ -58,6 +58,23 @@ echo -e "\n=============================="
 echo "Quick check complete."
 ```
 
+## Automated Detection Script
+
+We provide a robust detection script `scripts/detect.sh` that automates many of these checks.
+
+```bash
+# Basic scan
+./scripts/detect.sh .
+
+# Scan with GitHub API check (requires gh CLI authentication)
+./scripts/detect.sh . --github-check
+
+# Output results to file (useful for CI)
+./scripts/detect.sh . --output results.txt
+```
+
+**Note:** The script includes hardening against false positives (e.g., excluding documentation files) and supports both local and CI environments.
+
 ## Detailed Audit
 
 ### 1. Check node_modules

@@ -22,36 +22,84 @@ OUTPUT_FILE=""
 VERBOSE=false
 CI_MODE=false
 SKIP_HASH=false
+GITHUB_CHECK=false
 FOUND_ISSUES=0
-VERSION="1.3.1"
+VERSION="1.3.2"
 
 # Parse arguments
-for arg in "$@"; do
-    case $arg in
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
         --version)
             echo "$VERSION"
             exit 0
             ;;
         --output=*)
-            OUTPUT_FILE="${arg#*=}"
+            OUTPUT_FILE="${1#*=}"
+            shift
+            ;;
+        --output)
+            OUTPUT_FILE="$2"
+            shift 2
             ;;
         --verbose)
             VERBOSE=true
+            shift
             ;;
         --ci)
             CI_MODE=true
+            shift
             ;;
         --skip-hash)
             SKIP_HASH=true
+            shift
+            ;;
+        --github-check)
+            GITHUB_CHECK=true
+            shift
             ;;
         -*)
             # Unknown flag, ignore or handle
+            shift
             ;;
         *)
-            SCAN_PATH="$arg"
+            SCAN_PATH="$1"
+            shift
             ;;
     esac
 done
+
+# --- begin insertion ---
+# Ensure OUTPUT_FILE is absolute in CI and pre-create file so the artifact step can find it.
+if [[ -n "${OUTPUT_FILE:-}" ]]; then
+  if [[ "${CI_MODE:-}" == "true" && -n "${GITHUB_WORKSPACE:-}" ]]; then
+    OUTPUT_FILE="${GITHUB_WORKSPACE%/}/$OUTPUT_FILE"
+  else
+    OUTPUT_FILE="$(pwd)/$OUTPUT_FILE"
+  fi
+  mkdir -p "$(dirname "$OUTPUT_FILE")"
+  # Pre-create file so upload-artifact sees it even if script exits early.
+  echo "Shai-Hulud scan started: $(date)" > "$OUTPUT_FILE" || true
+fi
+
+# Ensure we always append a summary on exit (runs on normal and error exits)
+# Ensure we always append a summary on exit (runs on normal and error exits)
+_trap_write_summary() {
+  # Avoid failing in the trap (|| true assures non-zero in trap doesn't abort)
+  if [[ -n "${OUTPUT_FILE:-}" ]]; then
+    # If file is empty or doesn't exist, write NO_FINDINGS (unless we have found issues)
+    if [[ ! -s "$OUTPUT_FILE" ]] && [[ "${FOUND_ISSUES:-0}" -eq 0 ]]; then
+        echo "NO_FINDINGS" > "$OUTPUT_FILE" || true
+    else
+        # If we have content or issues, append summary
+        echo "" >> "$OUTPUT_FILE" || true
+        echo "Issues found: ${FOUND_ISSUES:-0}" >> "$OUTPUT_FILE" || true
+        echo "Scan finished at: $(date)" >> "$OUTPUT_FILE" || true
+    fi
+  fi
+}
+trap _trap_write_summary EXIT
+# --- end insertion ---
 
 # Logging
 log_info() {
@@ -342,16 +390,22 @@ echo "         → Look for repos with description: 'Sha1-Hulud: The Continued C
 echo "         → Look for repos with '-migration' suffix"
 echo "         → Check for unauthorized self-hosted runners named 'SHA1HULUD'"
 
-# If gh CLI is available, offer automated check
-if command -v gh &> /dev/null; then
-    log_info "GitHub CLI detected. Running automated check..."
-    gh_repos=$(gh repo list --json name,description 2>/dev/null | grep -i "hulud" || true)
-    if [[ -n "$gh_repos" ]]; then
-        log_error "Found suspicious repositories on your account!"
-        echo "$gh_repos"
+# If gh CLI is available and user opted in
+if [[ "$GITHUB_CHECK" == true ]]; then
+    if command -v gh &> /dev/null; then
+        log_info "GitHub CLI detected. Running automated check..."
+        gh_repos=$(gh repo list --json name,description 2>/dev/null | grep -i "hulud" || true)
+        if [[ -n "$gh_repos" ]]; then
+            log_error "Found suspicious repositories on your account!"
+            echo "$gh_repos"
+        else
+            log_ok "No suspicious repos found via GitHub CLI"
+        fi
     else
-        log_ok "No suspicious repos found via GitHub CLI"
+        log_warn "GitHub check requested (--github-check) but 'gh' CLI not found."
     fi
+else
+    $VERBOSE && log_info "Skipping GitHub API check (use --github-check to enable)"
 fi
 
 # =============================================================================
@@ -404,7 +458,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "10. Checking for cloud metadata service abuse..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-metadata_abuse=$(grep -r "169.254.169.254" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | grep -v "node_modules" | head -5 || true)
+metadata_abuse=$(grep -r --exclude="*.md" --exclude="malicious-packages.json" --exclude="detect.sh" "169\.254\.169\.254" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | grep -v "node_modules" | head -5 || true)
 if [[ -n "$metadata_abuse" ]]; then
     log_error "Found references to cloud metadata service (potential credential theft):"
     echo "$metadata_abuse"
@@ -422,7 +476,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 
 secondary_found=false
 for pattern in "${SECONDARY_PATTERNS[@]}"; do
-    matches=$(grep -r "$pattern" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | head -3 || true)
+    matches=$(grep -r --exclude="*.md" --exclude="malicious-packages.json" --exclude="detect.sh" "$pattern" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | head -3 || true)
     if [[ -n "$matches" ]]; then
         log_error "Found secondary phase indicator: '$pattern'"
         echo "$matches"
@@ -477,6 +531,13 @@ fi
 # =============================================================================
 # Summary
 # =============================================================================
+
+# Output to file if requested (BEFORE exit)
+if [[ -n "$OUTPUT_FILE" ]]; then
+    echo "Issues found: $FOUND_ISSUES" > "$OUTPUT_FILE"
+    echo "Scan completed. Results saved to $OUTPUT_FILE"
+fi
+
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
 echo "║                         SCAN SUMMARY                          ║"
@@ -506,12 +567,11 @@ else
     echo "See [docs/REMEDIATION.md](docs/REMEDIATION.md) for detailed steps."
 
     if [[ "$CI_MODE" == true ]]; then
+        # Ensure output file exists before exiting
+        if [[ -n "$OUTPUT_FILE" ]] && [[ ! -f "$OUTPUT_FILE" ]]; then
+             echo "No scan results were produced. Please check script logic." > "$OUTPUT_FILE"
+        fi
         exit 1
     fi
 fi
 
-# Output to file if requested
-if [[ -n "$OUTPUT_FILE" ]]; then
-    echo "Issues found: $FOUND_ISSUES" > "$OUTPUT_FILE"
-    echo "Scan completed. Results saved to $OUTPUT_FILE"
-fi
