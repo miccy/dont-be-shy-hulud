@@ -16,14 +16,13 @@ reviews:
   high_level_summary: true
 
   # Enable detailed walkthrough of changes
-  poem: true # Fun easter egg, but standard is 'walkthrough: true' - using poem for friendly tone :)
   walkthrough: true
 
   # Enable auto-review on pull requests
   auto_review:
     enabled: true
     drafts: false # Don't review draft PRs automatically
-    auto_approve: true # Enable auto-approval if no issues found
+    drafts: false # Don't review draft PRs automatically
 
   # Feedback filter
   profile: "chill"
