@@ -407,6 +407,14 @@ See [docs/GITHUB-HARDENING.md](docs/GITHUB-HARDENING.md) for lockdown guide.
 - [Cobenian/shai-hulud-detect](https://github.com/Cobenian/shai-hulud-detect)
 - [SafeDep GitHub App](https://github.com/apps/safedep)
 
+## 💬 Community
+
+Have questions, found new IOCs, or want to share your experience?
+
+- **[GitHub Discussions](https://github.com/miccy/dont-be-shy-hulud/discussions)** — Ask questions, share findings, get help
+- **[Report Security Issue](https://github.com/miccy/dont-be-shy-hulud/security/advisories/new)** — For sensitive security reports
+- **[Open an Issue](https://github.com/miccy/dont-be-shy-hulud/issues)** — Bug reports and feature requests
+
 ## Contributing
 
 Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.

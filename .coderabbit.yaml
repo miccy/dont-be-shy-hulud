@@ -22,7 +22,6 @@ reviews:
   auto_review:
     enabled: true
     drafts: false # Don't review draft PRs automatically
-    drafts: false # Don't review draft PRs automatically
 
   # Feedback filter
   profile: "chill"

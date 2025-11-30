@@ -294,6 +294,14 @@ Projekt obsahuje předpřipravené VS Code tasks. Stiskněte `Cmd+Shift+P` -> `T
 - `🔍 Full Audit`
 - `🧹 Set Language`
 
+## 💬 Komunita
+
+Máte dotazy, našli jste nové IOCs, nebo chcete sdílet zkušenosti?
+
+- **[GitHub Discussions](https://github.com/miccy/dont-be-shy-hulud/discussions)** — Ptát se, sdílet nálezy, získat pomoc
+- **[Nahlásit bezpečnostní problém](https://github.com/miccy/dont-be-shy-hulud/security/advisories/new)** — Pro citlivé bezpečnostní zprávy
+- **[Otevřít Issue](https://github.com/miccy/dont-be-shy-hulud/issues)** — Bug reporty a feature requesty
+
 ## 📚 Reference
 
 - [HackerOne Blog](https://www.hackerone.com/blog/shai-hulud-2-npm-worm-supply-chain-attack)

@@ -16,7 +16,6 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Config
-# Config
 SCAN_PATH="."
 OUTPUT_FILE=""
 VERBOSE=false
@@ -26,7 +25,6 @@ GITHUB_CHECK=false
 FOUND_ISSUES=0
 VERSION="1.3.2"
 
-# Parse arguments
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -82,7 +80,6 @@ if [[ -n "${OUTPUT_FILE:-}" ]]; then
   echo "Shai-Hulud scan started: $(date)" > "$OUTPUT_FILE" || true
 fi
 
-# Ensure we always append a summary on exit (runs on normal and error exits)
 # Ensure we always append a summary on exit (runs on normal and error exits)
 _trap_write_summary() {
   # Avoid failing in the trap (|| true assures non-zero in trap doesn't abort)
