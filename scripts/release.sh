@@ -72,6 +72,13 @@ $HEADER\\
 " CHANGELOG.md && rm CHANGELOG.md.bak
 fi
 
+# 6b. Append comparison link
+echo -e "\n${BLUE}Appending comparison link...${NC}"
+REPO_URL="https://github.com/miccy/dont-be-shy-hulud"
+LINK="[$NEW_VERSION]: $REPO_URL/compare/v$CURRENT_VERSION...v$NEW_VERSION"
+# Ensure newline before link if not present (though echo >> adds one)
+echo "$LINK" >> CHANGELOG.md
+
 # 7. Open Editor
 echo -e "${YELLOW}Opening CHANGELOG.md. Please fill in the release notes.${NC}"
 echo "Save and close the file when done."
