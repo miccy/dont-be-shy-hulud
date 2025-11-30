@@ -38,7 +38,7 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Lockfile Lint (pnpm)
-        run: npx lockfile-lint --path pnpm-lock.yaml --allowed-hosts npm --validate-https
+        run: npx lockfile-lint --type pnpm --path pnpm-lock.yaml --allowed-hosts npm --validate-https
 
       - name: pnpm Audit
         run: pnpm audit --prod
