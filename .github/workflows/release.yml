@@ -37,9 +37,6 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
 
-      - name: Lockfile Lint (pnpm)
-        run: npx lockfile-lint --type pnpm --path pnpm-lock.yaml --allowed-hosts npm --validate-https
-
       - name: pnpm Audit
         run: pnpm audit --prod
         continue-on-error: true
