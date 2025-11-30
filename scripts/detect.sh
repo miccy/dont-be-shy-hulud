@@ -27,32 +27,44 @@ FOUND_ISSUES=0
 VERSION="1.3.2"
 
 # Parse arguments
-for arg in "$@"; do
-    case $arg in
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
         --version)
             echo "$VERSION"
             exit 0
             ;;
         --output=*)
-            OUTPUT_FILE="${arg#*=}"
+            OUTPUT_FILE="${1#*=}"
+            shift
+            ;;
+        --output)
+            OUTPUT_FILE="$2"
+            shift 2
             ;;
         --verbose)
             VERBOSE=true
+            shift
             ;;
         --ci)
             CI_MODE=true
+            shift
             ;;
         --skip-hash)
             SKIP_HASH=true
+            shift
             ;;
         --github-check)
             GITHUB_CHECK=true
+            shift
             ;;
         -*)
             # Unknown flag, ignore or handle
+            shift
             ;;
         *)
-            SCAN_PATH="$arg"
+            SCAN_PATH="$1"
+            shift
             ;;
     esac
 done
