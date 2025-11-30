@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updated `scripts/release.sh` to support releases from `*-dev` branches (e.g., `claude-dev`, `gemini-dev`)
+- Enhanced `scripts/detect.sh` output handling for CI environments (pre-creates files, ensures artifact upload)
 - Updated release script instructions to reflect the automated release process
 - Updated `docs/RELEASE_WORKFLOW.md` and `cs/docs/RELEASE_WORKFLOW.md` to reflect `*-dev` branch support
 
