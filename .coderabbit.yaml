@@ -2,15 +2,14 @@
 # Documentation: https://coderabbit.ai/docs/using-coderabbit/configuration
 version: "2"
 
-settings:
-  # Language for reviews and chat
-  language: "en-US"
+# Language for reviews and chat
+language: "en-US"
 
-  # Tone of the review
-  tone: "friendly" # options: "objective", "friendly", "assertive"
+# Tone of the review
+tone_instructions: "friendly"
 
-  # Enable early access to new features
-  early_access: true
+# Enable early access to new features
+early_access: true
 
 reviews:
   # Enable high-level summary of changes
@@ -26,9 +25,7 @@ reviews:
     drafts: false # Don't review draft PRs automatically
 
   # Feedback filter
-  # "standard" - focuses on critical issues and best practices
-  # "strict" - includes nitpicks and style suggestions
-  profile: "standard"
+  profile: "chill"
 
   # Request changes if critical issues are found
   request_changes_workflow: false
