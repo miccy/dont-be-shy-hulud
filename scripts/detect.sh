@@ -16,10 +16,12 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Config
-SCAN_PATH="${1:-.}"
+# Config
+SCAN_PATH="."
 OUTPUT_FILE=""
 VERBOSE=false
 CI_MODE=false
+SKIP_HASH=false
 FOUND_ISSUES=0
 VERSION="1.3.1"
 
@@ -38,6 +40,15 @@ for arg in "$@"; do
             ;;
         --ci)
             CI_MODE=true
+            ;;
+        --skip-hash)
+            SKIP_HASH=true
+            ;;
+        -*)
+            # Unknown flag, ignore or handle
+            ;;
+        *)
+            SCAN_PATH="$arg"
             ;;
     esac
 done
@@ -274,7 +285,7 @@ EXPECTED_BUN_PATHS=(
     "/opt/homebrew/bin/bun"
 )
 
-unexpected_bun=$(find "$SCAN_PATH" -name "bun" -type f -executable 2>/dev/null | while read -r bun_path; do
+unexpected_bun=$(find "$SCAN_PATH" -name "bun" -type f -perm +111 2>/dev/null || find "$SCAN_PATH" -name "bun" -type f -executable 2>/dev/null || true | while read -r bun_path; do
     is_expected=false
     for expected in "${EXPECTED_BUN_PATHS[@]}"; do
         if [[ "$bun_path" == "$expected"* ]]; then
@@ -352,22 +363,37 @@ echo "9. Hash-based malware detection..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # Check JS files between 1MB-15MB (payload size range)
-hash_matches=0
-while IFS= read -r jsfile; do
-    if [[ -f "$jsfile" ]]; then
-        file_hash=$(sha256sum "$jsfile" 2>/dev/null | cut -d' ' -f1)
-        for known_hash in "${MALICIOUS_HASHES[@]}"; do
-            if [[ "$file_hash" == "$known_hash" ]]; then
-                log_error "MALICIOUS FILE DETECTED (hash match): $jsfile"
-                log_error "Hash: $file_hash"
-                ((hash_matches++))
-            fi
-        done
-    fi
-done < <(find "$SCAN_PATH" -name "*.js" -type f -size +1M -size -15M 2>/dev/null)
+# Detect hash command
+HASH_CMD=""
+if command -v shasum &>/dev/null; then
+    HASH_CMD="shasum -a 256"
+elif command -v sha256sum &>/dev/null; then
+    HASH_CMD="sha256sum"
+fi
 
-if [[ $hash_matches -eq 0 ]]; then
-    log_ok "No known malicious hashes detected"
+if [[ "$SKIP_HASH" == true ]]; then
+    log_info "Skipping hash-based detection (--skip-hash)"
+elif [[ -z "$HASH_CMD" ]]; then
+    log_warn "No suitable hash command found (shasum or sha256sum). Skipping hash checks."
+else
+    # Check JS files between 1MB-15MB (payload size range)
+    hash_matches=0
+    while IFS= read -r jsfile; do
+        if [[ -f "$jsfile" ]]; then
+            file_hash=$($HASH_CMD "$jsfile" 2>/dev/null | cut -d' ' -f1)
+            for known_hash in "${MALICIOUS_HASHES[@]}"; do
+                if [[ "$file_hash" == "$known_hash" ]]; then
+                    log_error "MALICIOUS FILE DETECTED (hash match): $jsfile"
+                    log_error "Hash: $file_hash"
+                    ((hash_matches++))
+                fi
+            done
+        fi
+    done < <(find "$SCAN_PATH" -name "*.js" -type f -size +1M -size -15M 2>/dev/null)
+
+    if [[ $hash_matches -eq 0 ]]; then
+        log_ok "No known malicious hashes detected"
+    fi
 fi
 
 # =============================================================================
@@ -417,7 +443,7 @@ echo "12. Bun-specific security checks..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # Check if Bun is used
-BUN_LOCK_FOUND=$(find "$SCAN_PATH" -name "bun.lockb" -not -path "*/node_modules/*" -print -quit 2>/dev/null)
+BUN_LOCK_FOUND=$(find "$SCAN_PATH" -name "bun.lockb" -not -path "*/node_modules/*" -print -quit 2>/dev/null || true)
 
 if [[ -n "$BUN_LOCK_FOUND" ]] || command -v bun &> /dev/null; then
     log_warn "Bun detected in project"

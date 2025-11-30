@@ -4,7 +4,6 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
 ## [1.3.1] - 2025-11-30
 
 ### Added
@@ -12,12 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CodeRabbit PR Reviews badge to READMEs
 - Automated changelog injection into Pull Request descriptions
 - New GitHub Action `pr-changelog.yml`
+- Portable hash detection in `scripts/detect.sh` (macOS support)
+- `--skip-hash` flag to `scripts/detect.sh`
 
 ### Changed
 - Updated all repository URLs from `hunting-worms-guide` to `dont-be-shy-hulud`
+- Updated `softprops/action-gh-release` to v2.4.2
 
 ### Fixed
 - Syntax error in `release.yml` workflow (nested mapping issue)
+- Typo in `release.yml` (`head_commit_message` -> `head_commit.message`)
+- Unbound variable error in `scripts/quick-audit.sh` (set -u compatibility)
+- Unbound variable error in `scripts/full-audit.sh` (set -u compatibility)
+- False positive Bun detection in `scripts/detect.sh` (ignoring `node_modules`)
+- `find` command compatibility issues on macOS in `scripts/detect.sh`
 
 ## [1.3.0] - 2025-11-30
 
