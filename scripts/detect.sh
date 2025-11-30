@@ -414,7 +414,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "10. Checking for cloud metadata service abuse..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-metadata_abuse=$(grep -r "169.254.169.254" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | grep -v "node_modules" | head -5 || true)
+metadata_abuse=$(grep -r --exclude="*.md" --exclude="malicious-packages.json" --exclude="detect.sh" "169\.254\.169\.254" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | grep -v "node_modules" | head -5 || true)
 if [[ -n "$metadata_abuse" ]]; then
     log_error "Found references to cloud metadata service (potential credential theft):"
     echo "$metadata_abuse"
@@ -432,7 +432,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 
 secondary_found=false
 for pattern in "${SECONDARY_PATTERNS[@]}"; do
-    matches=$(grep -r "$pattern" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | head -3 || true)
+    matches=$(grep -r --exclude="*.md" --exclude="malicious-packages.json" --exclude="detect.sh" "$pattern" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | head -3 || true)
     if [[ -n "$matches" ]]; then
         log_error "Found secondary phase indicator: '$pattern'"
         echo "$matches"
@@ -487,6 +487,13 @@ fi
 # =============================================================================
 # Summary
 # =============================================================================
+
+# Output to file if requested (BEFORE exit)
+if [[ -n "$OUTPUT_FILE" ]]; then
+    echo "Issues found: $FOUND_ISSUES" > "$OUTPUT_FILE"
+    echo "Scan completed. Results saved to $OUTPUT_FILE"
+fi
+
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
 echo "║                         SCAN SUMMARY                          ║"
@@ -516,12 +523,11 @@ else
     echo "See [docs/REMEDIATION.md](docs/REMEDIATION.md) for detailed steps."
 
     if [[ "$CI_MODE" == true ]]; then
+        # Ensure output file exists before exiting
+        if [[ -n "$OUTPUT_FILE" ]] && [[ ! -f "$OUTPUT_FILE" ]]; then
+             echo "No scan results were produced. Please check script logic." > "$OUTPUT_FILE"
+        fi
         exit 1
     fi
 fi
 
-# Output to file if requested
-if [[ -n "$OUTPUT_FILE" ]]; then
-    echo "Issues found: $FOUND_ISSUES" > "$OUTPUT_FILE"
-    echo "Scan completed. Results saved to $OUTPUT_FILE"
-fi
