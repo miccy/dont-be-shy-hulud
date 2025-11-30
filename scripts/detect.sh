@@ -24,7 +24,7 @@ CI_MODE=false
 SKIP_HASH=false
 GITHUB_CHECK=false
 FOUND_ISSUES=0
-VERSION="1.3.1"
+VERSION="1.3.2"
 
 # Parse arguments
 for arg in "$@"; do
