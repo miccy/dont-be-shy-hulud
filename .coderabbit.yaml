@@ -24,6 +24,9 @@ reviews:
     enabled: true
     drafts: false # Don't review draft PRs automatically
 
+  # Enable auto-approval if no issues found
+  auto_approve: true
+
   # Feedback filter
   profile: "chill"
 
