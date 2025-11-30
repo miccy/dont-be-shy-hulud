@@ -59,8 +59,13 @@ DATE=$(date +%Y-%m-%d)
 HEADER="## [$NEW_VERSION] - $DATE"
 
 if grep -q "## \[Unreleased\]" CHANGELOG.md; then
-    echo "Please add the following header to CHANGELOG.md:"
-    echo -e "${YELLOW}$HEADER${NC}"
+    # Replace [Unreleased] with new version header
+    sed -i.bak "s/## \[Unreleased\]/$HEADER/" CHANGELOG.md && rm CHANGELOG.md.bak
+
+    # Add new Unreleased section at the top (optional, but good practice)
+    # For now, just replacing is what was requested/implied.
+    # Actually, let's keep it simple: Replace Unreleased with Version.
+    echo -e "${GREEN}Renamed [Unreleased] to [$NEW_VERSION]${NC}"
 else
     # Insert at line 8
     sed -i.bak "8i\\
@@ -76,8 +81,13 @@ fi
 echo -e "\n${BLUE}Appending comparison link...${NC}"
 REPO_URL="https://github.com/miccy/dont-be-shy-hulud"
 LINK="[$NEW_VERSION]: $REPO_URL/compare/v$CURRENT_VERSION...v$NEW_VERSION"
-# Ensure newline before link if not present (though echo >> adds one)
-echo "$LINK" >> CHANGELOG.md
+
+# Check if link already exists to avoid duplicates
+if ! grep -Fq "$LINK" CHANGELOG.md; then
+    # Ensure newline before link
+    echo "" >> CHANGELOG.md
+    echo "$LINK" >> CHANGELOG.md
+fi
 
 # 7. Open Editor
 echo -e "${YELLOW}Opening CHANGELOG.md. Please fill in the release notes.${NC}"
@@ -85,16 +95,11 @@ echo "Save and close the file when done."
 
 if command -v code &> /dev/null; then
     code -w CHANGELOG.md
-elif [ -n "$EDITOR" ]; then
-    $EDITOR CHANGELOG.md
-elif command -v nano &> /dev/null; then
-    nano CHANGELOG.md
-elif command -v vim &> /dev/null; then
-    vim CHANGELOG.md
-elif command -v vi &> /dev/null; then
-    vi CHANGELOG.md
 else
-    echo "Press [Enter] when you have finished editing CHANGELOG.md"
+    # Fallback to simple confirmation if VS Code is not available
+    # This avoids opening nano/vim unexpectedly inside npm run script
+    echo "Editor 'code' not found. Please edit CHANGELOG.md manually."
+    echo "Press [Enter] when you have finished editing."
     read -r
 fi
 
