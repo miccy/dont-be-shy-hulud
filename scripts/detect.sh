@@ -417,7 +417,9 @@ echo "12. Bun-specific security checks..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # Check if Bun is used
-if [[ -f "$SCAN_PATH/bun.lockb" ]] || command -v bun &> /dev/null; then
+BUN_LOCK_FOUND=$(find "$SCAN_PATH" -name "bun.lockb" -not -path "*/node_modules/*" -print -quit 2>/dev/null)
+
+if [[ -n "$BUN_LOCK_FOUND" ]] || command -v bun &> /dev/null; then
     log_warn "Bun detected in project"
     echo "         → ⚠️  Remember: .npmrc ignore-scripts does NOT work reliably in Bun!"
     echo "         → ALWAYS use: bun install --ignore-scripts"

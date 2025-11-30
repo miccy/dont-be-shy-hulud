@@ -19,7 +19,7 @@ NC='\033[0m'
 # Config
 VERSION="1.3.1"
 
-if [[ "$1" == "--version" ]]; then
+if [[ "${1:-}" == "--version" ]]; then
     echo "$VERSION"
     exit 0
 fi
