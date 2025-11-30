@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.4] - 2025-11-30
 
 ### Added
 - Community section to README.md (EN) with links to Discussions, Issues, Security advisories
@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - License badge: Yellow → Green, now links to LICENSE file
 - PRs Welcome badge: Now links to CONTRIBUTING.md instead of external site
 - Removed static Security Advisories badge (redundant with Community section)
+- Improved `scripts/release.sh` editor fallback to avoid unexpected terminal editors
 
 ### Fixed
 - Removed duplicate `drafts: false` line in `.coderabbit.yaml`
@@ -26,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added missing `[1.3.2]` and `[1.3.3]` links in CHANGELOG.md
 - Removed duplicate comments (`# Config`, `# Parse arguments`, trap comment) in `scripts/detect.sh`
 - Corrected `.coderabbit.yaml` nesting for `tools` and `auto_title_instructions`
+- Fixed `scripts/release.sh` to correctly rename `[Unreleased]` section and append comparison links
 
 ## [1.3.3] - 2025-11-30
 
@@ -162,6 +164,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IOC database
 - Configuration templates (Renovate, Socket.dev, npm)
 
+[1.3.4]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.3.2...v1.3.3
 [1.3.2]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.3.0...v1.3.1

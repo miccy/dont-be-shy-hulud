@@ -17,7 +17,7 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 # Config
-VERSION="1.3.3"
+VERSION="1.3.4"
 
 if [[ "${1:-}" == "--version" ]]; then
     echo "$VERSION"
