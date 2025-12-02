@@ -40,6 +40,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ioc/malicious-packages.json** - Updated statistics with credential exfiltration counts (775+ GitHub, 373+ AWS, 300+ GCP, 115+ Azure)
 - Updated ROADMAP progress: Core Detection 70%→75%, IOC Database 30%→45%
 
+### Fixed
+- False positives in `scripts/detect.sh` where documentation files triggered cloud metadata abuse detection
+- False positives in `scripts/detect.sh` where documentation files triggered secondary phase indicator detection
+- Downgraded "Bun detected" warning to INFO in `scripts/detect.sh` to prevent CI failure
+- Fixed `socket-security.yml` CI failure by skipping scan when `SOCKET_SECURITY_API_KEY` is missing
+- Fixed ShellCheck warning in `scripts/suspend-malware.sh` (unused `VERBOSE` variable)
+
 ## [1.4.1] - 2025-12-01
 
 ### Fixed
