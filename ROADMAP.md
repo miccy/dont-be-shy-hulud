@@ -517,5 +517,5 @@ Look for items marked with low effort:
 ---
 
 <p align="center">
-  <i>This roadmap is a living document. Last updated: 2025-12-01</i>
+  <i>This roadmap is a living document. Last updated: 2025-12-02</i>
 </p>

@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated project status in `AGENTS.md`, `README.md`, `cs/README.md`, and `ROADMAP.md` to 2025-12-02
 - Updated Roadmap progress (Core Detection 85%, IOC Database 60%)
 - Marked v1.5.0 as released in Roadmap
-- Updated ROADMAP progress: Core Detection 70%→75%, IOC Database 30%→45%
+
 - **ioc/malicious-packages.json** - Updated statistics with credential exfiltration counts (775+ GitHub, 373+ AWS, 300+ GCP, 115+ Azure)
 
 ### Fixed
@@ -131,6 +131,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Duplicate step in `release.yml`
 - False positives in `scripts/detect.sh` where `CHANGELOG.md` itself was flagged for containing IOC patterns
 - Fixed CI workflow `supply-chain-security.yml` to use local `detect.sh` script instead of downloading from `main` branch, ensuring latest fixes are tested in documentation
+- Refactored `scripts/detect.sh` to use shared `GREP_FILTERS` for whitelist approach to reduce code duplication (CodeRabbit review)
+- Corrected roadmap progress and dates in `CHANGELOG.md` and `ROADMAP.md` (CodeRabbit review)
 - CodeRabbit configuration errors in `.coderabbit.yaml`
 
 ## [1.3.1] - 2025-11-30
