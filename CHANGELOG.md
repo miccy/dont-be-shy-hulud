@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Downgraded "Bun detected" warning to INFO in `scripts/detect.sh` to prevent CI failure
 - Fixed `socket-security.yml` CI failure by skipping scan when `SOCKET_SECURITY_API_KEY` is missing
 - Fixed ShellCheck warning in `scripts/suspend-malware.sh` (unused `VERBOSE` variable)
+- Fixed false positive where `CHANGELOG.md` triggered detection by explicitly excluding it in `scripts/detect.sh`
 
 ## [1.4.1] - 2025-12-01
 
