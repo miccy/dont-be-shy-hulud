@@ -24,10 +24,10 @@ This repository provides:
 
 ### Current Status
 
-**Version**: 1.5.0 (in development)  
+**Version**: 1.5.0 (stable)
 **Roadmap**: See [ROADMAP.md](ROADMAP.md) for detailed progress tracking
 
-**Key Metrics (as of 2025-12-01):**
+**Key Metrics (as of 2025-12-02):**
 - 800+ compromised npm packages
 - 25,000+ affected GitHub repositories
 - 1,200+ impacted organizations

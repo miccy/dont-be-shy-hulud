@@ -455,7 +455,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "10. Checking for cloud metadata service abuse..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-metadata_abuse=$(grep -r --exclude="*.md" --exclude="CHANGELOG.md" --exclude="malicious-packages.json" --exclude="network.json" --exclude="detect.sh" "169\.254\.169\.254" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | grep -v "node_modules" | head -5 || true)
+metadata_abuse=$(grep -r --include="*.js" --include="*.ts" --include="*.jsx" --include="*.tsx" --include="*.mjs" --include="*.cjs" --include="*.json" --include="*.yml" --include="*.yaml" --include="*.sh" --exclude="network.json" --exclude="malicious-packages.json" --exclude="detect.sh" "169\.254\.169\.254" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | grep -v "node_modules" | head -5 || true)
 if [[ -n "$metadata_abuse" ]]; then
     log_error "Found references to cloud metadata service (potential credential theft):"
     echo "$metadata_abuse"
@@ -473,7 +473,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 
 secondary_found=false
 for pattern in "${SECONDARY_PATTERNS[@]}"; do
-    matches=$(grep -r --exclude="*.md" --exclude="CHANGELOG.md" --exclude="malicious-packages.json" --exclude="network.json" --exclude="detect.sh" "$pattern" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | head -3 || true)
+    matches=$(grep -r --include="*.js" --include="*.ts" --include="*.jsx" --include="*.tsx" --include="*.mjs" --include="*.cjs" --include="*.json" --include="*.yml" --include="*.yaml" --include="*.sh" --exclude="network.json" --exclude="malicious-packages.json" --exclude="detect.sh" "$pattern" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | head -3 || true)
     if [[ -n "$matches" ]]; then
         log_error "Found secondary phase indicator: '$pattern'"
         echo "$matches"

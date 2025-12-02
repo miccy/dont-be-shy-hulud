@@ -100,6 +100,9 @@ chmod +x scripts/*.sh
 | **Kompromitované packages** | 800+ unique, 1092+ versions |
 | **Zasažené GitHub repos** | 25,000+ |
 | **Weekly downloads zasažených** | 20+ milionů |
+| **Nov 26, 2025** | GitHub reduces public malicious repos to ~300 |
+| **2. prosince 2025** | Nástroje pro detekci dospěly (vydána verze v1.5.0) |
+| **Dec 9, 2025** | **npm legacy token revocation deadline** |
 | **Peak propagace** | 1,000 nových repos každých 30 minut |
 | **Exfiltrované credentials** | 775+ GitHub, 373 AWS, 300 GCP, 115 Azure |
 
@@ -291,10 +294,10 @@ Chcete pomoci? Vyberte si jakoukoliv nezaškrtnutou položku z roadmapy a pošle
 
 PRs jsou vítány! Viz [ROADMAP.md](ROADMAP.md) pro priority:
 
-- [ ] SIGSTOP suspend script (kritické pro bezpečnou manipulaci s malwarem)
-- [ ] Rozšířená IOC databáze (800+ balíčků)
+- [x] SIGSTOP suspend script (kritické pro bezpečnou manipulaci s malwarem)
+- [x] Rozšířená IOC databáze (800+ balíčků)
 - [ ] Stack-specific dokumentace (Expo, Bun, Tauri)
-- [ ] Network IOCs a file hashes
+- [x] Network IOCs a file hashes
 - [ ] SARIF výstupní formát
 
 ## 🛠️ Správa repozitáře

@@ -1,7 +1,7 @@
 # 🗺️ Project Roadmap
 
-> **Status:** Active Development  
-> **Last Updated:** 2025-12-01  
+> **Status:** Active Development
+> **Last Updated:** 2025-12-02
 > **Maintainer:** [@miccy](https://github.com/miccy)
 
 This roadmap is based on comprehensive security audits from multiple AI models (Claude Opus 4.5, GPT-5.1-Pro, Grok-4.1, Perplexity, Proton-Lumo, Gemini-3-Pro) and community feedback. We're transparent about what's done and what needs work.
@@ -14,8 +14,8 @@ This roadmap is based on comprehensive security audits from multiple AI models (
 
 | Category | Progress | Priority |
 |----------|----------|----------|
-| [Core Detection](#-core-detection) | 🟡 75% | P0 |
-| [IOC Database](#-ioc-database) | 🟡 45% | P0 |
+| [Core Detection](#-core-detection) | 🟢 85% | P0 |
+| [IOC Database](#-ioc-database) | 🟡 60% | P0 |
 | [Documentation](#-documentation) | 🟡 60% | P1 |
 | [Automation & CI/CD](#-automation--cicd) | 🟡 50% | P1 |
 | [Tooling](#-tooling) | 🔴 20% | P2 |
@@ -34,7 +34,7 @@ This roadmap is based on comprehensive security audits from multiple AI models (
   - [x] npm cache inspection
   - [x] Verbose mode and CI-friendly exit codes
   - [x] Color-coded output
-  - [ ] **SIGSTOP mode** - Freeze processes instead of killing (prevents wiper trigger)
+  - [x] **SIGSTOP mode** - Freeze processes instead of killing (prevents wiper trigger)
   - [ ] Scan mode flags (`--lockfiles-only`, `--filesystem-only`, `--full`)
   - [ ] JSON/SARIF output format
   - [ ] Parallel scanning for large monorepos
@@ -79,7 +79,7 @@ This roadmap is based on comprehensive security audits from multiple AI models (
   - [x] GitHub API abuse patterns
   - [x] Cloud metadata abuse detection
   - [x] Firewall rule recommendations
-  - [ ] Suspicious outbound connection alerts (real-time)
+  - [x] Suspicious outbound connection alerts (real-time)
 - [ ] **Behavioral analysis**
   - [ ] Unexpected Bun installation detection
   - [ ] TruffleHog download detection
@@ -445,11 +445,11 @@ For contributors testing detection capabilities:
 
 ## 📅 Release Milestones
 
-### v1.1.0 (Current Target)
-- [ ] SIGSTOP suspend script
-- [ ] Expanded IOC database (100+ packages)
-- [ ] Network IOCs
-- [ ] File hash verification
+### v1.5.0 (Released)
+- [x] SIGSTOP suspend script
+- [x] Expanded IOC database (100+ packages)
+- [x] Network IOCs
+- [x] File hash verification
 - [ ] Stack-specific docs (at least 2)
 
 ### v1.2.0

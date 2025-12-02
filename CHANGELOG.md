@@ -36,9 +36,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated Contributing/Priority Areas section in both READMEs to reference ROADMAP.md
 - Updated repository structure in AGENTS.md to reflect current layout
 - Updated task priorities in AGENTS.md to include roadmap items
-- Updated project status in AGENTS.md to "public release, seeking contributors"
-- **ioc/malicious-packages.json** - Updated statistics with credential exfiltration counts (775+ GitHub, 373+ AWS, 300+ GCP, 115+ Azure)
+- Updated project status in `AGENTS.md`, `README.md`, `cs/README.md`, and `ROADMAP.md` to 2025-12-02
+- Updated Roadmap progress (Core Detection 85%, IOC Database 60%)
+- Marked v1.5.0 as released in Roadmap
 - Updated ROADMAP progress: Core Detection 70%→75%, IOC Database 30%→45%
+- **ioc/malicious-packages.json** - Updated statistics with credential exfiltration counts (775+ GitHub, 373+ AWS, 300+ GCP, 115+ Azure)
 
 ### Fixed
 - False positives in `scripts/detect.sh` where documentation files triggered cloud metadata abuse detection

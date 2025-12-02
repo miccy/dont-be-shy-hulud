@@ -109,6 +109,7 @@ Shai-Hulud 2.0 (aka "The Second Coming") is a **self-propagating npm worm** disc
 | Nov 25, 2025 | **800+ packages**, 25,000+ repos, **1,200+ orgs**, **20M+ weekly downloads** | Wiz, Check Point |
 | Nov 25, 2025 | Secondary phase detected ("Continued Coming") | Wiz |
 | Nov 26, 2025 | GitHub reduces public malicious repos to ~300 | GitHub |
+| Dec 02, 2025 | Community detection tools matured (don't-be-shy-hulud v1.5.0 released) | Community |
 | **Dec 9, 2025** | **npm legacy token revocation deadline** | npm |
 
 ### Key Differences from v1
@@ -445,10 +446,10 @@ Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 
 ### Priority Areas (see [ROADMAP.md](ROADMAP.md) for details)
 
-- [ ] SIGSTOP suspend script (critical for safe malware handling)
-- [ ] Expanded IOC database (800+ packages)
+- [x] SIGSTOP suspend script (critical for safe malware handling)
+- [x] Expanded IOC database (800+ packages)
 - [ ] Stack-specific documentation (Expo, Bun, Tauri)
-- [ ] Network IOCs and file hashes
+- [x] Network IOCs and file hashes
 - [ ] SARIF output format
 
 ## 🛠️ Repository Maintenance
