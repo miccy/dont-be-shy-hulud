@@ -129,7 +129,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Markdown linting issues in READMEs and documentation
 - Unbound variable in `scripts/check-github-repos.sh`
 - Duplicate step in `release.yml`
-- False positives in `scripts/detect.sh` where the script detected its own patterns in documentation
+- False positives in `scripts/detect.sh` where `CHANGELOG.md` itself was flagged for containing IOC patterns
+- Fixed CI workflow `supply-chain-security.yml` to use local `detect.sh` script instead of downloading from `main` branch, ensuring latest fixes are tested in documentation
 - CodeRabbit configuration errors in `.coderabbit.yaml`
 
 ## [1.3.1] - 2025-11-30

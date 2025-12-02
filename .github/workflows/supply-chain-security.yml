@@ -34,11 +34,8 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Download Shai-Hulud Detector
-        run: |
-          DETECTOR_URL="https://raw.githubusercontent.com/miccy/dont-be-shy-hulud/main/scripts/detect.sh"
-          curl -sSL "$DETECTOR_URL" -o detect.sh
-          chmod +x detect.sh
+      - name: Make Shai-Hulud Detector Executable
+        run: chmod +x scripts/detect.sh
 
       - name: Run Shai-Hulud Detector
         id: detect
@@ -47,7 +44,7 @@ jobs:
           # initialize rc so we always have a value
           rc=0
           # run detector and capture exit code (allow failure)
-          ./detect.sh . --ci --output=results.txt || rc=$?
+          ./scripts/detect.sh . --ci --output=results.txt || rc=$?
 
           # Ensure results.txt exists and use an unambiguous marker
           if [ ! -f results.txt ]; then
