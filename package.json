@@ -1,6 +1,6 @@
 {
   "name": "dont-be-shy-hulud",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Shai-Hulud 2.0 Detection and Remediation",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

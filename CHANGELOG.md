@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.5.0] - 2025-12-02
 
 ### Added
 - **ROADMAP.md** - Comprehensive project roadmap with nested checkboxes based on multi-model AI security audits (Claude Opus 4.5, GPT-5.1-Pro, Grok-4.1, Perplexity, Proton-Lumo, Gemini-3-Pro)
@@ -214,6 +214,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IOC database
 - Configuration templates (Renovate, Socket.dev, npm)
 
+[1.5.0]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.3.4...v1.4.0
 [1.3.4]: https://github.com/miccy/dont-be-shy-hulud/compare/v1.3.3...v1.3.4
