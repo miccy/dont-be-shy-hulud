@@ -24,7 +24,7 @@ This repository provides:
 
 ### Current Status
 
-**Version**: 1.5.0 (stable)
+**Version**: 1.5.1 (stable)
 **Roadmap**: See [ROADMAP.md](ROADMAP.md) for detailed progress tracking
 
 **Key Metrics (as of 2025-12-02):**
