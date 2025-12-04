@@ -1,0 +1,20 @@
+{
+  "name": "@hulud/web",
+  "version": "1.5.1",
+  "description": "Documentation website for Shai-Hulud detection toolkit",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "lint": "biome check .",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "latest",
+    "@astrojs/starlight": "latest",
+    "astro": "latest",
+    "sharp": "latest",
+    "typescript": "latest"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@hulud/ioc",
+  "version": "1.5.1",
+  "description": "Indicators of Compromise database for Shai-Hulud detection",
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./index.d.ts"
+    },
+    "./packages": {
+      "import": "./malicious-packages.json"
+    },
+    "./network": {
+      "import": "./network.json"
+    },
+    "./hashes": {
+      "import": "./hashes.json"
+    }
+  },
+  "scripts": {
+    "build": "echo 'No build step needed'",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

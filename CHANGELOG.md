@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+- **Monorepo structure** — Turborepo + Bun workspaces with apps/ and packages/ directories
+- **apps/web** — Astro Starlight documentation website with i18n (EN/CS)
+- **apps/cli** — CLI package extracted from root
+- **packages/ioc** — IOC database as importable TypeScript package
+- **packages/scripts** — Shell scripts as standalone package
+- **GitHub Pages workflow** — Automatic docs deployment on push
+
+### Changed
+
+- Migrated from pnpm to Bun workspaces
+- Restructured project as monorepo
+
+### Added (previous)
 - **Mermaid attack flow diagram** — Visual representation of Shai-Hulud 2.0 attack chain in README.md (EN/CS)
 - **Regex pattern for exfil repos** — Added `[0-9a-z]{18}` pattern for detecting random 18-char exfiltration repo names
 - **configs/renovate-defense.json** — Anti-worm Renovate configuration that blocks known compromised packages

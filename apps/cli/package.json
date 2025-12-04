@@ -1,0 +1,26 @@
+{
+  "name": "@hulud/cli",
+  "version": "1.5.1",
+  "description": "CLI for Shai-Hulud 2.0 detection toolkit",
+  "type": "module",
+  "bin": {
+    "hulud": "./bin/cli.js"
+  },
+  "scripts": {
+    "dev": "node bin/cli.js",
+    "build": "echo 'No build step needed'",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "chalk": "latest",
+    "cli-progress": "latest",
+    "commander": "latest",
+    "ora": "latest"
+  },
+  "devDependencies": {
+    "@types/cli-progress": "latest",
+    "@types/node": "latest",
+    "typescript": "latest"
+  }
+}

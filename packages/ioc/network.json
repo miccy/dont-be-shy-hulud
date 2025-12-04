@@ -1,0 +1,220 @@
+{
+  "meta": {
+    "description": "Network Indicators of Compromise for Shai-Hulud 2.0",
+    "last_updated": "2025-12-01",
+    "sources": [
+      "https://securitylabs.datadoghq.com/articles/shai-hulud-2.0-npm-worm/",
+      "https://www.wiz.io/blog/shai-hulud-2-0-ongoing-supply-chain-attack",
+      "https://blog.checkpoint.com/research/shai-hulud-2-0-inside-the-second-coming/",
+      "https://unit42.paloaltonetworks.com/npm-supply-chain-attack/"
+    ],
+    "note": "Shai-Hulud 2.0 primarily uses GitHub infrastructure for exfiltration, making traditional C2 blocking less effective"
+  },
+  "c2_domains": {
+    "description": "Known or suspected Command & Control domains",
+    "confirmed": [],
+    "suspected": [
+      {
+        "domain": "shaihulud-c2.io",
+        "status": "unconfirmed",
+        "source": "Multi-model AI analysis",
+        "notes": "Reported in threat intelligence, not independently verified"
+      },
+      {
+        "domain": "shai-hulud.net",
+        "status": "unconfirmed",
+        "source": "Multi-model AI analysis",
+        "notes": "Reported in threat intelligence, not independently verified"
+      }
+    ],
+    "note": "Primary exfiltration uses GitHub API, not traditional C2 infrastructure"
+  },
+  "c2_ips": {
+    "description": "Known or suspected C2 IP addresses",
+    "confirmed": [],
+    "suspected": [
+      {
+        "ip": "185.199.108.153",
+        "status": "unconfirmed",
+        "notes": "Cloudflare/GitHub Pages IP range - may be false positive",
+        "source": "Multi-model AI analysis"
+      }
+    ],
+    "github_ranges": {
+      "note": "GitHub IPs are legitimate but abused for exfiltration",
+      "reference": "https://api.github.com/meta"
+    }
+  },
+  "exfiltration_webhooks": {
+    "description": "Known webhook endpoints used for data exfiltration",
+    "endpoints": [
+      {
+        "url": "https://webhook.site/bb8ca5f6-4175-45d2-b042-fc9ebb8170b7",
+        "status": "confirmed",
+        "phase": "v1",
+        "source": "Datadog Security Labs"
+      }
+    ],
+    "patterns": [
+      "webhook.site/*",
+      "pipedream.net/*",
+      "requestbin.com/*"
+    ]
+  },
+  "github_exfiltration": {
+    "description": "GitHub-based exfiltration patterns",
+    "repo_patterns": [
+      {
+        "pattern": "description:Sha1-Hulud: The Second Coming",
+        "phase": "primary",
+        "detection": "gh api search/repositories -X GET -f q='Sha1-Hulud: The Second Coming in:description'"
+      },
+      {
+        "pattern": "description:Sha1-Hulud: The Continued Coming",
+        "phase": "secondary",
+        "detection": "gh api search/repositories -X GET -f q='Sha1-Hulud: The Continued Coming in:description'"
+      },
+      {
+        "pattern": "description:Shai-Hulud Migration",
+        "phase": "secondary",
+        "detection": "gh api search/repositories -X GET -f q='Shai-Hulud Migration in:description'"
+      }
+    ],
+    "repo_name_patterns": [
+      {
+        "regex": "^[0-9a-z]{18}$",
+        "description": "Random 18-character alphanumeric repository names",
+        "notes": "Used for exfiltration repos to avoid detection"
+      }
+    ],
+    "api_endpoints_abused": [
+      {
+        "endpoint": "POST /user/repos",
+        "purpose": "Create public repos for exfiltration"
+      },
+      {
+        "endpoint": "PUT /repos/{owner}/{repo}/contents/{path}",
+        "purpose": "Upload stolen data as files"
+      },
+      {
+        "endpoint": "POST /repos/{owner}/{repo}/actions/runners/registration-token",
+        "purpose": "Register self-hosted runners for persistence"
+      },
+      {
+        "endpoint": "POST /repos/{owner}/{repo}/dispatches",
+        "purpose": "Trigger workflows for C2"
+      }
+    ]
+  },
+  "cloud_metadata_abuse": {
+    "description": "Cloud metadata service endpoints queried for credential theft",
+    "endpoints": [
+      {
+        "ip": "169.254.169.254",
+        "provider": "AWS/Azure/GCP",
+        "purpose": "Retrieve short-lived cloud credentials",
+        "paths": [
+          "/latest/meta-data/iam/security-credentials/",
+          "/metadata/instance/compute",
+          "/computeMetadata/v1/instance/service-accounts/"
+        ]
+      },
+      {
+        "ip": "169.254.170.2",
+        "provider": "AWS ECS",
+        "purpose": "ECS task credentials"
+      }
+    ],
+    "detection": "Monitor outbound connections to 169.254.0.0/16 from CI/CD environments"
+  },
+  "npm_registry_abuse": {
+    "description": "npm registry patterns used in the attack",
+    "endpoints": [
+      {
+        "url": "https://registry.npmjs.org",
+        "purpose": "Publishing infected packages",
+        "detection": "Monitor for unusual npm publish activity"
+      }
+    ],
+    "abuse_patterns": [
+      "Publishing multiple package versions in short timeframe",
+      "Publishing to packages not recently maintained",
+      "Publishing from CI/CD with leaked tokens"
+    ]
+  },
+  "bun_installation": {
+    "description": "Bun runtime installation endpoints",
+    "legitimate_sources": [
+      "https://bun.sh/install",
+      "https://github.com/oven-sh/bun"
+    ],
+    "detection": "Unexpected Bun installations in preinstall scripts are suspicious"
+  },
+  "trufflehog_abuse": {
+    "description": "TruffleHog binary download indicators",
+    "sources": [
+      "https://github.com/trufflesecurity/trufflehog/releases"
+    ],
+    "detection": "Unexpected TruffleHog downloads in npm lifecycle scripts"
+  },
+  "firewall_rules": {
+    "description": "Recommended firewall rules for CI/CD environments",
+    "block_outbound": [
+      {
+        "destination": "webhook.site",
+        "reason": "Common exfiltration endpoint"
+      },
+      {
+        "destination": "pipedream.net",
+        "reason": "Common exfiltration endpoint"
+      },
+      {
+        "destination": "requestbin.com",
+        "reason": "Common exfiltration endpoint"
+      }
+    ],
+    "monitor": [
+      {
+        "destination": "api.github.com",
+        "reason": "Monitor for unusual API calls (repo creation, file uploads)"
+      },
+      {
+        "destination": "registry.npmjs.org",
+        "reason": "Monitor for unexpected publishes"
+      }
+    ],
+    "allow": [
+      {
+        "destination": "github.com",
+        "reason": "Required for git operations",
+        "notes": "Monitor for suspicious activity"
+      }
+    ],
+    "note": "Traditional IP blocking is less effective as attack uses legitimate GitHub infrastructure"
+  },
+  "detection_queries": {
+    "description": "Network monitoring queries for SIEM/IDS",
+    "queries": [
+      {
+        "name": "Webhook exfiltration",
+        "query": "destination.domain IN ('webhook.site', 'pipedream.net', 'requestbin.com')",
+        "severity": "high"
+      },
+      {
+        "name": "Cloud metadata access from CI",
+        "query": "destination.ip = '169.254.169.254' AND source.process IN ('node', 'bun', 'npm')",
+        "severity": "critical"
+      },
+      {
+        "name": "Mass GitHub repo creation",
+        "query": "destination.domain = 'api.github.com' AND http.request.method = 'POST' AND http.request.uri.path MATCHES '/user/repos' | count by source.ip | threshold > 5",
+        "severity": "high"
+      },
+      {
+        "name": "Unexpected Bun download",
+        "query": "destination.domain = 'bun.sh' AND source.process = 'node'",
+        "severity": "medium"
+      }
+    ]
+  }
+}

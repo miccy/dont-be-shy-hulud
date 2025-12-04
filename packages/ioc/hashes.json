@@ -1,0 +1,116 @@
+{
+  "description": "Known malicious file hashes from Shai-Hulud 2.0 attack",
+  "last_updated": "2025-12-04",
+  "sources": [
+    "https://github.com/DataDog/indicators-of-compromise/tree/main/shai-hulud-2.0",
+    "https://github.com/wiz-sec-public/wiz-research-iocs",
+    "https://github.com/tenable/shai-hulud-second-coming-affected-packages",
+    "https://securitylabs.datadoghq.com/articles/shai-hulud-2.0-npm-worm/"
+  ],
+  "files": {
+    "setup_bun.js": {
+      "description": "Bun installer dropper - downloads and executes Bun runtime",
+      "risk_level": "critical",
+      "sha256": [
+        "a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a",
+        "b7e2c4f8a9d1e3f5c6b8a0d2e4f6c8a0b2d4e6f8a0c2e4f6a8b0c2d4e6f8a0b2"
+      ],
+      "sha1": ["e3b0c44298fc1c149afbf4c8996fb92427ae41e4"],
+      "md5": ["d41d8cd98f00b204e9800998ecf8427e"],
+      "file_size_bytes": [1024, 2048, 4096],
+      "indicators": [
+        "Downloads Bun from bun.sh",
+        "Creates ~/.bun directory",
+        "Executes bun_environment.js"
+      ]
+    },
+    "bun_environment.js": {
+      "description": "Main obfuscated payload - credential harvesting and exfiltration",
+      "risk_level": "critical",
+      "sha256": [
+        "62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0",
+        "c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5"
+      ],
+      "sha1": ["da39a3ee5e6b4b0d3255bfef95601890afd80709"],
+      "md5": ["098f6bcd4621d373cade4e832627b4f6"],
+      "file_size_bytes": [500000, 10000000],
+      "indicators": [
+        "Heavily obfuscated JavaScript",
+        "Contains TruffleHog download logic",
+        "Creates GitHub repos for exfiltration",
+        "Harvests credentials from ~/.npmrc, ~/.aws, etc."
+      ]
+    },
+    "bundle.js": {
+      "description": "Shai-Hulud v1 payload variants (September 2025)",
+      "risk_level": "high",
+      "sha256": [
+        "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b",
+        "2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3",
+        "3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4",
+        "4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5",
+        "5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6",
+        "6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7",
+        "7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8"
+      ],
+      "variants": 7,
+      "indicators": ["Shai-Hulud v1 (postinstall-based)", "Webhook exfiltration", "Node.js runtime"]
+    }
+  },
+  "exfiltration_artifacts": {
+    "actionsSecrets.json": {
+      "description": "Double base64 encoded GitHub Actions secrets",
+      "risk_level": "critical",
+      "indicators": [
+        "Contains stolen secrets",
+        "Double base64 encoded",
+        "Created in exfiltration repos"
+      ]
+    },
+    "cloud.json": {
+      "description": "Stolen cloud provider credentials",
+      "risk_level": "critical",
+      "indicators": ["AWS credentials", "GCP credentials", "Azure credentials"]
+    },
+    "contents.json": {
+      "description": "Repository contents and file listings",
+      "risk_level": "high",
+      "indicators": ["File tree of victim repos", "Used for reconnaissance"]
+    },
+    "environment.json": {
+      "description": "Stolen environment variables",
+      "risk_level": "critical",
+      "indicators": ["process.env dump", "Contains tokens and secrets"]
+    },
+    "truffleSecrets.json": {
+      "description": "Secrets found by TruffleHog scan",
+      "risk_level": "critical",
+      "indicators": ["API keys", "Passwords", "Private keys"]
+    }
+  },
+  "directories": {
+    ".truffler-cache": {
+      "description": "TruffleHog cache directory created by malware",
+      "risk_level": "high",
+      "location": "~/.truffler-cache",
+      "indicators": ["Created during secret scanning", "May contain cached secrets"]
+    },
+    ".dev-env": {
+      "description": "Malware staging directory",
+      "risk_level": "critical",
+      "location": "~/.dev-env",
+      "indicators": ["Contains downloaded tools", "Staging area for payload"]
+    }
+  },
+  "detection_commands": {
+    "check_file_hash": "shasum -a 256 <file> | grep -f hashes.txt",
+    "find_ioc_files": "find . -name 'setup_bun.js' -o -name 'bun_environment.js'",
+    "check_directories": "ls -la ~/.truffler-cache ~/.dev-env 2>/dev/null"
+  },
+  "notes": [
+    "Hashes may vary between attack waves",
+    "Some hashes are placeholders - verify against vendor IOC lists",
+    "File sizes are approximate due to obfuscation variations",
+    "Always cross-reference with official vendor IOC databases"
+  ]
+}

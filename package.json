@@ -1,21 +1,24 @@
 {
   "name": "dont-be-shy-hulud",
   "version": "1.5.1",
+  "private": true,
   "description": "🪱 npm supply chain attack detection toolkit — Shai-Hulud 2.0 detection, defense & remediation",
-  "type": "module",
-  "bin": {
-    "hulud": "./bin/cli.js"
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "release": "./scripts/release.sh",
-    "detect": "./scripts/detect.sh",
-    "audit:full": "./scripts/full-audit.sh",
-    "audit:quick": "./scripts/quick-audit.sh",
-    "harden": "./scripts/harden-npm.sh",
-    "lang": "./scripts/set-language.sh",
-    "check:repos": "./scripts/check-github-repos.sh",
-    "cli": "node bin/cli.js"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "detect": "./packages/scripts/detect.sh",
+    "audit:full": "./packages/scripts/full-audit.sh",
+    "audit:quick": "./packages/scripts/quick-audit.sh",
+    "harden": "./packages/scripts/harden-npm.sh",
+    "web:dev": "turbo dev --filter=@hulud/web",
+    "web:build": "turbo build --filter=@hulud/web",
+    "cli": "turbo dev --filter=@hulud/cli"
   },
   "keywords": [
     "security",
@@ -33,7 +36,7 @@
     "audit",
     "scanner"
   ],
-  "author": "Miccy <miccy@miccy.dev>",
+  "author": "Miccy <support@miccy.dev>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -43,23 +46,11 @@
     "url": "https://github.com/miccy/dont-be-shy-hulud/issues"
   },
   "homepage": "https://github.com/miccy/dont-be-shy-hulud#readme",
-  "files": [
-    "bin/",
-    "scripts/",
-    "ioc/",
-    "configs/",
-    "docs/",
-    "README.md",
-    "LICENSE"
-  ],
-  "packageManager": "pnpm@10.24.0",
+  "packageManager": "bun@1.1.38",
   "engines": {
     "node": ">=18"
   },
-  "dependencies": {
-    "chalk": "^5.6.2",
-    "cli-progress": "^3.12.0",
-    "commander": "^14.0.2",
-    "ora": "^9.0.0"
+  "devDependencies": {
+    "turbo": "latest"
   }
 }

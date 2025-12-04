@@ -1,0 +1,19 @@
+{
+  "name": "@hulud/scripts",
+  "version": "1.5.1",
+  "description": "Shell scripts for Shai-Hulud detection",
+  "type": "module",
+  "scripts": {
+    "detect": "./detect.sh",
+    "audit:full": "./full-audit.sh",
+    "audit:quick": "./quick-audit.sh",
+    "harden": "./harden-npm.sh",
+    "scan:github": "./gh-scan-exfil.sh",
+    "update:iocs": "./update-iocs.sh"
+  },
+  "bin": {
+    "hulud-detect": "./detect.sh",
+    "hulud-audit": "./full-audit.sh",
+    "hulud-harden": "./harden-npm.sh"
+  }
+}

@@ -1,0 +1,53 @@
+
+## ⚠️ Critical Security Alert
+
+**Shai-Hulud 2.0** is an active npm supply chain attack affecting **800+ packages** and **25,000+ repositories**.
+
+<CardGrid stagger>
+  <Card title="🔍 Detect" icon="magnifier">
+    Scan your projects for indicators of compromise (IOCs) including malicious files, compromised packages, and suspicious network activity.
+  </Card>
+  <Card title="🛡️ Defend" icon="shield">
+    Harden your npm configuration, GitHub Actions, and CI/CD pipelines against supply chain attacks.
+  </Card>
+  <Card title="🔧 Remediate" icon="setting">
+    Step-by-step guides for credential rotation, cache cleanup, and full system recovery.
+  </Card>
+  <Card title="📚 Learn" icon="open-book">
+    Understand how the attack works, why Bun is the execution vector, and how to prevent future compromises.
+  </Card>
+</CardGrid>
+
+## Quick Scan
+
+```bash
+# One-liner detection
+npx hulud scan .
+
+# Or use the shell script directly
+curl -sSL https://raw.githubusercontent.com/miccy/dont-be-shy-hulud/main/scripts/detect.sh | bash
+```
+
+## Key IOC Files
+
+Watch for these files in your projects:
+
+- `setup_bun.js` — Loader script
+- `bun_environment.js` — Main payload (~500KB obfuscated)
+- `.truffler-cache/` — Staging directory
+- `actionsSecrets.json`, `cloud.json` — Exfiltrated credentials
+
+## Attack Timeline
+
+| Date | Event |
+|------|-------|
+| Nov 21, 2025 | First compromised packages published |
+| Nov 24, 2025 | Socket.dev detects anomalies |
+| Nov 26, 2025 | Public disclosure |
+| Dec 2, 2025 | 800+ packages confirmed affected |
+
+---
+
+<Card title="🌍 Čeština" icon="translate">
+  Tato dokumentace je dostupná také v češtině. [Přejít na českou verzi →](/cs/)
+</Card>

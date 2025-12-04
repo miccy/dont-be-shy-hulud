@@ -1,0 +1,496 @@
+{
+  "meta": {
+    "description": "Indicators of Compromise (IOCs) for Shai-Hulud 2.0 npm worm",
+    "last_updated": "2025-12-01",
+    "update_frequency": "Daily during active incidents",
+    "sources": [
+      "https://github.com/DataDog/indicators-of-compromise/tree/main/shai-hulud-2.0",
+      "https://github.com/wiz-sec-public/wiz-research-iocs",
+      "https://github.com/tenable/shai-hulud-second-coming-affected-packages",
+      "https://github.com/safedep/shai-hulud-migration-response",
+      "https://securitylabs.datadoghq.com/articles/shai-hulud-2.0-npm-worm/",
+      "https://unit42.paloaltonetworks.com/npm-supply-chain-attack/"
+    ],
+    "note": "This list is regularly updated from vendor sources. Always cross-reference with official vendor IOC lists for the most current data.",
+    "statistics": {
+      "packages_compromised": "800+",
+      "versions_affected": "1092+",
+      "organizations_impacted": "1200+",
+      "weekly_downloads_affected": "20M+",
+      "github_repos_created": "25,000+",
+      "peak_propagation_rate": "1,000 new repos every 30 minutes",
+      "credentials_exfiltrated": {
+        "github_tokens": "775+",
+        "aws_credentials": "373+",
+        "gcp_credentials": "300+",
+        "azure_credentials": "115+"
+      }
+    }
+  },
+  "high_risk_packages": {
+    "description": "Packages with highest deployment rates that were compromised",
+    "packages": [
+      {
+        "name": "@postman/tunnel-agent",
+        "risk_level": "critical",
+        "deployment_rate": "27%",
+        "affected_versions": ["1.0.1", "1.0.2"],
+        "status": "reclaimed",
+        "notes": "High prevalence in cloud environments"
+      },
+      {
+        "name": "posthog-node",
+        "risk_level": "critical",
+        "deployment_rate": "25%",
+        "affected_versions": ["4.18.1", "5.13.3", "5.11.3"],
+        "status": "reclaimed",
+        "notes": "Analytics package, widely deployed"
+      },
+      {
+        "name": "posthog-js",
+        "risk_level": "critical",
+        "deployment_rate": "15%",
+        "affected_versions": ["1.297.3"],
+        "status": "reclaimed",
+        "notes": "Client-side analytics"
+      },
+      {
+        "name": "@posthog/agent",
+        "risk_level": "critical",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["1.24.1"],
+        "status": "reclaimed",
+        "notes": "PostHog agent package"
+      },
+      {
+        "name": "@asyncapi/specs",
+        "risk_level": "critical",
+        "deployment_rate": "20%",
+        "affected_versions": ["multiple"],
+        "status": "reclaimed",
+        "notes": "First detected package (go-template)"
+      },
+      {
+        "name": "@asyncapi/openapi-schema-parser",
+        "risk_level": "critical",
+        "deployment_rate": "17%",
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
+        "status": "reclaimed",
+        "notes": "Schema parser"
+      },
+      {
+        "name": "@asyncapi/avro-schema-parser",
+        "risk_level": "critical",
+        "deployment_rate": "17%",
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
+        "status": "reclaimed"
+      },
+      {
+        "name": "@asyncapi/raml-dt-schema-parser",
+        "risk_level": "critical",
+        "deployment_rate": "15%",
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
+        "status": "reclaimed"
+      },
+      {
+        "name": "zapier-platform-core",
+        "risk_level": "critical",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["18.0.2", "18.0.3", "18.0.4"],
+        "status": "reclaimed",
+        "notes": "Zapier official toolkit"
+      },
+      {
+        "name": "zapier-platform-cli",
+        "risk_level": "critical",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
+        "status": "reclaimed"
+      },
+      {
+        "name": "@zapier/zapier-sdk",
+        "risk_level": "critical",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["0.15.5", "0.15.6", "0.15.7"],
+        "status": "reclaimed"
+      },
+      {
+        "name": "@ensdomains/ensjs",
+        "risk_level": "critical",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["4.0.3"],
+        "status": "reclaimed",
+        "notes": "ENS Domains official package"
+      },
+      {
+        "name": "@ensdomains/ens-validation",
+        "risk_level": "critical",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["0.1.1"],
+        "status": "reclaimed"
+      },
+      {
+        "name": "ngx-bootstrap",
+        "risk_level": "high",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
+        "status": "reclaimed",
+        "notes": "Widely used Angular bootstrap components"
+      },
+      {
+        "name": "tinycolor2",
+        "risk_level": "high",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["4.1.2"],
+        "status": "reclaimed",
+        "notes": "Color manipulation library - NOTE: tinycolor2, NOT tinycolor"
+      },
+      {
+        "name": "angulartics2",
+        "risk_level": "high",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
+        "status": "reclaimed",
+        "notes": "Angular analytics"
+      },
+      {
+        "name": "koa2-swagger-ui",
+        "risk_level": "high",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
+        "status": "reclaimed",
+        "notes": "Swagger UI for Koa"
+      },
+      {
+        "name": "@postman/postman-mcp-cli",
+        "risk_level": "high",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
+        "status": "reclaimed",
+        "notes": "Postman MCP tooling"
+      },
+      {
+        "name": "ethereum-ens",
+        "risk_level": "high",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
+        "status": "reclaimed"
+      },
+      {
+        "name": "@ensdomains/content-hash",
+        "risk_level": "high",
+        "deployment_rate": "Unknown",
+        "affected_versions": ["unknown"],
+        "vendor_note": "Check vendor sources",
+        "status": "reclaimed"
+      }
+    ]
+  },
+  "ioc_files": {
+    "description": "File indicators of compromise",
+    "droppers": [
+      {
+        "filename": "setup_bun.js",
+        "type": "dropper",
+        "sha256": "a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a",
+        "description": "Initial loader script, typically in preinstall hook. Installs Bun runtime from bun.sh",
+        "detection": "find . -name 'setup_bun.js' 2>/dev/null"
+      },
+      {
+        "filename": "bun_environment.js",
+        "type": "payload",
+        "sha256": "62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0",
+        "size": "~10MB",
+        "description": "Main malicious payload, heavily obfuscated. Runs as detached background process.",
+        "detection": "find . -name 'bun_environment.js' 2>/dev/null"
+      },
+      {
+        "filename": "bundle.js",
+        "type": "payload_v1",
+        "sha256": "46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09",
+        "description": "Alternative payload variant from v1",
+        "detection": "find . -name 'bundle.js' -size +1M 2>/dev/null"
+      }
+    ],
+    "exfiltration": [
+      {
+        "filename": "actionsSecrets.json",
+        "type": "exfiltration",
+        "description": "Stolen GitHub Actions secrets (double base64 encoded)",
+        "detection": "find . -name 'actionsSecrets.json' 2>/dev/null"
+      },
+      {
+        "filename": "cloud.json",
+        "type": "exfiltration",
+        "description": "Cloud credentials (AWS, GCP, Azure) - double base64 encoded",
+        "detection": "find . -name 'cloud.json' 2>/dev/null"
+      },
+      {
+        "filename": "contents.json",
+        "type": "exfiltration",
+        "description": "Repository contents",
+        "detection": "find . -name 'contents.json' 2>/dev/null"
+      },
+      {
+        "filename": "environment.json",
+        "type": "exfiltration",
+        "description": "Environment variables",
+        "detection": "find . -name 'environment.json' 2>/dev/null"
+      },
+      {
+        "filename": "truffleSecrets.json",
+        "type": "exfiltration",
+        "description": "Secrets found by TruffleHog scan of codebase",
+        "detection": "find . -name 'truffleSecrets.json' 2>/dev/null"
+      },
+      {
+        "filename": "data.json",
+        "type": "exfiltration",
+        "description": "Consolidated stolen data",
+        "detection": "find . -name 'data.json' 2>/dev/null"
+      }
+    ],
+    "persistence": [
+      {
+        "pattern": ".github/workflows/formatter_*.yml",
+        "type": "backdoor",
+        "description": "Backdoor workflow files for secrets exfiltration"
+      },
+      {
+        "pattern": ".github/workflows/discussion.yaml",
+        "type": "backdoor",
+        "description": "C2 backdoor using GitHub Discussions as trigger - survives credential rotation"
+      },
+      {
+        "pattern": ".github/workflows/shai-hulud-workflow.yml",
+        "type": "backdoor",
+        "description": "Self-hosted runner registration workflow"
+      }
+    ],
+    "cache": [
+      {
+        "directory": ".truffler-cache",
+        "description": "TruffleHog abuse indicator - cache from secret scanning"
+      }
+    ]
+  },
+  "behavioral_iocs": {
+    "description": "Behavioral indicators of compromise",
+    "indicators": [
+      {
+        "type": "github_repo",
+        "pattern": "Repository description contains 'Sha1-Hulud: The Second Coming'",
+        "phase": "primary",
+        "detection": "gh repo list --json description | jq -r '.[] | select(.description | contains(\"Hulud\"))'"
+      },
+      {
+        "type": "github_repo",
+        "pattern": "Repository description contains 'Sha1-Hulud: The Continued Coming'",
+        "phase": "secondary",
+        "detection": "gh repo list --json description | jq -r '.[] | select(.description | contains(\"Continued\"))'"
+      },
+      {
+        "type": "github_repo",
+        "pattern": "Repository description contains 'Shai-Hulud Migration'",
+        "phase": "secondary",
+        "detection": "Check for repos with '-migration' suffix"
+      },
+      {
+        "type": "github_actions",
+        "pattern": "Self-hosted runner named 'SHA1HULUD'",
+        "detection": "Check Actions runners in GitHub settings or via API"
+      },
+      {
+        "type": "github_branch",
+        "pattern": "Branch named 'shai-hulud' or random 18-char alphanumeric",
+        "detection": "git branch -a | grep -i hulud"
+      },
+      {
+        "type": "workflow_file",
+        "pattern": "Workflow files matching 'formatter_*.yml' in .github/workflows/",
+        "detection": "find .github/workflows -name 'formatter_*.yml'"
+      },
+      {
+        "type": "directory",
+        "pattern": ".truffler-cache directory in project or home folder",
+        "detection": "ls -la ~/.truffler-cache || find . -name '.truffler-cache' -type d"
+      },
+      {
+        "type": "process",
+        "pattern": "Unexpected Bun processes running",
+        "detection": "ps aux | grep bun | grep -v grep"
+      },
+      {
+        "type": "package_json",
+        "pattern": "preinstall script with 'setup_bun' or 'bun_environment'",
+        "detection": "grep -r '\"preinstall\".*setup_bun\\|bun_environment' package.json"
+      }
+    ]
+  },
+  "network_iocs": {
+    "description": "Network indicators of compromise",
+    "indicators": [
+      {
+        "type": "webhook",
+        "url": "https://webhook.site/bb8ca5f6-4175-45d2-b042-fc9ebb8170b7",
+        "description": "Known exfiltration webhook endpoint"
+      },
+      {
+        "type": "metadata_service",
+        "ip": "169.254.169.254",
+        "description": "Cloud metadata service (AWS/Azure/GCP) - queried for short-lived credentials in CI/CD"
+      }
+    ],
+    "github_api_abuse": [
+      {
+        "endpoint": "POST /user/repos",
+        "description": "Creating public repos for data exfiltration"
+      },
+      {
+        "endpoint": "PUT /repos/{owner}/{repo}/contents/{path}",
+        "description": "Uploading stolen data to repos"
+      },
+      {
+        "endpoint": "POST /repos/{owner}/{repo}/actions/runners/registration-token",
+        "description": "Registering self-hosted runners for persistence"
+      }
+    ],
+    "note": "Shai-Hulud 2.0 primarily uses GitHub for exfiltration rather than external C2 servers"
+  },
+  "file_hashes": {
+    "description": "SHA-256 hashes of known malicious files",
+    "hashes": [
+      {
+        "hash": "a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a",
+        "filename": "setup_bun.js",
+        "type": "dropper"
+      },
+      {
+        "hash": "62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0",
+        "filename": "bun_environment.js",
+        "type": "payload"
+      },
+      {
+        "hash": "46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09",
+        "filename": "bundle.js",
+        "type": "payload_v1"
+      }
+    ],
+    "note": "Payloads may be polymorphic - use behavioral detection in addition to hash matching"
+  },
+  "credential_targets": {
+    "description": "Files and locations targeted for credential theft",
+    "targets": [
+      {
+        "path": "~/.npmrc",
+        "type": "npm_token",
+        "priority": "critical"
+      },
+      {
+        "path": "~/.aws/credentials",
+        "type": "aws",
+        "priority": "critical"
+      },
+      {
+        "path": "~/.aws/config",
+        "type": "aws",
+        "priority": "high"
+      },
+      {
+        "path": "~/.azure/",
+        "type": "azure",
+        "priority": "critical"
+      },
+      {
+        "path": "~/.config/gcloud/application_default_credentials.json",
+        "type": "gcp",
+        "priority": "critical"
+      },
+      {
+        "path": "~/.ssh/",
+        "type": "ssh_keys",
+        "priority": "critical"
+      },
+      {
+        "path": "~/.gitconfig",
+        "type": "github",
+        "priority": "high"
+      },
+      {
+        "path": "Environment variables",
+        "type": "secrets",
+        "priority": "critical",
+        "patterns": ["*_TOKEN", "*_KEY", "*_SECRET", "*_PASSWORD"]
+      }
+    ]
+  },
+  "timeline": {
+    "key_dates": [
+      {
+        "date": "2025-08-27",
+        "event": "S1ngularity/Nx GitHub token theft (precursor attack)",
+        "recommended_action": "Monitor for unusual token usage"
+      },
+      {
+        "date": "2025-09-15",
+        "event": "Shai-Hulud v1 discovered (postinstall-based)",
+        "recommended_action": "Block postinstall scripts"
+      },
+      {
+        "date": "2025-09-23",
+        "event": "CISA Advisory issued",
+        "recommended_action": "Review CISA guidance"
+      },
+      {
+        "date": "2025-11-05",
+        "event": "npm disables new classic token creation",
+        "recommended_action": "Switch to granular tokens"
+      },
+      {
+        "date": "2025-11-21",
+        "event": "Shai-Hulud 2.0 package uploads begin",
+        "recommended_action": "Pin dependencies to pre-Nov 21"
+      },
+      {
+        "date": "2025-11-24T03:16:00Z",
+        "event": "First detection (go-template, AsyncAPI)",
+        "recommended_action": "Scan for IOCs"
+      },
+      {
+        "date": "2025-11-24T04:11:00Z",
+        "event": "PostHog packages compromised",
+        "recommended_action": "Audit PostHog dependencies"
+      },
+      {
+        "date": "2025-11-24T05:09:00Z",
+        "event": "Postman packages compromised",
+        "recommended_action": "Audit Postman dependencies"
+      },
+      {
+        "date": "2025-11-25",
+        "event": "Secondary phase detected ('Continued Coming')",
+        "recommended_action": "Check for new IOC patterns"
+      },
+      {
+        "date": "2025-11-26",
+        "event": "GitHub reduces public malicious repos to ~300",
+        "recommended_action": "Continue monitoring"
+      },
+      {
+        "date": "2025-12-09",
+        "event": "npm legacy token revocation deadline",
+        "critical": true,
+        "recommended_action": "Migrate to granular tokens immediately"
+      }
+    ]
+  }
+}

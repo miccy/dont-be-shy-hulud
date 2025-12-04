@@ -1,0 +1,53 @@
+
+## ⚠️ Kritické bezpečnostní upozornění
+
+**Shai-Hulud 2.0** je aktivní npm supply chain útok postihující **800+ balíčků** a **25 000+ repozitářů**.
+
+<CardGrid stagger>
+  <Card title="🔍 Detekce" icon="magnifier">
+    Skenujte své projekty na indikátory kompromitace (IOC) včetně škodlivých souborů, kompromitovaných balíčků a podezřelé síťové aktivity.
+  </Card>
+  <Card title="🛡️ Obrana" icon="shield">
+    Zabezpečte svou npm konfiguraci, GitHub Actions a CI/CD pipelines proti supply chain útokům.
+  </Card>
+  <Card title="🔧 Náprava" icon="setting">
+    Krok za krokem průvodci pro rotaci credentials, čištění cache a kompletní obnovu systému.
+  </Card>
+  <Card title="📚 Vzdělávání" icon="open-book">
+    Pochopte, jak útok funguje, proč je Bun vektorem spuštění a jak předejít budoucím kompromitacím.
+  </Card>
+</CardGrid>
+
+## Rychlý sken
+
+```bash
+# Jednořádková detekce
+npx hulud scan .
+
+# Nebo použijte shell skript přímo
+curl -sSL https://raw.githubusercontent.com/miccy/dont-be-shy-hulud/main/scripts/detect.sh | bash
+```
+
+## Klíčové IOC soubory
+
+Sledujte tyto soubory ve svých projektech:
+
+- `setup_bun.js` — Loader skript
+- `bun_environment.js` — Hlavní payload (~500KB obfuskovaný)
+- `.truffler-cache/` — Staging adresář
+- `actionsSecrets.json`, `cloud.json` — Exfiltrované credentials
+
+## Časová osa útoku
+
+| Datum | Událost |
+|-------|---------|
+| 21. 11. 2025 | První kompromitované balíčky publikovány |
+| 24. 11. 2025 | Socket.dev detekuje anomálie |
+| 26. 11. 2025 | Veřejné odhalení |
+| 2. 12. 2025 | 800+ balíčků potvrzeno jako postižených |
+
+---
+
+<Card title="🌍 English" icon="translate">
+  This documentation is also available in English. [Switch to English version →](/)
+</Card>
