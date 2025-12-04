@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # comprehensive-scan.sh - Full system Shai-Hulud malware scan
-# 
+#
 # Purpose:
 #   Comprehensive scan of entire system for Shai-Hulud 2.0 malware
 #   Scans all critical locations with intelligent exclusions
@@ -42,23 +42,14 @@ NC='\033[0m' # No Color
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DETECTOR_SCRIPT=""
+DETECTOR_SCRIPT="$SCRIPT_DIR/detect.sh"
 
-# Try multiple locations for detect.sh
-if [[ -f "$HOME/Dev/dont-be-shy-hulud/scripts/detect.sh" ]]; then
-    DETECTOR_SCRIPT="$HOME/Dev/dont-be-shy-hulud/scripts/detect.sh"
-elif [[ -f "$HOME/AI-sandbox/dev/dont-be-shy-hulud/scripts/detect.sh" ]]; then
-    DETECTOR_SCRIPT="$HOME/AI-sandbox/dev/dont-be-shy-hulud/scripts/detect.sh"
-elif [[ -f "$SCRIPT_DIR/detect.sh" ]]; then
-    DETECTOR_SCRIPT="$SCRIPT_DIR/detect.sh"
-fi
-
-if [[ -z "$DETECTOR_SCRIPT" ]] || [[ ! -x "$DETECTOR_SCRIPT" ]]; then
+# Verify detect.sh exists
+if [[ ! -x "$DETECTOR_SCRIPT" ]]; then
     echo -e "${RED}ERROR: detect.sh not found or not executable!${NC}"
-    echo "Looked in:"
-    echo "  - $HOME/Dev/dont-be-shy-hulud/scripts/detect.sh"
-    echo "  - $HOME/AI-sandbox/dev/dont-be-shy-hulud/scripts/detect.sh"
-    echo "  - $SCRIPT_DIR/detect.sh"
+    echo "Expected at: $DETECTOR_SCRIPT"
+    echo ""
+    echo "Make sure you're running from the dont-be-shy-hulud repository."
     exit 1
 fi
 
@@ -79,7 +70,7 @@ while [[ $# -gt 0 ]]; do
             SCAN_MODE="full"
             shift
             ;;
-        --projects-only)
+        --projects-only|--projects)
             SCAN_MODE="projects"
             shift
             ;;
@@ -155,12 +146,12 @@ scan_location() {
     local location="$1"
     local label="$2"
     local result_file="$TEMP_DIR/scan_$(echo "$location" | sed 's|/|_|g').txt"
-    
+
     if [[ ! -d "$location" ]] && [[ ! -f "$location" ]]; then
         echo "SKIP: Location does not exist: $location" > "$result_file"
         return
     fi
-    
+
     # Run detector with timeout
     if timeout 300s "$DETECTOR_SCRIPT" "$location" > "$result_file" 2>&1; then
         if grep -qi "critical\|error\|detected" "$result_file"; then
@@ -172,14 +163,12 @@ scan_location() {
         echo "TIMEOUT" > "${result_file}.status"
         echo "TIMEOUT: Scan exceeded 5 minutes" >> "$result_file"
     fi
-    
+
     update_progress
 }
 
-# Export for parallel execution
-export -f scan_location update_progress
-export DETECTOR_SCRIPT TEMP_DIR SCANNED_LOCATIONS TOTAL_LOCATIONS
-export RED GREEN YELLOW BLUE CYAN NC
+# Note: Progress tracking doesn't work with GNU Parallel (subshells)
+# We track completion by counting result files instead
 
 # Define scan locations based on mode
 declare -a SCAN_LOCATIONS
@@ -209,11 +198,11 @@ case $SCAN_MODE in
             "Local Directory"
         )
         ;;
-        
+
     full)
         log "🔍 FULL SCAN MODE - Entire HOME directory (slow!)"
         log_warn "This may take several hours depending on system size"
-        
+
         # Build full scan list with exclusions
         EXCLUDE_PATTERNS=(
             "Library"
@@ -229,7 +218,7 @@ case $SCAN_MODE in
             ".cache/Homebrew"
             ".npm/_cacache"
         )
-        
+
         # Find all directories in HOME (up to 3 levels deep)
         while IFS= read -r dir; do
             SCAN_LOCATIONS+=("$dir")
@@ -238,7 +227,7 @@ case $SCAN_MODE in
             $(printf "! -path *%s* " "${EXCLUDE_PATTERNS[@]}") \
             2>/dev/null || true)
         ;;
-        
+
     projects)
         log "🔍 PROJECTS ONLY MODE - Development directories"
         SCAN_LOCATIONS=(
@@ -254,20 +243,9 @@ case $SCAN_MODE in
         ;;
 esac
 
-# Add node_modules detection
-if [[ "$SCAN_MODE" != "full" ]]; then
-    log_info "Finding node_modules directories..."
-    NODE_MODULES_COUNT=0
-    while IFS= read -r nm_dir; do
-        SCAN_LOCATIONS+=("$nm_dir")
-        SCAN_LABELS+=("node_modules: $(dirname "$nm_dir")")
-        ((NODE_MODULES_COUNT++))
-    done < <(find "${SCAN_LOCATIONS[@]}" -name "node_modules" -type d 2>/dev/null || true)
-    
-    if (( NODE_MODULES_COUNT > 0 )); then
-        log_info "Found $NODE_MODULES_COUNT node_modules directories"
-    fi
-fi
+# Note: We don't add individual node_modules directories because
+# detect.sh already scans recursively. Adding them would cause
+# massive duplication (17k+ locations instead of ~10).
 
 TOTAL_LOCATIONS=${#SCAN_LOCATIONS[@]}
 
@@ -310,27 +288,32 @@ log ""
 START_TIME=$(date +%s)
 
 if $USE_PARALLEL && command -v parallel >/dev/null 2>&1; then
-    log_info "Using GNU Parallel for faster scanning"
-    
+    log_info "Using GNU Parallel for faster scanning ($PARALLEL_JOBS jobs)"
+
     # Create job file
     for i in "${!SCAN_LOCATIONS[@]}"; do
-        echo "${SCAN_LOCATIONS[$i]}|${SCAN_LABELS[$i]}"
+        echo "${SCAN_LOCATIONS[$i]}"
     done > "$TEMP_DIR/jobs.txt"
-    
-    # Run parallel scans
-    parallel -j "$PARALLEL_JOBS" --colsep '|' scan_location {1} {2} :::: "$TEMP_DIR/jobs.txt"
+
+    # Export function and variables for parallel
+    export -f scan_location
+    export DETECTOR_SCRIPT TEMP_DIR
+    export RED GREEN YELLOW BLUE CYAN NC
+
+    # Run parallel scans with progress bar
+    parallel --bar -j "$PARALLEL_JOBS" scan_location {} "scan" :::: "$TEMP_DIR/jobs.txt"
     echo ""  # New line after progress
 else
     if $USE_PARALLEL; then
         log_warn "GNU Parallel not found, falling back to sequential scan"
         log_info "Install with: brew install parallel"
     fi
-    
+
     # Sequential scan
     for i in "${!SCAN_LOCATIONS[@]}"; do
         location="${SCAN_LOCATIONS[$i]}"
         label="${SCAN_LABELS[$i]}"
-        
+
         log "Scanning [$((i+1))/$TOTAL_LOCATIONS]: $label"
         scan_location "$location" "$label"
     done
@@ -350,9 +333,9 @@ SKIP_COUNT=0
 
 for result_file in "$TEMP_DIR"/scan_*.txt; do
     [[ -f "$result_file" ]] || continue
-    
+
     status_file="${result_file}.status"
-    
+
     if [[ -f "$status_file" ]]; then
         status=$(cat "$status_file")
         case $status in
@@ -391,11 +374,11 @@ if (( THREAT_COUNT > 0 )); then
 
 🚨 THREATS DETECTED:
 EOF
-    
+
     for result_file in "$TEMP_DIR"/scan_*.txt; do
         [[ -f "$result_file" ]] || continue
         status_file="${result_file}.status"
-        
+
         if [[ -f "$status_file" ]] && [[ "$(cat "$status_file")" == "THREAT" ]]; then
             location=$(basename "$result_file" | sed 's/^scan_//; s/_/\//g; s/.txt$//')
             cat >> "$SUMMARY_FILE" << EOF
@@ -414,11 +397,11 @@ if (( TIMEOUT_COUNT > 0 )); then
 
 ⏱️  TIMEOUTS (>5 minutes):
 EOF
-    
+
     for result_file in "$TEMP_DIR"/scan_*.txt; do
         [[ -f "$result_file" ]] || continue
         status_file="${result_file}.status"
-        
+
         if [[ -f "$status_file" ]] && [[ "$(cat "$status_file")" == "TIMEOUT" ]]; then
             location=$(basename "$result_file" | sed 's/^scan_//; s/_/\//g; s/.txt$//')
             echo "  - $location" >> "$SUMMARY_FILE"

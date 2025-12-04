@@ -10,6 +10,7 @@
  * Commands:
  *   scan [path]     Scan directory for Shai-Hulud 2.0 IOCs (default: current dir)
  *   check           Quick check of current project
+ *   full [mode]     Comprehensive system scan (quick|full|projects)
  *   suspend         Safely suspend malicious processes (SIGSTOP)
  *   info            Show attack information and IOCs
  *
@@ -18,6 +19,7 @@
  *   --version, -v   Show version
  *   --verbose       Verbose output
  *   --json          Output as JSON (for CI/CD)
+ *   --parallel N    Number of parallel jobs (default: 4)
  */
 
 import { spawn } from 'child_process'
@@ -64,6 +66,10 @@ ${c('bright', 'COMMANDS:')}
   ${c('cyan', 'check')}           Quick check of current project
                    (alias for: scan .)
 
+  ${c('cyan', 'full')} [mode]     Comprehensive system scan
+                   Modes: quick (default), full, projects
+                   Scans multiple critical locations in parallel
+
   ${c('cyan', 'suspend')}         Safely suspend malicious processes
                    Uses SIGSTOP to freeze without triggering wiper
 
@@ -75,6 +81,8 @@ ${c('bright', 'OPTIONS:')}
   ${c('yellow', '--verbose')}       Enable verbose output
   ${c('yellow', '--json')}          Output results as JSON (for CI/CD)
   ${c('yellow', '--output')} FILE   Write results to file
+  ${c('yellow', '--parallel')} N    Parallel jobs for full scan (default: 4)
+  ${c('yellow', '--dry-run')}       Show what would be scanned (full command)
 
 ${c('bright', 'EXAMPLES:')}
   ${c('green', '# Scan current directory')}
@@ -88,6 +96,12 @@ ${c('bright', 'EXAMPLES:')}
 
   ${c('green', '# CI/CD integration')}
   npx hulud scan . --json --output results.json
+
+  ${c('green', '# Full system scan (quick mode)')}
+  npx hulud full
+
+  ${c('green', '# Full system scan (all projects)')}
+  npx hulud full projects --parallel 8
 
 ${c('bright', 'CRITICAL WARNING:')}
   ${c('red', '⚠️  DO NOT kill suspicious processes with kill -9!')}
@@ -182,9 +196,12 @@ function parseArgs(args) {
   const parsed = {
     command: 'scan',
     path: '.',
+    mode: 'quick',
     verbose: false,
     json: false,
     output: null,
+    parallel: 4,
+    dryRun: false,
     help: false,
     version: false,
   }
@@ -202,9 +219,15 @@ function parseArgs(args) {
       parsed.json = true
     } else if (arg === '--output' && args[i + 1]) {
       parsed.output = args[++i]
+    } else if (arg === '--parallel' && args[i + 1]) {
+      parsed.parallel = parseInt(args[++i], 10) || 4
+    } else if (arg === '--dry-run') {
+      parsed.dryRun = true
     } else if (!arg.startsWith('-')) {
-      if (['scan', 'check', 'suspend', 'info'].includes(arg)) {
+      if (['scan', 'check', 'full', 'suspend', 'info'].includes(arg)) {
         parsed.command = arg
+      } else if (['quick', 'full', 'projects'].includes(arg)) {
+        parsed.mode = arg
       } else {
         parsed.path = arg
       }
@@ -254,11 +277,23 @@ function main() {
     case 'info': {
       console.log(infoText)
       process.exit(0)
+      break // unreachable but satisfies linter
+    }
+
+    case 'full': {
+      console.log(banner)
+      console.log(c('cyan', `🔍 Comprehensive system scan (mode: ${args.mode})\n`))
+      const scriptArgs = [`--${args.mode}`]
+      if (args.parallel !== 4) scriptArgs.push('--parallel', String(args.parallel))
+      if (args.dryRun) scriptArgs.push('--dry-run')
+      runScript('comprehensive-scan.sh', scriptArgs)
+      break
     }
 
     default: {
       console.log(banner)
       runScript('detect.sh', [resolve(args.path)])
+      break
     }
   }
 }

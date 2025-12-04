@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **CLI `full` command** — Comprehensive system scan with parallel execution
+  - `npx hulud full` — Quick scan of critical locations
+  - `npx hulud full projects` — Scan only development directories
+  - `npx hulud full full` — Full HOME directory scan (slow)
+  - `--parallel N` — Number of parallel jobs (default: 4)
+  - `--dry-run` — Show what would be scanned
+- **scripts/comprehensive-scan.sh** — Parallelized multi-location scanner
+  - Intelligent exclusions (Library, Downloads, .git, etc.)
+  - Automatic node_modules discovery
+  - Timeout handling (5 min per location)
+  - Detailed logging to `~/Log/security/comprehensive-scan/`
+
+### Changed
+- CLI now supports `--parallel` and `--dry-run` options
+
+### Fixed
+- Removed hardcoded paths from `comprehensive-scan.sh`
+- Fixed progress tracking for GNU Parallel mode
+- Fixed node_modules duplication (was adding 17k+ locations instead of scanning recursively)
+- Added `--projects` alias for `--projects-only` flag
+
+### Removed
+- Moved `test-suite.sh` and `setup-log-structure.sh` to dot-bin repository (not Shai-Hulud specific)
+
+---
+
 ## [1.5.1] - 2025-12-04
 
 ### Added
