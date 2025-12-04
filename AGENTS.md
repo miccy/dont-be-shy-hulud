@@ -49,11 +49,16 @@ Audit findings are stored in `.agents/research/` and have been synthesized into 
 
 ```
 dont-be-shy-hulud/
+├── bin/                 # CLI entry point (npx hulud)
+│   └── cli.js           # Node.js CLI with chalk, ora, cli-progress
 ├── docs/                # English documentation
 ├── cs/                  # Czech documentation (translations)
 │   ├── docs/            # Czech docs
 │   └── README.md        # Czech README
 ├── scripts/             # Detection and audit scripts
+│   ├── detect.sh        # Main IOC detection script
+│   ├── comprehensive-scan.sh  # Multi-location parallel scanner
+│   └── suspend-malware.sh     # Safe process suspension (SIGSTOP)
 ├── configs/             # Security configuration templates
 ├── ioc/                 # Indicators of Compromise databases
 ├── .agents/             # AI assistant tools and workflows

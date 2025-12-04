@@ -79,13 +79,23 @@ npx hulud scan /cesta/k/projektu
 ### CLI příkazy
 
 ```bash
-npx hulud              # Skenuj aktuální adresář
-npx hulud scan .       # Totéž
-npx hulud check        # Rychlá kontrola
-npx hulud suspend      # Bezpečně zmraz škodlivé procesy (SIGSTOP)
-npx hulud info         # Zobraz info o útoku a IOCs
-npx hulud --help       # Nápověda
+npx hulud                # Skenuj aktuální adresář
+npx hulud scan .         # Totéž
+npx hulud check          # Rychlá kontrola (alias pro scan .)
+npx hulud scan --all     # Skenuj všechny detekované dev adresáře
+npx hulud scan --system  # Skenuj systémové lokace (~/.npm, ~/.bun, atd.)
+npx hulud scan --deep    # Hloubkový sken celého HOME (pomalé!)
+npx hulud suspend        # Bezpečně zmraz škodlivé procesy (SIGSTOP)
+npx hulud info           # Zobraz info o útoku a IOCs
+npx hulud --help         # Nápověda
 ```
+
+**Možnosti skenu:**
+- `--all` — Auto-detekce a sken Dev, Projects, Code, repos, src, workspace
+- `--system` — Skenuj ~/.npm, ~/.bun, ~/.config, ~/.cache, npm global
+- `--deep` — Hloubkový sken celého HOME adresáře (pomalé!)
+- `--dry-run` — Náhled co by se skenovalo
+- `--parallel N` — Počet paralelních úloh (default: 4)
 
 ### Alternativa: Klon a spuštění
 
@@ -112,17 +122,17 @@ cd dont-be-shy-hulud
 
 ### Shai-Hulud 2.0 (Listopad 2025)
 
-| Vlastnost | Hodnota |
-|-----------|---------|
-| **Typ** | Self-propagating npm worm |
-| **Kompromitované packages** | 800+ unique, 1092+ versions |
-| **Zasažené GitHub repos** | 25,000+ |
-| **Weekly downloads zasažených** | 20+ milionů |
-| **Nov 26, 2025** | GitHub reduces public malicious repos to ~300 |
-| **2. prosince 2025** | Nástroje pro detekci dospěly (vydána verze v1.5.0) |
-| **Dec 9, 2025** | **npm legacy token revocation deadline** |
-| **Peak propagace** | 1,000 nových repos každých 30 minut |
-| **Exfiltrované credentials** | 775+ GitHub, 373 AWS, 300 GCP, 115 Azure |
+| Vlastnost                       | Hodnota                                            |
+| ------------------------------- | -------------------------------------------------- |
+| **Typ**                         | Self-propagating npm worm                          |
+| **Kompromitované packages**     | 800+ unique, 1092+ versions                        |
+| **Zasažené GitHub repos**       | 25,000+                                            |
+| **Weekly downloads zasažených** | 20+ milionů                                        |
+| **Nov 26, 2025**                | GitHub reduces public malicious repos to ~300      |
+| **2. prosince 2025**            | Nástroje pro detekci dospěly (vydána verze v1.5.0) |
+| **Dec 9, 2025**                 | **npm legacy token revocation deadline**           |
+| **Peak propagace**              | 1,000 nových repos každých 30 minut                |
+| **Exfiltrované credentials**    | 775+ GitHub, 373 AWS, 300 GCP, 115 Azure           |
 
 **Klíčové vlastnosti:**
 - ⚡ Exekuce v **preinstall** fázi (ne postinstall)
@@ -193,13 +203,13 @@ npm install --ignore-scripts
 
 ### Doporučené nástroje
 
-| Nástroj | Účel | Cena |
-|---------|------|------|
-| [Socket.dev](https://socket.dev) | Supply-chain security | Free / Paid |
-| [Snyk](https://snyk.io) | Vulnerability scanning | Free / Paid |
-| [npm audit](https://docs.npmjs.com/cli/v10/commands/npm-audit) | Built-in audit | Free |
-| [Renovate](https://renovatebot.com) | Dependency updates | Free |
-| [Datadog SCFW](https://github.com/DataDog/supply-chain-firewall) | Firewall | Free (OSS) |
+| Nástroj                                                          | Účel                   | Cena        |
+| ---------------------------------------------------------------- | ---------------------- | ----------- |
+| [Socket.dev](https://socket.dev)                                 | Supply-chain security  | Free / Paid |
+| [Snyk](https://snyk.io)                                          | Vulnerability scanning | Free / Paid |
+| [npm audit](https://docs.npmjs.com/cli/v10/commands/npm-audit)   | Built-in audit         | Free        |
+| [Renovate](https://renovatebot.com)                              | Dependency updates     | Free        |
+| [Datadog SCFW](https://github.com/DataDog/supply-chain-firewall) | Firewall               | Free (OSS)  |
 
 ### Klíčová opatření
 
@@ -231,12 +241,12 @@ bun install --ignore-scripts
 
 Časté nálezy ze security scanů:
 
-| Issue | Příčina | Řešení |
-|-------|---------|--------|
-| Transitivní CVE | Stará závislost v dependency tree | `npm ls package` → update parent |
-| Špatný package name | `biome` místo `@biomejs/biome` | Přeinstaluj správný package |
-| `unstableOwnership` | Změna maintainera | Často false positive (Google, Biome) |
-| `obfuscatedFile` | Minifikovaný kód | Ověř na npm/GitHub |
+| Issue               | Příčina                           | Řešení                               |
+| ------------------- | --------------------------------- | ------------------------------------ |
+| Transitivní CVE     | Stará závislost v dependency tree | `npm ls package` → update parent     |
+| Špatný package name | `biome` místo `@biomejs/biome`    | Přeinstaluj správný package          |
+| `unstableOwnership` | Změna maintainera                 | Často false positive (Google, Biome) |
+| `obfuscatedFile`    | Minifikovaný kód                  | Ověř na npm/GitHub                   |
 
 ➡️ [Kompletní common issues guide](docs/COMMON-ISSUES.md)
 
@@ -253,23 +263,23 @@ Praktický příklad analýzy 78 alertů ze Socket.dev:
 
 ## 📜 Scripty
 
-| Script | Účel |
-|--------|------|
-| [`quick-audit.sh`](../scripts/quick-audit.sh) | Rychlý security audit (5 min) |
-| [`full-audit.sh`](../scripts/full-audit.sh) | Kompletní audit s IOC skenováním |
-| [`scan-node-modules.sh`](../scripts/scan-node-modules.sh) | Skenování node_modules ve všech projektech |
-| [`check-github-repos.sh`](../scripts/check-github-repos.sh) | Kontrola GitHub repos na kompromitaci |
-| [`rotate-credentials.sh`](../scripts/rotate-credentials.sh) | Asistovaná rotace credentials |
-| [`harden-npm.sh`](../scripts/harden-npm.sh) | Hardening npm/bun konfigurace |
+| Script                                                      | Účel                                       |
+| ----------------------------------------------------------- | ------------------------------------------ |
+| [`quick-audit.sh`](../scripts/quick-audit.sh)               | Rychlý security audit (5 min)              |
+| [`full-audit.sh`](../scripts/full-audit.sh)                 | Kompletní audit s IOC skenováním           |
+| [`scan-node-modules.sh`](../scripts/scan-node-modules.sh)   | Skenování node_modules ve všech projektech |
+| [`check-github-repos.sh`](../scripts/check-github-repos.sh) | Kontrola GitHub repos na kompromitaci      |
+| [`rotate-credentials.sh`](../scripts/rotate-credentials.sh) | Asistovaná rotace credentials              |
+| [`harden-npm.sh`](../scripts/harden-npm.sh)                 | Hardening npm/bun konfigurace              |
 
 ## ⚙️ Konfigurace
 
-| Soubor | Účel |
-|--------|------|
+| Soubor                                                        | Účel                                 |
+| ------------------------------------------------------------- | ------------------------------------ |
 | [`renovate-lockdown.json`](../configs/renovate-lockdown.json) | Renovate config pro krizový lockdown |
-| [`renovate-hardened.json`](../configs/renovate-hardened.json) | Renovate config pro běžný provoz |
-| [`socket.yml`](../configs/socket.yml) | Socket.dev konfigurace |
-| [`.npmrc-secure`](../configs/.npmrc-secure) | Bezpečná .npmrc template |
+| [`renovate-hardened.json`](../configs/renovate-hardened.json) | Renovate config pro běžný provoz     |
+| [`socket.yml`](../configs/socket.yml)                         | Socket.dev konfigurace               |
+| [`.npmrc-secure`](../configs/.npmrc-secure)                   | Bezpečná .npmrc template             |
 
 **👉 Pro sdílený preset použitelný ve všech repozitářích viz [miccy/renovate-config](https://github.com/miccy/renovate-config)**:
 

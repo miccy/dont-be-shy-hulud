@@ -82,13 +82,23 @@ npx hulud scan /path/to/your/project
 ### CLI Commands
 
 ```bash
-npx hulud              # Scan current directory
-npx hulud scan .       # Same as above
-npx hulud check        # Quick check
-npx hulud suspend      # Safely freeze malicious processes (SIGSTOP)
-npx hulud info         # Show attack info and IOCs
-npx hulud --help       # Show all options
+npx hulud                # Scan current directory
+npx hulud scan .         # Same as above
+npx hulud check          # Quick check (alias for scan .)
+npx hulud scan --all     # Scan all detected dev directories
+npx hulud scan --system  # Scan system locations (~/.npm, ~/.bun, etc.)
+npx hulud scan --deep    # Deep scan of entire HOME (slow!)
+npx hulud suspend        # Safely freeze malicious processes (SIGSTOP)
+npx hulud info           # Show attack info and IOCs
+npx hulud --help         # Show all options
 ```
+
+**Scan options:**
+- `--all` — Auto-detect and scan Dev, Projects, Code, repos, src, workspace
+- `--system` — Scan ~/.npm, ~/.bun, ~/.config, ~/.cache, npm global
+- `--deep` — Deep scan of entire HOME directory (slow!)
+- `--dry-run` — Preview what would be scanned
+- `--parallel N` — Number of parallel jobs (default: 4)
 
 ### Alternative: Clone and Run
 
@@ -116,33 +126,33 @@ Shai-Hulud 2.0 (aka "The Second Coming") is a **self-propagating npm worm** disc
 
 ### Attack Timeline
 
-| Date | Event | Source |
-|------|-------|--------|
-| Aug 27, 2025 | S1ngularity/Nx GitHub token theft (precursor) | Unit42 |
-| Sep 15, 2025 | Shai-Hulud v1 discovered (postinstall-based) | Aikido |
-| Sep 23, 2025 | CISA Advisory issued | CISA |
-| Nov 5, 2025 | npm disables new classic token creation | GitHub |
-| Nov 21-23, 2025 | Shai-Hulud 2.0 packages uploaded | Multiple |
-| Nov 24, 2025 03:16 UTC | First detection (go-template, AsyncAPI) | Wiz |
-| Nov 24, 2025 04:11 UTC | PostHog packages compromised | PostHog |
-| Nov 24, 2025 05:09 UTC | Postman packages compromised | Postman |
-| Nov 24, 2025 | Peak: **1,000 new repos every 30 minutes** | Datadog |
-| Nov 25, 2025 | **800+ packages**, 25,000+ repos, **1,200+ orgs**, **20M+ weekly downloads** | Wiz, Check Point |
-| Nov 25, 2025 | Secondary phase detected ("Continued Coming") | Wiz |
-| Nov 26, 2025 | GitHub reduces public malicious repos to ~300 | GitHub |
-| Dec 02, 2025 | Community detection tools matured (don't-be-shy-hulud v1.5.0 released) | Community |
-| **Dec 9, 2025** | **npm legacy token revocation deadline** | npm |
+| Date                   | Event                                                                        | Source           |
+| ---------------------- | ---------------------------------------------------------------------------- | ---------------- |
+| Aug 27, 2025           | S1ngularity/Nx GitHub token theft (precursor)                                | Unit42           |
+| Sep 15, 2025           | Shai-Hulud v1 discovered (postinstall-based)                                 | Aikido           |
+| Sep 23, 2025           | CISA Advisory issued                                                         | CISA             |
+| Nov 5, 2025            | npm disables new classic token creation                                      | GitHub           |
+| Nov 21-23, 2025        | Shai-Hulud 2.0 packages uploaded                                             | Multiple         |
+| Nov 24, 2025 03:16 UTC | First detection (go-template, AsyncAPI)                                      | Wiz              |
+| Nov 24, 2025 04:11 UTC | PostHog packages compromised                                                 | PostHog          |
+| Nov 24, 2025 05:09 UTC | Postman packages compromised                                                 | Postman          |
+| Nov 24, 2025           | Peak: **1,000 new repos every 30 minutes**                                   | Datadog          |
+| Nov 25, 2025           | **800+ packages**, 25,000+ repos, **1,200+ orgs**, **20M+ weekly downloads** | Wiz, Check Point |
+| Nov 25, 2025           | Secondary phase detected ("Continued Coming")                                | Wiz              |
+| Nov 26, 2025           | GitHub reduces public malicious repos to ~300                                | GitHub           |
+| Dec 02, 2025           | Community detection tools matured (don't-be-shy-hulud v1.5.0 released)       | Community        |
+| **Dec 9, 2025**        | **npm legacy token revocation deadline**                                     | npm              |
 
 ### Key Differences from v1
 
-| Feature | v1 (September) | v2 (November) |
-|---------|----------------|---------------|
-| Execution Phase | `postinstall` | `preinstall` |
-| Exfiltration | Webhook endpoint | GitHub repos |
-| Runtime | Node.js | Bun |
-| Fallback | None | Dead-man switch (wipe data) |
-| Persistence | None | GitHub Actions backdoor |
-| Propagation | ~500 packages | **800+ packages** (20M+ downloads) |
+| Feature         | v1 (September)   | v2 (November)                      |
+| --------------- | ---------------- | ---------------------------------- |
+| Execution Phase | `postinstall`    | `preinstall`                       |
+| Exfiltration    | Webhook endpoint | GitHub repos                       |
+| Runtime         | Node.js          | Bun                                |
+| Fallback        | None             | Dead-man switch (wipe data)        |
+| Persistence     | None             | GitHub Actions backdoor            |
+| Propagation     | ~500 packages    | **800+ packages** (20M+ downloads) |
 
 ### How It Works
 
@@ -204,22 +214,22 @@ npm cache ls 2>/dev/null | grep -E "(setup_bun|bun_environment)"
 
 If you use any of these packages, **immediately audit your lockfile**:
 
-| Package | Risk | Notes |
-|---------|------|-------|
-| `@postman/tunnel-agent` | 🔴 Critical | 27% of environments |
-| `posthog-node` | 🔴 Critical | 25% of environments |
-| `posthog-js` | 🔴 Critical | 15% of environments |
-| `@asyncapi/specs` | 🔴 Critical | 20% of environments |
-| `@asyncapi/openapi-schema-parser` | 🔴 Critical | 17% of environments |
-| `@zapier/*` | 🔴 Critical | Multiple packages |
-| `@ensdomains/*` | 🔴 Critical | Multiple packages |
-| `@postman/postman-mcp-cli` | 🟠 High | MCP tooling |
-| `zapier-sdk` | 🟠 High | |
-| `angulartics2` | 🟠 High | |
-| `koa2-swagger-ui` | 🟠 High | |
-| `tinycolor2` | 🟠 High | v4.1.2 specifically (note: tinycolor2, not tinycolor) |
-| `ngx-bootstrap` | 🟠 High | Angular bootstrap components |
-| `@zapier/zapier-sdk` | 🔴 Critical | v0.15.5-0.15.7 |
+| Package                           | Risk       | Notes                                                 |
+| --------------------------------- | ---------- | ----------------------------------------------------- |
+| `@postman/tunnel-agent`           | 🔴 Critical | 27% of environments                                   |
+| `posthog-node`                    | 🔴 Critical | 25% of environments                                   |
+| `posthog-js`                      | 🔴 Critical | 15% of environments                                   |
+| `@asyncapi/specs`                 | 🔴 Critical | 20% of environments                                   |
+| `@asyncapi/openapi-schema-parser` | 🔴 Critical | 17% of environments                                   |
+| `@zapier/*`                       | 🔴 Critical | Multiple packages                                     |
+| `@ensdomains/*`                   | 🔴 Critical | Multiple packages                                     |
+| `@postman/postman-mcp-cli`        | 🟠 High     | MCP tooling                                           |
+| `zapier-sdk`                      | 🟠 High     |                                                       |
+| `angulartics2`                    | 🟠 High     |                                                       |
+| `koa2-swagger-ui`                 | 🟠 High     |                                                       |
+| `tinycolor2`                      | 🟠 High     | v4.1.2 specifically (note: tinycolor2, not tinycolor) |
+| `ngx-bootstrap`                   | 🟠 High     | Angular bootstrap components                          |
+| `@zapier/zapier-sdk`              | 🔴 Critical | v0.15.5-0.15.7                                        |
 
 For full IOC database with detailed indicators, see [IOC Lists](#ioc-lists) below and [ioc/malicious-packages.json](ioc/malicious-packages.json).
 
@@ -394,22 +404,22 @@ See [docs/GITHUB-HARDENING.md](docs/GITHUB-HARDENING.md) for lockdown guide.
 
 ### Official Sources
 
-| Source | URL |
-|--------|-----|
-| Datadog | [github.com/DataDog/indicators-of-compromise](https://github.com/DataDog/indicators-of-compromise/tree/main/shai-hulud-2.0) |
-| Wiz Research | [wiz-sec-public/wiz-research-iocs](https://github.com/wiz-sec-public/wiz-research-iocs) |
-| Tenable | [tenable/shai-hulud-second-coming-affected-packages](https://github.com/tenable/shai-hulud-second-coming-affected-packages) |
-| SafeDep | [safedep/shai-hulud-migration-response](https://github.com/safedep/shai-hulud-migration-response) |
-| Cobenian | [Cobenian/shai-hulud-detect](https://github.com/Cobenian/shai-hulud-detect) |
+| Source       | URL                                                                                                                         |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| Datadog      | [github.com/DataDog/indicators-of-compromise](https://github.com/DataDog/indicators-of-compromise/tree/main/shai-hulud-2.0) |
+| Wiz Research | [wiz-sec-public/wiz-research-iocs](https://github.com/wiz-sec-public/wiz-research-iocs)                                     |
+| Tenable      | [tenable/shai-hulud-second-coming-affected-packages](https://github.com/tenable/shai-hulud-second-coming-affected-packages) |
+| SafeDep      | [safedep/shai-hulud-migration-response](https://github.com/safedep/shai-hulud-migration-response)                           |
+| Cobenian     | [Cobenian/shai-hulud-detect](https://github.com/Cobenian/shai-hulud-detect)                                                 |
 
 ### File IOCs
 
-| File | Purpose | Hash (SHA-256) |
-|------|---------|----------------|
-| `setup_bun.js` | Loader/dropper | Various |
-| `bun_environment.js` | Main payload (~10MB) | Various |
-| `actionsSecrets.json` | Exfil data (double base64) | N/A |
-| `.github/workflows/formatter_*.yml` | Backdoor workflow | N/A |
+| File                                | Purpose                    | Hash (SHA-256) |
+| ----------------------------------- | -------------------------- | -------------- |
+| `setup_bun.js`                      | Loader/dropper             | Various        |
+| `bun_environment.js`                | Main payload (~10MB)       | Various        |
+| `actionsSecrets.json`               | Exfil data (double base64) | N/A            |
+| `.github/workflows/formatter_*.yml` | Backdoor workflow          | N/A            |
 
 ### Behavioral IOCs
 

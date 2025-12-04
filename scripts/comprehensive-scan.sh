@@ -230,16 +230,21 @@ case $SCAN_MODE in
 
     projects)
         log "🔍 PROJECTS ONLY MODE - Development directories"
-        SCAN_LOCATIONS=(
-            "$HOME/Dev"
-            "$HOME/Projects"
-            "$HOME/AI-sandbox/dev"
-        )
-        SCAN_LABELS=(
-            "Dev Directory"
-            "Projects Directory"
-            "AI Sandbox Dev"
-        )
+        # Common development directory names (auto-detect which exist)
+        SCAN_LOCATIONS=()
+        SCAN_LABELS=()
+        for dir in Dev Development Projects Code repos src workspace work; do
+            if [[ -d "$HOME/$dir" ]]; then
+                SCAN_LOCATIONS+=("$HOME/$dir")
+                SCAN_LABELS+=("$dir")
+            fi
+        done
+        if [[ ${#SCAN_LOCATIONS[@]} -eq 0 ]]; then
+            log_warn "No common dev directories found (Dev, Projects, Code, etc.)"
+            log_info "Falling back to current directory"
+            SCAN_LOCATIONS=("$(pwd)")
+            SCAN_LABELS=("Current Directory")
+        fi
         ;;
 esac
 

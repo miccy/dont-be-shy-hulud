@@ -8,29 +8,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- **CLI `full` command** — Comprehensive system scan with parallel execution
-  - `npx hulud full` — Quick scan of critical locations
-  - `npx hulud full projects` — Scan only development directories
-  - `npx hulud full full` — Full HOME directory scan (slow)
+- **CLI scan flags** — Multi-location scanning with intuitive options
+  - `npx hulud scan --all` — Scan all detected dev directories
+  - `npx hulud scan --system` — Scan system locations (~/.npm, ~/.bun, ~/.config)
+  - `npx hulud scan --deep` — Deep scan of entire HOME directory (slow!)
   - `--parallel N` — Number of parallel jobs (default: 4)
-  - `--dry-run` — Show what would be scanned
+  - `--dry-run` — Preview what would be scanned
 - **scripts/comprehensive-scan.sh** — Parallelized multi-location scanner
   - Intelligent exclusions (Library, Downloads, .git, etc.)
-  - Automatic node_modules discovery
   - Timeout handling (5 min per location)
   - Detailed logging to `~/Log/security/comprehensive-scan/`
+- **Dependencies** — chalk, ora, cli-progress, commander for professional CLI
 
 ### Changed
-- CLI now supports `--parallel` and `--dry-run` options
+- CLI refactored: replaced `full` command with `--all`, `--system`, `--deep` flags
+- CLI now uses chalk for colors (better terminal compatibility)
 
 ### Fixed
 - Removed hardcoded paths from `comprehensive-scan.sh`
+- Projects mode now auto-detects common dev directories (Dev, Projects, Code, repos, src, workspace, work)
 - Fixed progress tracking for GNU Parallel mode
 - Fixed node_modules duplication (was adding 17k+ locations instead of scanning recursively)
-- Added `--projects` alias for `--projects-only` flag
 
 ### Removed
-- Moved `test-suite.sh` and `setup-log-structure.sh` to dot-bin repository (not Shai-Hulud specific)
+- Removed `full` command (replaced by scan flags)
+- Moved `test-suite.sh` and `setup-log-structure.sh` to dot-bin repository
 
 ---
 
