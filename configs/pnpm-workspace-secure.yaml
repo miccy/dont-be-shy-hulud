@@ -1,0 +1,108 @@
+# Secure pnpm workspace configuration for protection against supply chain attacks
+# See: https://github.com/miccy/dont-be-shy-hulud
+#
+# Place this file as pnpm-workspace.yaml in your monorepo root
+# Combine with .npmrc settings for maximum protection
+
+# Define workspace packages
+packages:
+  - "packages/*"
+  - "apps/*"
+  # Exclude test fixtures that may contain malicious samples
+  - "!**/test-fixtures/**"
+  - "!**/fixtures/**"
+  - "!**/__mocks__/**"
+# =============================================================================
+# SECURITY CONFIGURATION (place in .npmrc alongside this file)
+# =============================================================================
+#
+# Create .npmrc with these settings:
+#
+# # Disable lifecycle scripts globally
+# ignore-scripts=true
+#
+# # Enable strict peer dependencies
+# strict-peer-dependencies=true
+#
+# # Require exact versions
+# save-exact=true
+#
+# # Enable package lock
+# package-lock=true
+#
+# # Verify package integrity
+# package-import-method=copy
+#
+# # Disable optional dependencies
+# optional=false
+#
+# # Use strict SSL
+# strict-ssl=true
+#
+# # Audit on install
+# audit=true
+#
+# # Disable fund messages (reduces noise)
+# fund=false
+#
+# =============================================================================
+# PNPM-SPECIFIC SECURITY SETTINGS (.npmrc)
+# =============================================================================
+#
+# # Hoist patterns - limit what gets hoisted to reduce attack surface
+# public-hoist-pattern[]=*types*
+# public-hoist-pattern[]=*eslint*
+# public-hoist-pattern[]=*prettier*
+#
+# # Shamefully hoist - DISABLE for security (breaks some packages but safer)
+# shamefully-hoist=false
+#
+# # Side effects cache - disable for security
+# side-effects-cache=false
+#
+# # Prefer offline - use cached packages when possible
+# prefer-offline=true
+#
+# =============================================================================
+# CI/CD RECOMMENDED COMMANDS
+# =============================================================================
+#
+# # Install with frozen lockfile and no scripts
+# pnpm install --frozen-lockfile --ignore-scripts
+#
+# # Audit before build
+# pnpm audit --audit-level=high
+#
+# # Run scripts explicitly (not via lifecycle)
+# pnpm run build
+#
+# =============================================================================
+# SHAI-HULUD SPECIFIC PROTECTIONS
+# =============================================================================
+#
+# Add to .npmrc to block known compromised package patterns:
+#
+# # Block preinstall scripts from running
+# ignore-scripts=true
+#
+# # If you MUST allow scripts, use allowlist approach:
+# # enable-pre-post-scripts=false
+#
+# # For packages that require scripts, add them explicitly:
+# # onlyBuiltDependencies[]=node-gyp
+# # onlyBuiltDependencies[]=esbuild
+#
+# =============================================================================
+# DETECTION COMMANDS
+# =============================================================================
+#
+# # Check for IOC files in node_modules
+# find node_modules -name "setup_bun.js" -o -name "bun_environment.js" 2>/dev/null
+#
+# # Check for suspicious packages
+# pnpm ls --depth=Infinity | grep -E "(posthog|@postman|@asyncapi|@zapier)"
+#
+# # Audit with pnpm
+# pnpm audit
+#
+# =============================================================================

@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Regex pattern for exfil repos** — Added `[0-9a-z]{18}` pattern for detecting random 18-char exfiltration repo names
 - **configs/renovate-defense.json** — Anti-worm Renovate configuration that blocks known compromised packages
 - **configs/bunfig-secure.toml** — Secure Bun configuration with lifecycle script protection
+- **configs/pnpm-workspace-secure.yaml** — Secure pnpm workspace configuration with security best practices
+- **docs/stacks/BUN.md** — Bun-specific security guide (EN/CS) explaining why Bun is the attack vector
 - **CLI scan flags** — Multi-location scanning with intuitive options
   - `npx hulud scan --all` — Scan all detected dev directories
   - `npx hulud scan --system` — Scan system locations (~/.npm, ~/.bun, ~/.config)

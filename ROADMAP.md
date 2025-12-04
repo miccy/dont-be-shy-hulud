@@ -204,11 +204,11 @@ This roadmap is based on comprehensive security audits from multiple AI models (
   - [ ] Recommended: `--ignore-scripts` in mobile CI
   - [ ] Analytics SDK pinning strategy
 
-- [ ] **`docs/stacks/BUN.md`**
-  - [ ] Why Bun is NOT safer (it's the attack vector!)
-  - [ ] `bunfig.toml` hardening
-  - [ ] Detecting unauthorized Bun installations
-  - [ ] `~/.bun` and `~/.dev-env` inspection
+- [x] **`docs/stacks/BUN.md`** ✅ Added
+  - [x] Why Bun is NOT safer (it's the attack vector!)
+  - [x] `bunfig.toml` hardening
+  - [x] Detecting unauthorized Bun installations
+  - [x] `~/.bun` and `~/.dev-env` inspection
 
 - [ ] **`docs/stacks/TYPESCRIPT-ASTRO.md`**
   - [ ] Build pipeline risks
@@ -277,8 +277,8 @@ This roadmap is based on comprehensive security audits from multiple AI models (
   - [x] Disable postinstall by default
   - [x] Integrity verification
 
-- [ ] **`configs/pnpm-workspace-secure.yaml`** - pnpm security
-  - [ ] Lifecycle script restrictions
+- [x] **`configs/pnpm-workspace-secure.yaml`** - pnpm security ✅ Added
+  - [x] Lifecycle script restrictions
 
 ### Output Formats
 
