@@ -30,29 +30,30 @@ echo "Setting repository language to: $LANG"
 case "$LANG" in
     "en")
         echo "Removing Czech files..."
-        rm -rf cs/
+        rm -rf packages/docs-content/cs/
         echo "Done. Repository is now English-only."
         ;;
     "cs")
-        echo "Removing English root files..."
-        # Remove English versions where Czech exists in cs/
-        [ -f cs/README.md ] && rm README.md
-        [ -f cs/CONTRIBUTING.md ] && rm CONTRIBUTING.md
-        [ -f cs/CODE_OF_CONDUCT.md ] && rm CODE_OF_CONDUCT.md
-        [ -f cs/SECURITY.md ] && rm SECURITY.md
-        [ -f cs/AGENTS.md ] && rm AGENTS.md
+        echo "Removing English docs..."
+        rm -rf packages/docs-content/en/
 
-        # Remove English docs
-        rm -rf docs/
-
-        echo "Promoting Czech files to root..."
-        cp -r cs/* .
-        rm -rf cs/
+        echo "Promoting Czech files..."
+        # Move CS content to EN location for Astro
+        mv packages/docs-content/cs packages/docs-content/en
 
         echo "Done. Repository is now Czech-only."
         ;;
     "both")
         echo "Keeping both languages (default)."
+        ;;
+    "--help"|"-h")
+        echo "Usage: $0 [en|cs|both]"
+        echo ""
+        echo "Options:"
+        echo "  en    - Remove Czech files, keep English only"
+        echo "  cs    - Remove English files, keep Czech only"
+        echo "  both  - Keep both languages (default)"
+        exit 0
         ;;
     *)
         echo "Usage: $0 [en|cs|both]"

@@ -1,6 +1,9 @@
 ---
 title: Installation
 description: Install the Shai-Hulud detection toolkit
+sidebar:
+  order: 3
+lastUpdated: 2025-12-05
 ---
 
 # Installation

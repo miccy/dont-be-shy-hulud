@@ -1,0 +1,14 @@
+{
+  "name": "@hulud/assets",
+  "version": "1.5.1",
+  "private": true,
+  "description": "Shared assets for Shai-Hulud detection toolkit",
+  "type": "module",
+  "exports": {
+    "./images/*": "./images/*",
+    "./diagrams/*": "./diagrams/*"
+  },
+  "scripts": {
+    "build": "echo 'No build step needed'"
+  }
+}

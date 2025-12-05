@@ -23,10 +23,10 @@
 
   "navigation_button": {
     "enable": true,
-    "label": "Get Started",
+    "label": "Quick Scan",
     "translations": {
-      "cs": "Začít"
+      "cs": "Rychlý sken"
     },
-    "link": "/getting-started/introduction/overview/"
+    "link": "/getting-started/"
   }
 }

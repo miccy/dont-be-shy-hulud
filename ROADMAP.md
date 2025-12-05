@@ -1,7 +1,7 @@
 # 🗺️ Project Roadmap
 
 > **Status:** Active Development
-> **Last Updated:** 2025-12-04
+> **Last Updated:** 2025-12-05
 > **Maintainer:** [@miccy](https://github.com/miccy)
 
 This roadmap is based on comprehensive security audits from multiple AI models (Claude Opus 4.5, GPT-5.1-Pro, Grok-4.1, Perplexity, Proton-Lumo, Gemini-3-Pro) and community feedback. We're transparent about what's done and what needs work.
@@ -16,9 +16,9 @@ This roadmap is based on comprehensive security audits from multiple AI models (
 | ----------------------------------------------- | -------- | -------- |
 | [Core Detection](#-core-detection)              | 🟢 85%    | P0       |
 | [IOC Database](#-ioc-database)                  | 🟡 60%    | P0       |
-| [Documentation](#-documentation)                | 🟡 60%    | P1       |
-| [Automation & CI/CD](#-automation--cicd)        | 🟡 50%    | P1       |
-| [Tooling](#-tooling)                            | 🔴 20%    | P2       |
+| [Documentation](#-documentation)                | 🟢 90%    | P1       |
+| [Automation & CI/CD](#-automation--cicd)        | 🟢 70%    | P1       |
+| [Tooling](#-tooling)                            | 🟡 40%    | P2       |
 | [Community & Ecosystem](#-community--ecosystem) | 🔴 10%    | P2       |
 
 ---

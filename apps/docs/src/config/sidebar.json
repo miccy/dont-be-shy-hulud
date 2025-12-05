@@ -3,67 +3,76 @@
     {
       "label": "Getting Started",
       "translations": {
-        "cs": "Commencer"
+        "cs": "Začínáme"
       },
       "items": [
         {
-          "label": "[seti:vite] Introduction",
+          "label": "[rocket] Quick Start",
           "translations": {
-            "cs": "[seti:vite] Introduction"
+            "cs": "[rocket] Rychlý start"
           },
-          "autogenerate": { "directory": "getting-started/introduction" }
-        },
-        {
-          "label": "[setting] Global Settings",
-          "translations": {
-            "cs": "[setting] Paramètres globaux"
-          },
-          "autogenerate": { "directory": "getting-started/global-settings" }
-        },
-        {
-          "label": "[seti:plan] Navigation",
-          "translations": {
-            "cs": "[seti:plan] Navigation"
-          },
-          "slug": "getting-started/navigation"
+          "autogenerate": { "directory": "getting-started" }
         }
       ]
     },
     {
-      "label": "Content",
+      "label": "Detection",
       "translations": {
-        "cs": "Contenu"
+        "cs": "Detekce"
       },
       "items": [
         {
-          "label": "[document] Components and Block",
+          "label": "[magnifier] Detection Guide",
           "translations": {
-            "cs": "[document] Composants et blocs"
+            "cs": "[magnifier] Průvodce detekcí"
           },
-          "autogenerate": { "directory": "contents/components" }
-        },
-        {
-          "label": "[pencil] Editing Content",
-          "translations": {
-            "cs": "[pencil] Édition du contenu"
-          },
-          "autogenerate": { "directory": "contents/editing" }
+          "autogenerate": { "directory": "detection" }
         }
       ]
+    },
+    {
+      "label": "Remediation",
+      "translations": {
+        "cs": "Náprava"
+      },
+      "items": [
+        {
+          "label": "[setting] Remediation Guide",
+          "translations": {
+            "cs": "[setting] Průvodce nápravou"
+          },
+          "autogenerate": { "directory": "remediation" }
+        }
+      ]
+    },
+    {
+      "label": "Hardening",
+      "translations": {
+        "cs": "Zabezpečení"
+      },
+      "items": [
+        {
+          "label": "[shield] Security Hardening",
+          "translations": {
+            "cs": "[shield] Bezpečnostní zabezpečení"
+          },
+          "autogenerate": { "directory": "hardening" }
+        }
+      ]
+    },
+    {
+      "label": "Stack Guides",
+      "translations": {
+        "cs": "Průvodci pro stacky"
+      },
+      "autogenerate": { "directory": "stacks" }
     },
     {
       "label": "Reference",
       "translations": {
-        "cs": "Référence"
+        "cs": "Reference"
       },
       "autogenerate": { "directory": "reference" }
-    },
-    {
-      "label": "Configurations",
-      "translations": {
-        "cs": "Configurations"
-      },
-      "autogenerate": { "directory": "configurations" }
     }
   ]
 }

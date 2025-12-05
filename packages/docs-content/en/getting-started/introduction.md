@@ -1,6 +1,9 @@
 ---
 title: Introduction
 description: Understanding the Shai-Hulud 2.0 npm supply chain attack
+sidebar:
+  order: 0
+lastUpdated: 2025-12-05
 ---
 
 # Introduction

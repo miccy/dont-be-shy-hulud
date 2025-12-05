@@ -34,12 +34,12 @@ jobs:
         run: bun install
 
       - name: Build docs
-        run: bun run web:build
+        run: bun run docs:build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: apps/web/dist
+          path: apps/docs/dist
 
   deploy:
     environment:

@@ -3,6 +3,9 @@
   "version": "1.5.1",
   "private": true,
   "description": "🪱 npm supply chain attack detection toolkit — Shai-Hulud 2.0 detection, defense & remediation",
+  "bin": {
+    "hulud": "./apps/cli/bin/cli.js"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -16,9 +19,12 @@
     "audit:full": "./packages/scripts/full-audit.sh",
     "audit:quick": "./packages/scripts/quick-audit.sh",
     "harden": "./packages/scripts/harden-npm.sh",
-    "web:dev": "turbo dev --filter=@hulud/web",
-    "web:build": "turbo build --filter=@hulud/web",
-    "cli": "turbo dev --filter=@hulud/cli"
+    "docs:dev": "turbo dev --filter=@hulud/docs",
+    "docs:build": "turbo build --filter=@hulud/docs",
+    "cli": "turbo dev --filter=@hulud/cli",
+    "wiki:sync": "bun run --filter=@hulud/wiki-sync sync",
+    "clean": "./scripts/clean.sh",
+    "clean:dry": "./scripts/clean.sh --dry-run"
   },
   "keywords": [
     "security",

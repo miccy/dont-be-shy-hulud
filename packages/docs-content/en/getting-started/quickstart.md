@@ -1,6 +1,12 @@
 ---
 title: Quick Start
 description: Get started with Shai-Hulud detection in under 5 minutes
+sidebar:
+  order: 1
+  badge:
+    text: Start Here
+    variant: success
+lastUpdated: 2025-12-05
 ---
 
 # Quick Start

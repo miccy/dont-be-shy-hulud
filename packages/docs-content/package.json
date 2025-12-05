@@ -1,0 +1,15 @@
+{
+  "name": "@hulud/docs-content",
+  "version": "1.5.1",
+  "private": true,
+  "description": "Documentation content for Shai-Hulud detection toolkit",
+  "type": "module",
+  "exports": {
+    "./en/*": "./en/*",
+    "./cs/*": "./cs/*"
+  },
+  "scripts": {
+    "build": "echo 'No build step needed'",
+    "lint": "echo 'No lint step needed'"
+  }
+}

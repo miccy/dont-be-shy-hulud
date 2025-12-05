@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
         with:
-          scandir: './scripts'
+          scandir: "./packages/scripts"
 
   smoke-test:
     name: Smoke Tests
@@ -25,18 +25,18 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Make scripts executable
-        run: chmod +x scripts/*.sh
+        run: chmod +x packages/scripts/*.sh scripts/*.sh 2>/dev/null || true
 
       - name: Run Quick Audit
-        run: ./scripts/quick-audit.sh
+        run: ./packages/scripts/quick-audit.sh
         continue-on-error: true
 
       - name: Run Full Audit (Dry Run/Check)
         # Just running it to ensure it doesn't crash.
         # It will create a report dir which is fine.
-        run: ./scripts/full-audit.sh
+        run: ./packages/scripts/full-audit.sh
         continue-on-error: true
 
       - name: Test Language Script (Dry Run)
         # Test help output
-        run: ./scripts/set-language.sh --help || true
+        run: ./packages/scripts/set-language.sh --help || true

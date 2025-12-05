@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       language:
-        description: 'Language to keep (en = English only, cs = Czech only)'
+        description: "Language to keep (en = English only, cs = Czech only)"
         required: true
-        default: 'en'
+        default: "en"
         type: choice
         options:
-        - en
-        - cs
+          - en
+          - cs
 
 jobs:
   set-language:
@@ -22,11 +22,11 @@ jobs:
 
       - name: Run language setup script
         run: |
-          chmod +x scripts/set-language.sh
-          ./scripts/set-language.sh ${{ inputs.language }}
+          chmod +x packages/scripts/set-language.sh
+          ./packages/scripts/set-language.sh ${{ inputs.language }}
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: set repository language to ${{ inputs.language }}"
-          file_pattern: '.'
+          file_pattern: "."

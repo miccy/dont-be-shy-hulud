@@ -10,16 +10,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Monorepo structure** — Turborepo + Bun workspaces with apps/ and packages/ directories
-- **apps/web** — Astro Starlight documentation website with i18n (EN/CS)
-- **apps/cli** — CLI package extracted from root
-- **packages/ioc** — IOC database as importable TypeScript package
-- **packages/scripts** — Shell scripts as standalone package
+- **apps/docs** — Astro Starlight documentation website with i18n (EN/CS)
+- **apps/cli** — CLI package extracted from root (`@hulud/cli`)
+- **packages/ioc** — IOC database as importable TypeScript package (`@hulud/ioc`)
+- **packages/scripts** — Shell scripts as standalone package (`@hulud/scripts`)
+- **packages/docs-content** — Shared documentation content for web and wiki (`@hulud/docs-content`)
+- **packages/wiki-sync** — GitHub Wiki synchronization tool (`@hulud/wiki-sync`)
+- **packages/assets** — Shared assets (images, diagrams) (`@hulud/assets`)
+- **packages/configs** — Security configuration templates (`@hulud/configs`)
 - **GitHub Pages workflow** — Automatic docs deployment on push
+- **Wiki sync workflow** — Automatic GitHub Wiki sync from docs-content
+- **scripts/clean.sh** — Global cleanup script for node_modules, lockfiles, and temp directories
+- **Complete CS translations** — All documentation now available in Czech
 
 ### Changed
 
 - Migrated from pnpm to Bun workspaces
 - Restructured project as monorepo
+- Moved `bin/cli.js` to `apps/cli/bin/cli.js`
+- Moved `docs/` to `packages/docs-content/en/`
+- Moved `cs/docs/` to `packages/docs-content/cs/`
+- Moved `cs/*.md` meta files to `packages/docs-content/cs/meta/`
+- Updated all documentation with frontmatter for Astro Starlight
+- Symlinked `apps/docs/src/content/docs/` to `packages/docs-content/en/`
+- Updated GitHub workflows for new monorepo structure
+- Updated `set-language.sh` for new docs-content structure
+
+### Fixed
+
+- Fixed `deploy-docs.yml` workflow paths (apps/docs instead of apps/web)
+- Fixed `ci.yml` script paths (packages/scripts instead of scripts)
+- Fixed `release.yml` to use Bun instead of pnpm
+- Fixed `set-language.yml` script path
+
+### Removed
+
+- Legacy `bin/` directory (moved to apps/cli)
+- Legacy `docs/` directory (moved to packages/docs-content)
+- Legacy `cs/` directory (moved to packages/docs-content)
 
 ### Added (previous)
 - **Mermaid attack flow diagram** — Visual representation of Shai-Hulud 2.0 attack chain in README.md (EN/CS)
