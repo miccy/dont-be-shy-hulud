@@ -1,9 +1,9 @@
 ---
 interface Props {
-	columns?: number;
+  columns?: number
 }
 
-const { columns = 2 } = Astro.props;
+const { columns = 2 } = Astro.props
 ---
 
 <div class="card-grid" style={`--columns: ${columns}`}><slot /></div>

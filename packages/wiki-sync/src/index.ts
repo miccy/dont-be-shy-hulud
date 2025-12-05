@@ -47,7 +47,7 @@ function toWikiName(slug: string): string {
       part
         .split('-')
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join('-'),
+        .join('-')
     )
     .join('-')
 }

@@ -55,11 +55,7 @@
         "source": "Datadog Security Labs"
       }
     ],
-    "patterns": [
-      "webhook.site/*",
-      "pipedream.net/*",
-      "requestbin.com/*"
-    ]
+    "patterns": ["webhook.site/*", "pipedream.net/*", "requestbin.com/*"]
   },
   "github_exfiltration": {
     "description": "GitHub-based exfiltration patterns",
@@ -144,17 +140,12 @@
   },
   "bun_installation": {
     "description": "Bun runtime installation endpoints",
-    "legitimate_sources": [
-      "https://bun.sh/install",
-      "https://github.com/oven-sh/bun"
-    ],
+    "legitimate_sources": ["https://bun.sh/install", "https://github.com/oven-sh/bun"],
     "detection": "Unexpected Bun installations in preinstall scripts are suspicious"
   },
   "trufflehog_abuse": {
     "description": "TruffleHog binary download indicators",
-    "sources": [
-      "https://github.com/trufflesecurity/trufflehog/releases"
-    ],
+    "sources": ["https://github.com/trufflesecurity/trufflehog/releases"],
     "detection": "Unexpected TruffleHog downloads in npm lifecycle scripts"
   },
   "firewall_rules": {

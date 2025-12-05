@@ -52,7 +52,8 @@ export default defineConfig({
     }),
   ],
   vite: {
-    plugins: [tailwindcss(),viewTransitions()],
+    // @ts-expect-error - Vite version mismatch between @tailwindcss/vite (7.x) and Astro (6.x)
+    plugins: [tailwindcss(), viewTransitions()],
     resolve: {
       alias: {
         //'@content': '../../packages/docs-content',

@@ -1,31 +1,27 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "🛡️ HARDENED CONFIG - Bezpečný setup pro každodenní použití",
-  
-  "extends": [
-    "config:recommended",
-    ":semanticCommits",
-    ":rebaseStalePrs"
-  ],
-  
+
+  "extends": ["config:recommended", ":semanticCommits", ":rebaseStalePrs"],
+
   "timezone": "Europe/Prague",
   "schedule": ["before 6am on monday"],
-  
+
   "stabilityDays": 7,
   "minimumReleaseAge": "7 days",
-  
+
   "prConcurrentLimit": 3,
   "prHourlyLimit": 2,
-  
+
   "automerge": false,
   "platformAutomerge": false,
-  
+
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["before 6am on sunday"],
     "automerge": false
   },
-  
+
   "packageRules": [
     {
       "description": "Seskupit všechny non-major npm updates",
@@ -102,22 +98,18 @@
     },
     {
       "description": "Blokovat známé problematické packages",
-      "matchPackageNames": [
-        "@asyncapi/specs",
-        "event-stream",
-        "flatmap-stream"
-      ],
+      "matchPackageNames": ["@asyncapi/specs", "event-stream", "flatmap-stream"],
       "enabled": false
     }
   ],
-  
+
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": ["security", "vulnerability"],
     "prPriority": 10,
     "automerge": false
   },
-  
+
   "prBodyNotes": [
     "⚠️ **Security Review Required**",
     "Before merging:",
@@ -125,20 +117,15 @@
     "- [ ] Verify no suspicious lifecycle scripts",
     "- [ ] Run `npm audit` / `socket scan`"
   ],
-  
+
   "commitMessagePrefix": "chore(deps): ",
-  
+
   "labels": ["dependencies"],
   "addLabels": ["renovate"],
-  
+
   "reviewersFromCodeOwners": true,
-  
+
   "postUpdateOptions": ["npmDedupe"],
-  
-  "ignorePaths": [
-    "**/node_modules/**",
-    "**/vendor/**",
-    "**/dist/**",
-    "**/build/**"
-  ]
+
+  "ignorePaths": ["**/node_modules/**", "**/vendor/**", "**/dist/**", "**/build/**"]
 }

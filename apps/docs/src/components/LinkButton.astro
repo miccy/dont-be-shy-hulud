@@ -1,16 +1,15 @@
 ---
-const { href, variant = "primary", className } = Astro.props;
+const { href, variant = 'primary', className } = Astro.props
 
 let classes = ''
 
-if (variant === "primary") {
-  classes += ""
-} else if (variant === "text") {
-  classes += "flex items-center gap-2 text-black dark:text-white no-underline "
+if (variant === 'primary') {
+  classes += ''
+} else if (variant === 'text') {
+  classes += 'flex items-center gap-2 text-black dark:text-white no-underline '
 } else {
-  classes += ""
+  classes += ''
 }
-
 ---
 
 <a href={href} class={` ${classes} ${className}`}>

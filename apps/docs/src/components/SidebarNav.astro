@@ -1,34 +1,32 @@
 ---
-import LanguageSelect from "@astrojs/starlight/components/LanguageSelect.astro";
-import { plainLabel } from "../lib/utils/textConverter.ts";
+import LanguageSelect from '@astrojs/starlight/components/LanguageSelect.astro'
+import { plainLabel } from '../lib/utils/textConverter.ts'
 
-const { sidebar } = Astro.locals.starlightRoute;
+const { sidebar } = Astro.locals.starlightRoute
 
 // url path
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname
 
 // Helper function to recursively find the first href in nested entries
 function getFirstHref(item: any): string | null {
-  if (typeof item?.href === "string" && item.href) {
-    return item.href;
+  if (typeof item?.href === 'string' && item.href) {
+    return item.href
   }
   if (item?.entries && Array.isArray(item.entries) && item.entries.length > 0) {
-    return getFirstHref(item.entries[0]);
+    return getFirstHref(item.entries[0])
   }
-  return null; // No valid href found
+  return null // No valid href found
 }
 
 // Helper function to recursively check if any nested entry matches the current path
 function hasActiveEntry(item: any, currentPath: string): boolean {
-  if (typeof item?.href === "string" && item.href === currentPath) {
-    return true;
+  if (typeof item?.href === 'string' && item.href === currentPath) {
+    return true
   }
   if (item?.entries && Array.isArray(item.entries)) {
-    return item.entries.some((entry: any) =>
-      hasActiveEntry(entry, currentPath)
-    );
+    return item.entries.some((entry: any) => hasActiveEntry(entry, currentPath))
   }
-  return false;
+  return false
 }
 ---
 

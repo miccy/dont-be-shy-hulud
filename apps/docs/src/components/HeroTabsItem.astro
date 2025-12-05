@@ -1,24 +1,17 @@
 ---
-import { Image } from "astro:assets";
-import ImageMod from "./ImageMod.astro";
+import { Image } from 'astro:assets'
+import ImageMod from './ImageMod.astro'
 
 interface Props {
-  title: string;
-  subtitle: string;
-  number: number;
-  image: string;
-  imageAlt: string;
-  isActive?: boolean;
+  title: string
+  subtitle: string
+  number: number
+  image: string
+  imageAlt: string
+  isActive?: boolean
 }
 
-const {
-  title,
-  subtitle,
-  number,
-  image,
-  imageAlt,
-  isActive = false,
-} = Astro.props;
+const { title, subtitle, number, image, imageAlt, isActive = false } = Astro.props
 ---
 
 <div class="hero-tab-item">

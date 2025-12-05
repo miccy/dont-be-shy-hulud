@@ -1,27 +1,27 @@
 ---
-import { AstroFont } from "astro-font";
-import theme from "@/config/theme.json";
-const { head } = Astro.locals.starlightRoute;
+import { AstroFont } from 'astro-font'
+import theme from '@/config/theme.json'
+
+const { head } = Astro.locals.starlightRoute
 
 // font families
-const pf = theme.fonts.font_family.primary;
-// @ts-ignore
-const sf = theme.fonts.font_family.secondary ;
+const pf = theme.fonts.font_family.primary
+// @ts-expect-error
+const sf = theme.fonts.font_family.secondary
 
-let fontPrimary, fontSecondary;
+let fontPrimary, fontSecondary
 if (theme.fonts.font_family.primary) {
   fontPrimary = theme.fonts.font_family.primary
-    .replace(/\+/g, " ")
-    .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, "");
+    .replace(/\+/g, ' ')
+    .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, '')
 }
-// @ts-ignore
+// @ts-expect-error
 if (theme.fonts.font_family.secondary) {
-// @ts-ignore
+  // @ts-expect-error
   fontSecondary = theme.fonts.font_family.secondary
-    .replace(/\+/g, " ")
-    .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, "");
+    .replace(/\+/g, ' ')
+    .replace(/:[ital,]*[ital@]*[wght@]*[0-9,;.]+/gi, '')
 }
-
 ---
 
 {head.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}

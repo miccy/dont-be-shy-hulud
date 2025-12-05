@@ -1,12 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Hardened Renovate config for npm supply chain attack protection",
-  
-  "extends": [
-    "config:recommended",
-    ":semanticCommits",
-    ":pinAllExceptPeerDependencies"
-  ],
+
+  "extends": ["config:recommended", ":semanticCommits", ":pinAllExceptPeerDependencies"],
 
   "timezone": "Europe/Prague",
   "schedule": ["before 6am on monday"],
@@ -38,7 +34,7 @@
       "assignees": ["miccy"]
     },
     {
-      "description": "Block known compromised package namespaces",
+      "description": "Block known compromised package namespaces (temporarily disabled - manually verify before re-enabling)",
       "matchPackagePatterns": [
         "^@asyncapi/",
         "^@postman/",
@@ -48,8 +44,7 @@
         "^posthog-",
         "^zapier-"
       ],
-      "enabled": false,
-      "description": "Temporarily disabled - manually verify before re-enabling"
+      "enabled": false
     },
     {
       "description": "GitHub Actions - keep automerge but pin to SHA",
@@ -94,16 +89,9 @@
     }
   ],
 
-  "ignoreDeps": [
-    "@asyncapi/specs",
-    "@postman/tunnel-agent",
-    "comment": "Add any packages you want to permanently ignore"
-  ],
+  "ignoreDeps": ["@asyncapi/specs", "@postman/tunnel-agent"],
 
-  "postUpdateOptions": [
-    "npmDedupe",
-    "yarnDedupeFewer"
-  ],
+  "postUpdateOptions": ["npmDedupe", "yarnDedupeFewer"],
 
   "npmrc": "ignore-scripts=true",
 

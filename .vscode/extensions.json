@@ -1,7 +1,7 @@
 {
-    "recommendations": [
-        "tamasfe.even-better-toml",
-        "foxundermoon.shell-format",
-        "SocketSecurity.vscode-socket-security"
-    ]
+  "recommendations": [
+    "tamasfe.even-better-toml",
+    "foxundermoon.shell-format",
+    "SocketSecurity.vscode-socket-security"
+  ]
 }

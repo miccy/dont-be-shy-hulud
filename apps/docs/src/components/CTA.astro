@@ -1,16 +1,12 @@
 ---
-import { getEntry } from "astro:content";
-import Button from "./user-components/Button.astro";
-import Section from "./Section.astro";
+import { getEntry } from 'astro:content'
+import Section from './Section.astro'
+import Button from './user-components/Button.astro'
 
-const locale = Astro.currentLocale || "en";
+const locale = Astro.currentLocale || 'en'
 
-const cta = await getEntry(
-  "ctaSection",
-  `${locale === "en" ? "" : `${locale}/`}call-to-action`
-);
-const { title, description, enable, fill_button, outline_button } =
-  cta?.data ?? {};
+const cta = await getEntry('ctaSection', `${locale === 'en' ? '' : `${locale}/`}call-to-action`)
+const { title, description, enable, fill_button, outline_button } = cta?.data ?? {}
 ---
 
 {

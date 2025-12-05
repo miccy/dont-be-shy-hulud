@@ -1,13 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "🔒 LOCKDOWN CONFIG - Pro použití během aktivní supply-chain hrozby",
-  
-  "extends": [
-    "config:recommended"
-  ],
-  
+
+  "extends": ["config:recommended"],
+
   "enabled": true,
-  
+
   "packageRules": [
     {
       "description": "🔴 KRITICKÉ: Zakázat všechny npm/bun updates",
@@ -43,24 +41,24 @@
       "automerge": false
     }
   ],
-  
+
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": ["security", "critical", "vulnerability"],
     "prPriority": 10
   },
-  
+
   "prConcurrentLimit": 1,
   "prHourlyLimit": 1,
-  
+
   "schedule": ["before 6am on monday"],
   "timezone": "Europe/Prague",
-  
+
   "commitMessagePrefix": "🔒 chore(deps): ",
   "commitMessageAction": "lockdown update",
-  
+
   "labels": ["dependencies", "lockdown-mode"],
-  
+
   "reviewers": ["security-team"],
   "reviewersFromCodeOwners": true
 }

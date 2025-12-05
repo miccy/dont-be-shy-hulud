@@ -1,11 +1,10 @@
 ---
-import { Icon } from "@astrojs/starlight/components";
-import { Badge } from "@astrojs/starlight/components";
-import SidebarRestorePoint from "./SidebarRestorePoint.astro";
-import { flattenSidebar } from "node_modules/@astrojs/starlight/utils/navigation";
-import { plainLabel, getIconFromLabel } from "@/lib/utils/textConverter";
+import { Badge, Icon } from '@astrojs/starlight/components'
+import { flattenSidebar } from 'node_modules/@astrojs/starlight/utils/navigation'
+import { getIconFromLabel, plainLabel } from '@/lib/utils/textConverter'
+import SidebarRestorePoint from './SidebarRestorePoint.astro'
 
-const { sublist, nested } = Astro.props;
+const { sublist, nested } = Astro.props
 ---
 
 <ul class:list={{ "top-level": !nested }}>

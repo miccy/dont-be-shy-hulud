@@ -1,11 +1,11 @@
 ---
-const url = Astro.url;
-const pathSegments = url.pathname.split("/").filter((segment) => segment);
+const url = Astro.url
+const pathSegments = url.pathname.split('/').filter((segment) => segment)
 const breadcrumbItems = pathSegments.map((segment, index) => {
-  const href = "/" + pathSegments.slice(0, index + 1).join("/");
-  const text = decodeURIComponent(segment.replace(/-/g, " "));
-  return { href, text };
-});
+  const href = '/' + pathSegments.slice(0, index + 1).join('/')
+  const text = decodeURIComponent(segment.replace(/-/g, ' '))
+  return { href, text }
+})
 ---
 
 <div class="breadcrumb">

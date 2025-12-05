@@ -7,11 +7,11 @@
  * Professional CLI with spinners, progress bars, and beautiful output.
  */
 
-import chalk from 'chalk'
 import { spawn } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import chalk from 'chalk'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)

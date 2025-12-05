@@ -1,21 +1,22 @@
 ---
-import Search from "./Search.astro";
-const { data } = Astro.locals.starlightRoute.entry;
-const { title = data.title, tagline } = data.hero || {};
-const { sidebar } = Astro.locals.starlightRoute;
+import Search from './Search.astro'
+
+const { data } = Astro.locals.starlightRoute.entry
+const { title = data.title, tagline } = data.hero || {}
+const { sidebar } = Astro.locals.starlightRoute
 
 function getFirstHref(item: any): string | null {
-  if (typeof item?.href === "string" && item.href) {
-    return item.href;
+  if (typeof item?.href === 'string' && item.href) {
+    return item.href
   }
   if (item?.entries && Array.isArray(item.entries) && item.entries.length > 0) {
-    return getFirstHref(item.entries[0]);
+    return getFirstHref(item.entries[0])
   }
-  return null; // No valid href found
+  return null // No valid href found
 }
 
 // check if 404 page
-const is404 = Astro.locals.starlightRoute?.id === "404";
+const is404 = Astro.locals.starlightRoute?.id === '404'
 ---
 
 <div

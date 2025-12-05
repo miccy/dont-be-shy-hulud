@@ -1,23 +1,22 @@
 ---
-impoprojectc } from "@astrojs/starlints";
-impo{ Icon }ect from "@astrojs/starli/componentsght";
+import project from 'virtual:starlight/project-context'
+import { Icon } from '@astrojs/starlight/components'
 
 const pagefindTranslations = {
-  placeholder: Astro.locals.t("search.label"),
+  placeholder: Astro.locals.t('search.label'),
   ...Object.fromEntries(
     Object.entries(Astro.locals.t.all())
-      .filter(([key]) => key.startsWith("pagefind."))
-      .map(([key, value]) => [key.replace("pagefind.", ""), value])
+      .filter(([key]) => key.startsWith('pagefind.'))
+      .map(([key, value]) => [key.replace('pagefind.', ''), value]),
   ),
-};
+}
 
 const dataAttributes: DOMStringMap = {
-  "data-translations": JSON.stringify(pagefindTranslations),
-};
+  'data-translations': JSON.stringify(pagefindTranslations),
+}
 
-// @ts-ignore - Accessing trailingSlash from Starlight integration
-if ((project as any)?.trailingSlash === "never")
-  dataAttributes["data-strip-trailing-slash"] = "";
+if ((project as { trailingSlash?: string })?.trailingSlash === 'never')
+  dataAttributes['data-strip-trailing-slash'] = ''
 ---
 
 <site-search class={Astro.props.class} {...dataAttributes}>

@@ -1,10 +1,10 @@
 ---
-import { plainLabel } from "@/lib/utils/textConverter";
-import { Icon } from "@astrojs/starlight/components";
+import { Icon } from '@astrojs/starlight/components'
+import { plainLabel } from '@/lib/utils/textConverter'
 
-const { dir, pagination } = Astro.locals.starlightRoute;
-const { prev, next } = pagination;
-const isRtl = dir === "rtl";
+const { dir, pagination } = Astro.locals.starlightRoute
+const { prev, next } = pagination
+const isRtl = dir === 'rtl'
 ---
 
 <div class="pagination-links print:hidden" dir={dir}>

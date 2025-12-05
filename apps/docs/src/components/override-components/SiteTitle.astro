@@ -1,6 +1,8 @@
 ---
 import config from "@/config/config.json" assert { type: "json" };
+
 import ImageMod from "../ImageMod.astro";
+
 const { siteTitle, siteTitleHref } = Astro.locals.starlightRoute;
 
 const { src, srcDarkmode }: { src?: string; srcDarkmode?: string } =

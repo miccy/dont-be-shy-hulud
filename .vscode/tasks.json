@@ -1,48 +1,48 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "🛡️ Quick Audit",
-            "type": "shell",
-            "command": "./scripts/quick-audit.sh",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "🔍 Full Audit",
-            "type": "shell",
-            "command": "./scripts/full-audit.sh",
-            "group": "test",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "🧹 Set Language (English)",
-            "type": "shell",
-            "command": "./scripts/set-language.sh en",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        },
-        {
-            "label": "🧹 Set Language (Czech)",
-            "type": "shell",
-            "command": "./scripts/set-language.sh cs",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "panel": "new"
-            }
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🛡️ Quick Audit",
+      "type": "shell",
+      "command": "./scripts/quick-audit.sh",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "🔍 Full Audit",
+      "type": "shell",
+      "command": "./scripts/full-audit.sh",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "🧹 Set Language (English)",
+      "type": "shell",
+      "command": "./scripts/set-language.sh en",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "🧹 Set Language (Czech)",
+      "type": "shell",
+      "command": "./scripts/set-language.sh cs",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    }
+  ]
 }

@@ -4,20 +4,23 @@
  * Provides typed access to IOC data for Shai-Hulud 2.0 detection.
  */
 
-import { createRequire } from 'module'
+import { createRequire } from 'node:module'
 
 const require = createRequire(import.meta.url)
 
+/** @type {import('./hashes.json')} */
 const hashes = require('./hashes.json')
+/** @type {import('./malicious-packages.json')} */
 const maliciousPackages = require('./malicious-packages.json')
+/** @type {import('./network.json')} */
 const networkIOCs = require('./network.json')
 
 /**
- * Get all known malicious packages
- * @returns {Array<{name: string, versions: string[], risk: string, source: string}>}
+ * Get all known malicious packages (high risk)
+ * @returns {Array<{name: string, risk_level: string, deployment_rate: string, affected_versions: string[], status: string, notes: string}>}
  */
 export function getMaliciousPackages() {
-  return maliciousPackages.packages || []
+  return maliciousPackages.high_risk_packages?.packages || []
 }
 
 /**
