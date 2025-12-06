@@ -198,15 +198,21 @@ if [[ "$OUTPUT_FORMAT" != "json" ]]; then
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 fi
 
-# Malicious files
-IOC_FILES=(
+# CRITICAL IOC files - unique names, search EVERYWHERE including node_modules
+# These are specific to Shai-Hulud and unlikely to be legitimate
+CRITICAL_IOC_FILES=(
     "setup_bun.js"
     "bun_environment.js"
     "actionsSecrets.json"
+    "truffleSecrets.json"
+)
+
+# GENERIC IOC files - common names, search OUTSIDE node_modules only
+# These names are too generic and cause false positives in dependencies
+GENERIC_IOC_FILES=(
     "cloud.json"
     "contents.json"
     "environment.json"
-    "truffleSecrets.json"
     "data.json"
 )
 
@@ -223,10 +229,30 @@ SECONDARY_PATTERNS=(
     "Shai-Hulud Migration"
 )
 
-for file in "${IOC_FILES[@]}"; do
-    found=$(find "$SCAN_PATH" -name "$file" -type f 2>/dev/null | head -5)
+# Check CRITICAL IOC files - search everywhere including node_modules
+for file in "${CRITICAL_IOC_FILES[@]}"; do
+    found=$(find "$SCAN_PATH" -name "$file" -type f -not -path "*/.git/*" 2>/dev/null | head -5)
     if [[ -n "$found" ]]; then
-        log_error "Found malicious file: $file"
+        log_error "Found CRITICAL malicious file: $file"
+        echo "$found" | while read -r f; do
+            # Verify with hash if possible
+            if command -v shasum &> /dev/null; then
+                file_hash=$(shasum -a 256 "$f" 2>/dev/null | cut -d' ' -f1)
+                echo "         → $f (SHA256: $file_hash)"
+            else
+                echo "         → $f"
+            fi
+        done
+    else
+        $VERBOSE && log_ok "Not found: $file"
+    fi
+done
+
+# Check GENERIC IOC files - search only outside node_modules to avoid false positives
+for file in "${GENERIC_IOC_FILES[@]}"; do
+    found=$(find "$SCAN_PATH" -name "$file" -type f -not -path "*/node_modules/*" -not -path "*/.git/*" 2>/dev/null | head -5)
+    if [[ -n "$found" ]]; then
+        log_error "Found suspicious file: $file (outside node_modules)"
         echo "$found" | while read -r f; do
             echo "         → $f"
         done
@@ -519,11 +545,15 @@ echo "10. Checking for cloud metadata service abuse..."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # Common grep filters for whitelist approach
+# Exclude our own IOC documentation files to avoid false positives
 GREP_FILTERS=(
     --include="*.js" --include="*.ts" --include="*.jsx" --include="*.tsx"
     --include="*.mjs" --include="*.cjs" --include="*.json" --include="*.yml"
     --include="*.yaml" --include="*.sh"
     --exclude="network.json" --exclude="malicious-packages.json" --exclude="detect.sh"
+    --exclude="hashes.json" --exclude="ROADMAP.md" --exclude="*.spec.ts"
+    --exclude-dir="node_modules" --exclude-dir=".git" --exclude-dir="packages/ioc"
+    --exclude-dir="packages/docs-content"
 )
 
 metadata_abuse=$(grep -r "${GREP_FILTERS[@]}" "169\.254\.169\.254" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | grep -v "node_modules" | head -5 || true)
@@ -544,7 +574,15 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 
 secondary_found=false
 for pattern in "${SECONDARY_PATTERNS[@]}"; do
-    matches=$(grep -r "${GREP_FILTERS[@]}" "$pattern" "$SCAN_PATH" 2>/dev/null | grep -v ".git" | head -3 || true)
+    # Exclude our own documentation, IOC files, and detection scripts to avoid false positives
+    matches=$(grep -r "${GREP_FILTERS[@]}" "$pattern" "$SCAN_PATH" 2>/dev/null | \
+        grep -v ".git" | \
+        grep -v "node_modules" | \
+        grep -v "packages/ioc" | \
+        grep -v "packages/docs-content" | \
+        grep -v "packages/scripts" | \
+        grep -v "ROADMAP.md" | \
+        head -3 || true)
     if [[ -n "$matches" ]]; then
         log_error "Found secondary phase indicator: '$pattern'"
         echo "$matches"

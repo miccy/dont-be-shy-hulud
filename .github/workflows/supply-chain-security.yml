@@ -1,12 +1,10 @@
 name: Supply Chain Security Scan
 
 on:
-  push:
-    branches: [main, master]
   pull_request:
     branches: [main, master]
   schedule:
-    - cron: '0 6 * * *'  # Daily at 6 AM UTC
+    - cron: "0 6 * * *" # Daily at 6 AM UTC
   workflow_dispatch:
 
 permissions:
@@ -35,7 +33,7 @@ jobs:
           fetch-depth: 1
 
       - name: Make Shai-Hulud Detector Executable
-        run: chmod +x scripts/detect.sh
+        run: chmod +x packages/scripts/detect.sh
 
       - name: Run Shai-Hulud Detector
         id: detect
@@ -44,7 +42,7 @@ jobs:
           # initialize rc so we always have a value
           rc=0
           # run detector and capture exit code (allow failure)
-          ./scripts/detect.sh . --ci --output=results.txt || rc=$?
+          ./packages/scripts/detect.sh . --ci --output=results.txt || rc=$?
 
           # Ensure results.txt exists and use an unambiguous marker
           if [ ! -f results.txt ]; then
@@ -96,7 +94,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Configure npm security
         run: |
